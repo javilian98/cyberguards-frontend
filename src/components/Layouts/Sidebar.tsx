@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
   FiHome,
@@ -70,7 +71,10 @@ export default function Sidebar({ className }: SidebarProps) {
               <path d="M16 6H3" />
               <path d="M12 18H3" />
             </svg> */}
-            <div className="w-10 h-10 bg-gray-600 mr-3 rounded-full"></div>
+            <Avatar className="w-10 h-10 bg-gray-600 mr-3 rounded-full">
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
             John Doe
           </Button>
         </div>
