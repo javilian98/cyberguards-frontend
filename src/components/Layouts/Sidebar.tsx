@@ -1,3 +1,5 @@
+import { Link, useLocation } from "react-router-dom";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,6 +12,37 @@ import {
 } from "react-icons/fi";
 
 export default function Sidebar() {
+  const { pathname } = useLocation();
+
+  const renderActiveLinkStyle = (pathname: string, selectedPath: string) => {
+    if (pathname === selectedPath) return "secondary";
+
+    return "ghost";
+  };
+
+  const links = [
+    {
+      path: "/",
+      name: "Home",
+      icon: <FiHome className="h-5 w-5 mr-3" />,
+    },
+    {
+      path: "/threats",
+      name: "Threats",
+      icon: <FiAlertTriangle className="h-5 w-5 mr-3" />,
+    },
+    {
+      path: "/users",
+      name: "Users",
+      icon: <FiUsers className="h-5 w-5 mr-3" />,
+    },
+    {
+      path: "/cases",
+      name: "Cases",
+      icon: <FiFolderMinus className="h-5 w-5 mr-3" />,
+    },
+  ];
+
   return (
     <div>
       <div className="space-y-4 py-4 border-r-2 min-h-dvh w-[300px] flex flex-col justify-between">
@@ -24,22 +57,19 @@ export default function Sidebar() {
           </div>
           <div className="px-3 py-2">
             <div className="space-y-1">
-              <Button variant="secondary" className="w-full justify-start">
-                <FiHome className="h-5 w-5 mr-3" />
-                Home
-              </Button>
-              <Button variant="ghost" className="w-full justify-start">
-                <FiAlertTriangle className="h-5 w-5 mr-3" />
-                Threats
-              </Button>
-              <Button variant="ghost" className="w-full justify-start">
-                <FiUsers className="h-5 w-5 mr-3" />
-                Users
-              </Button>
-              <Button variant="ghost" className="w-full justify-start">
-                <FiFolderMinus className="h-5 w-5 mr-3" />
-                Cases
-              </Button>
+              {links.map((linkItem) => {
+                return (
+                  <Link key={linkItem.path} to={linkItem.path}>
+                    <Button
+                      variant={renderActiveLinkStyle(pathname, linkItem.path)}
+                      className="w-full justify-start"
+                    >
+                      {linkItem.icon}
+                      {linkItem.name}
+                    </Button>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>
