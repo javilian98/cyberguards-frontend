@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
   FiHome,
@@ -10,6 +9,8 @@ import {
   FiUsers,
   FiFolderMinus,
 } from "react-icons/fi";
+
+import AvatarMenu from "@/components/AvatarMenu";
 
 export default function Sidebar() {
   const { pathname } = useLocation();
@@ -76,15 +77,7 @@ export default function Sidebar() {
 
         <div className="px-4">
           <Separator className="mb-4" />
-          <Button variant="ghost" className="w-full justify-start">
-            <Avatar className="w-10 h-10 bg-gray-600 mr-3 rounded-full">
-              <AvatarImage src="https://github.com/shadcn.pnga" />
-              <AvatarFallback className="bg-blue-600 text-white">
-                JD
-              </AvatarFallback>
-            </Avatar>
-            John Doe
-          </Button>
+          <AvatarMenu name="John Doe" imgSrc="https://github.com/shadcn.png" />
         </div>
       </div>
     </div>
