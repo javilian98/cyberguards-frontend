@@ -10,7 +10,6 @@ function App() {
     <>
       <div className="flex">
         <Sidebar />
-        {/* <div className="py-4 px-3">Main Content Area</div> */}
         <div className="py-4 px-3">
           <Routes>
             <Route path="/" element={<Home />} />
