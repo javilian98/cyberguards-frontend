@@ -1,4 +1,4 @@
-import Sidebar from "@/components/Layouts/Sidebar";
+import Sidebar from "@/components/Layouts/Sidebar/Sidebar";
 import { Route, Routes } from "react-router-dom";
 import Home from "@/pages/Home";
 import Threats from "@/pages/Threats";

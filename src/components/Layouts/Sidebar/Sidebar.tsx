@@ -10,7 +10,7 @@ import {
   FiFolderMinus,
 } from "react-icons/fi";
 
-import AvatarMenu from "@/components/AvatarMenu";
+import AvatarMenu from "@/components/AvatarMenu/AvatarMenu";
 
 export default function Sidebar() {
   const { pathname } = useLocation();
