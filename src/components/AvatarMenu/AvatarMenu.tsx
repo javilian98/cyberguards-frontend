@@ -17,8 +17,8 @@ interface AvatarMenuProps {
 
 function AvatarMenu({ name, imgSrc }: AvatarMenuProps) {
   const renderNameInitials = (name: string) => {
-    const [firstName, lastName] = name.split("");
-    return `${firstName[0]} ${lastName[0]}`;
+    const [firstName, lastName] = name.split(" ");
+    return `${firstName[0]}${lastName[0]}`;
   };
 
   return (
