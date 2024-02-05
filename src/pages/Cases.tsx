@@ -260,7 +260,7 @@ function Cases() {
           asd
         </Search>
         <Button>
-          <LuPlus className="w-5 h-5 mr-2" />
+          <LuPlus className="w-5 h-5 mr-2 text-white" />
           Create Case
         </Button>
       </div>
