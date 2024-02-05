@@ -15,7 +15,7 @@ import {
 
 import { Column, ColumnDef } from "@tanstack/react-table";
 
-import { LuArrowUpDown, LuMoreHorizontal } from "react-icons/lu";
+import { LuArrowUpDown, LuMoreHorizontal, LuPlus } from "react-icons/lu";
 
 interface Case {
   id: string;
@@ -255,9 +255,15 @@ const renderSortButton = (column: Column<Case>, columnName: string) => {
 function Cases() {
   return (
     <>
-      <Search placeholderText="Search for a case" drawerTitle="Filter Cases">
-        asd
-      </Search>
+      <div className="flex gap-2">
+        <Search placeholderText="Search for a case" drawerTitle="Filter Cases">
+          asd
+        </Search>
+        <Button>
+          <LuPlus className="w-5 h-5 mr-2" />
+          Create Case
+        </Button>
+      </div>
       <Tabs defaultValue="all cases" className="mt-8">
         <TabsList>
           <TabsTrigger value="all cases" className="w-[200px]">
