@@ -17,6 +17,7 @@ interface SearchProps {
   placeholderText?: string;
   drawerTitle?: string;
   drawerDescription?: string;
+  width?: string;
   onReset?: () => void;
   onApplyFilter?: () => void;
   children: ReactNode;
@@ -26,13 +27,16 @@ function Search({
   placeholderText = "Search",
   drawerTitle = "Filter",
   drawerDescription,
+  width = "450px",
   onReset,
   onApplyFilter,
   children,
 }: SearchProps) {
   return (
     <Sheet>
-      <div className="relative flex items-center justify-between max-w-xl mb-2 ">
+      <div
+        className={`relative flex items-center justify-between w-full max-w-[${width}] mb-2`}
+      >
         <LuSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform" />
         <Input placeholder={placeholderText} className="pl-9" />
         <SheetTrigger asChild>
