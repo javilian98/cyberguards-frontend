@@ -4,6 +4,7 @@ import Home from "@/pages/Home";
 import Threats from "@/pages/Threats";
 import Users from "@/pages/Users";
 import Cases from "@/pages/Cases";
+import CreateEditCase from "./pages/CreateEditCase";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="/threats" element={<Threats />} />
             <Route path="/users" element={<Users />} />
             <Route path="/cases" element={<Cases />} />
+            <Route path="/cases/create" element={<CreateEditCase />} />
           </Routes>
         </div>
       </div>
