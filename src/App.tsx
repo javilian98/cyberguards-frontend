@@ -1,5 +1,5 @@
 import Sidebar from "@/components/Layouts/Sidebar/Sidebar";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "@/pages/Home";
 import Threats from "@/pages/Threats";
 import Users from "@/pages/Users";
