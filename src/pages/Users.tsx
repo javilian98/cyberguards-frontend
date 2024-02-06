@@ -1,9 +1,10 @@
-import * as React from "react"
+import * as React from "react";
 import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons"
+  LuArrowUpDown,
+  LuMoreHorizontal,
+  LuChevronDown,
+  LuPlus,
+} from "react-icons/lu";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,10 +16,10 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -27,7 +28,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -35,9 +36,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import Search from "@/components/Search/Search"
-import { LuPlus } from "react-icons/lu"
+} from "@/components/ui/table";
+import Search from "@/components/Search/Search";
 
 const data: Payment[] = [
   {
@@ -70,14 +70,14 @@ const data: Payment[] = [
     status: "failed",
     email: "carmella@hotmail.com",
   },
-]
+];
 
 export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
+  id: string;
+  amount: number;
+  status: "pending" | "processing" | "success" | "failed";
+  email: string;
+};
 
 export const columns: ColumnDef<Payment>[] = [
   {
@@ -118,9 +118,9 @@ export const columns: ColumnDef<Payment>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
-          <CaretSortIcon className="ml-2 h-4 w-4" />
+          <LuArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
@@ -128,29 +128,29 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "amount",
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const amount = parseFloat(row.getValue("amount"));
 
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-      }).format(amount)
+      }).format(amount);
 
-      return <div className="text-right font-medium">{formatted}</div>
+      return <div className="text-right font-medium">{formatted}</div>;
     },
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      const payment = row.original;
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
+              <LuMoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -165,19 +165,19 @@ export const columns: ColumnDef<Payment>[] = [
             <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
 function Users() {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -196,27 +196,28 @@ function Users() {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
-        <div className="flex gap-2">
-          <Search placeholderText="Search for a user" drawerTitle="Filter Users">
-            asd
-          </Search>
-          <Button>
-            <LuPlus className="w-5 h-5 mr-2 text-white" />
-            Create Case
-          </Button>
-        </div>
-        <div className=" py-4">
+      <div className="flex gap-2">
+        <Search placeholderText="Search for a user" drawerTitle="Filter Users">
+          asd
+        </Search>
+        <Button>
+          <LuPlus className="w-5 h-5 mr-2 text-white" />
+          Create Case
+        </Button>
+      </div>
+      <div className=" py-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Actions <ChevronDownIcon className="ml-2 h-4 w-4" />
+              Actions
+              <LuChevronDown className="w-4 h-4 ml-2" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start"className="block">
+          <DropdownMenuContent align="start" className="block">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
@@ -232,7 +233,7 @@ function Users() {
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -252,7 +253,7 @@ function Users() {
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -312,6 +313,6 @@ function Users() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 export default Users;
