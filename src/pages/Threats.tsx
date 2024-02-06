@@ -1,5 +1,7 @@
 function Threats() {
-  return <div>Threats</div>;
+  return (
+    <div>Threats</div>
+  )
 }
 
-export default Threats;
+export default Threats
