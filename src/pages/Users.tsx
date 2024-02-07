@@ -39,47 +39,71 @@ import {
 } from "@/components/ui/table";
 import Search from "@/components/Search/Search";
 
-const data: Payment[] = [
+const data: UserInfo[] = [
   {
     id: "m5gr84i9",
-    amount: 316,
-    status: "success",
+    username:"Kennyboi",
+    employeeType: "Software Engineer",
+    risk: 0.73,
+    lastAccessDate: "21 Jan 2023",
+    lastAccessLocation: "Australia",
     email: "ken99@yahoo.com",
+    website: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
   {
     id: "3u1reuv4",
-    amount: 242,
-    status: "success",
+    username:"Abebe",
+    employeeType: "Human Resource",
+    risk: 0.45,
+    lastAccessDate: "28 Feb 2022",
+    lastAccessLocation: "Singapore",
     email: "Abe45@gmail.com",
+    website: "https://www.youtube.com/watch?v=lDK9QqIzhwk",
   },
   {
     id: "derv1ws0",
-    amount: 837,
-    status: "processing",
+    username:"Monserati",
+    employeeType: "Software Engineer",
+    risk: 0.29,
+    lastAccessDate: "1 Sep 2022",
+    lastAccessLocation: "India",
     email: "Monserrat44@gmail.com",
+    website: "https://twitter.com/MIT_CSAIL/status/1363172815315214336?lang=en",
   },
   {
     id: "5kma53ae",
-    amount: 874,
-    status: "success",
+    username:"Silats",
+    employeeType: "UI/UX Designer",
+    risk: 0.89,
+    lastAccessDate: "21 Oct 2022",
+    lastAccessLocation: "Sweden",
     email: "Silas22@gmail.com",
+    website: "https://www.facebook.com/gmail.net21/videos/never-gonna-give-you-up-rick-astley/471344660006374/",
   },
   {
     id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
+    username:"Caramel",
+    employeeType: "Accountant",
+    risk: 0.04,
+    lastAccessDate: "21 Jan 2022",
+    lastAccessLocation: "Malaysia",
     email: "carmella@hotmail.com",
+    website: "https://www.youtube.com/watch?v=xc_0wfIuuzw",
   },
 ];
 
-type Payment = {
+type UserInfo = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
+  username: string,
+  employeeType: string;
+  risk: number, 
+  lastAccessDate: string,
+  lastAccessLocation: string,
+  email: string,
+  website: String;
 };
 
-const columns: ColumnDef<Payment>[] = [
+const columns: ColumnDef<UserInfo>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -103,42 +127,116 @@ const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
+    accessorKey: "username",
+    header: ({ column }) => (
+      <div className="text-center">
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
-          <LuArrowUpDown className="ml-2 h-4 w-4" />
+          Username
+          <LuArrowUpDown className="ml-2 h-3 w-3" />
         </Button>
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">
+        {row.getValue("username")}
+      </div>
+    ),
+  },   
+  {
+    accessorKey: "employeeType",
+    header: ({ column }) => (
+      <div className="text-center">
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          EmployeeType
+          <LuArrowUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">
+        {row.getValue("employeeType")}
+      </div>
+    ),
+  },   
+  {
+    accessorKey: "risk",
+    header: ({ column }) => (
+      <div className="text-center">
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Risk
+          <LuArrowUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      </div>
+    ),
+    cell: ({ row }) => {
+      const risk = parseFloat(row.getValue("risk"));
+  
+      // Convert decimal to percentage
+      const riskPercentage = (risk * 100).toFixed(0);
+  
+      return (
+        <div className="text-center font-medium">
+          {riskPercentage}%
+        </div>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+  }, 
+  {
+    accessorKey: "lastAccessDate",
+    header: "Last Access Date",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("lastAccessDate")}</div>
+    ),
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "lastAccessLocation",
+    header: ({ column }) => (
+      <div className="text-center">
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Last Access Location
+          <LuArrowUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">
+        {row.getValue("lastAccessLocation")}
+      </div>
+    ),
+  },   
+  {
+    accessorKey: "website",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Website
+        <LuArrowUpDown className="ml-2 h-3 w-3" />
+      </Button>
+    ),
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      const website = row.getValue("website");
+      const truncatedWebsite = typeof website === 'string' && website.length > 30
+        ? `${website.slice(0, 30)}...`
+        : website as string;
+    
+      return <div className="lowercase">{truncatedWebsite}</div>;
     },
   },
+  
   {
     id: "actions",
     enableHiding: false,
