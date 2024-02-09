@@ -17,17 +17,17 @@ function App() {
       <div className={`flex ${!showSidebar && "justify-center"}`}>
         {/* Render the Sidebar only if showSidebar is true */}
         {showSidebar && <Sidebar />}
-        <div className="py-4 px-3 w-full ml-[300px]">
+        <div className={`py-4 px-3 w-full ${showSidebar && "ml-[300px]"}`}>
           <Routes>
             <Route path="/login" element={<Sign />} />
-              {/* Other routes remain the same */}
-              <Route element={<PrivateRoutes />}>
-                <Route index path="/" element={<Home />} />
-                <Route path="/threats" element={<Threats />} />
-                <Route path="/users" element={<Users />} />
-                <Route path="cases">
-                  <Route index element={<Cases />} />
-                  <Route path="create" element={<CreateEditCase />} />
+            {/* Other routes remain the same */}
+            <Route element={<PrivateRoutes />}>
+              <Route index path="/" element={<Home />} />
+              <Route path="/threats" element={<Threats />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="cases">
+                <Route index element={<Cases />} />
+                <Route path="create" element={<CreateEditCase />} />
               </Route>
             </Route>
           </Routes>
