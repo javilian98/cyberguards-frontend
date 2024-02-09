@@ -23,7 +23,7 @@ export default function Sidebar() {
 
   const links = [
     {
-      path: "/home",
+      path: "/",
       name: "Home",
       icon: <FiHome className="h-5 w-5 mr-3" />,
     },
