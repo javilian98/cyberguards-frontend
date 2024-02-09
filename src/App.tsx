@@ -5,22 +5,27 @@ import Threats from "@/pages/Threats";
 import Users from "@/pages/Users";
 import Cases from "@/pages/Cases";
 import Sign from "@/pages/Sign";
+import PrivateRoutes from "./utils/PrivateRoutes";
 
 function App() {
   const location = useLocation(); // This hook gives you access to the location object
-  const showSidebar = location.pathname !== '/'; // Check if we're not on the sign-in page (which is the root)
+  const showSidebar = location.pathname !== "/login"; // Check if we're not on the sign-in page (which is the root)
   return (
     <>
-      <div className={`flex ${!showSidebar && 'justify-center'}`}> {/* Center the content if there's no sidebar */}
-        {showSidebar && <Sidebar />} {/* Render the Sidebar only if showSidebar is true */}
+      {/* Center the content if there's no sidebar */}
+      <div className={`flex ${!showSidebar && "justify-center"}`}>
+        {/* Render the Sidebar only if showSidebar is true */}
+        {showSidebar && <Sidebar />}
         <div className="py-4 px-3 w-full">
           <Routes>
-            <Route path="/" element={<Sign />} />
+            <Route path="/login" element={<Sign />} />
             {/* Other routes remain the same */}
-            <Route path="/home" element={<Home />} />
-            <Route path="/threats" element={<Threats />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/cases" element={<Cases />} />
+            <Route element={<PrivateRoutes />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/threats" element={<Threats />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/cases" element={<Cases />} />
+            </Route>
           </Routes>
         </div>
       </div>
