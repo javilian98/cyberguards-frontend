@@ -6,6 +6,7 @@ import Users from "@/pages/Users";
 import Cases from "@/pages/Cases";
 import Sign from "@/pages/Sign";
 import PrivateRoutes from "./utils/PrivateRoutes";
+import CreateEditCase from "./pages/CreateEditCase";
 
 function App() {
   const location = useLocation(); // This hook gives you access to the location object
@@ -16,15 +17,18 @@ function App() {
       <div className={`flex ${!showSidebar && "justify-center"}`}>
         {/* Render the Sidebar only if showSidebar is true */}
         {showSidebar && <Sidebar />}
-        <div className="py-4 px-3 w-full">
+        <div className="py-4 px-3 w-full ml-[300px]">
           <Routes>
             <Route path="/login" element={<Sign />} />
-            {/* Other routes remain the same */}
-            <Route element={<PrivateRoutes />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/threats" element={<Threats />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/cases" element={<Cases />} />
+              {/* Other routes remain the same */}
+              <Route element={<PrivateRoutes />}>
+                <Route index path="/" element={<Home />} />
+                <Route path="/threats" element={<Threats />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="cases">
+                  <Route index element={<Cases />} />
+                  <Route path="create" element={<CreateEditCase />} />
+              </Route>
             </Route>
           </Routes>
         </div>

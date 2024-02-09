@@ -6,7 +6,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, } from "@/components/ui/avatar";
 
 import { FiUser, FiLogOut } from "react-icons/fi";
 
@@ -26,7 +26,7 @@ function AvatarMenu({ name, imgSrc }: AvatarMenuProps) {
       <PopoverTrigger className="w-full">
         <Button variant="ghost" className="w-full justify-start">
           <Avatar className="w-10 h-10 bg-gray-600 mr-3 rounded-full">
-            <AvatarImage src={imgSrc} />
+            <img src={imgSrc} alt={name}/>
             <AvatarFallback className="bg-blue-600 text-white">
               {renderNameInitials(name)}
             </AvatarFallback>
