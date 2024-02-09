@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCaseStore } from "@/stores/useCaseStore";
+import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 
 import { DataTable } from "@/components/DataTable/DataTable";
 import Search from "@/components/Search/Search";
@@ -17,7 +18,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import FixedHeader from "@/components/Layouts/Header/FixedHeader";
-import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { casesColumns } from "@/components/DataTable/Cases/CasesColumns";
 import { casesData } from "@/components/DataTable/Cases/casesData";
 
