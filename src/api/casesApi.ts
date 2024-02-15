@@ -1,4 +1,4 @@
-import { Case } from "@/types/types";
+import { Case, CaseDetail } from "@/types/types";
 import { formatDateTime } from "@/utils/utils";
 import axios from "axios";
 
@@ -21,5 +21,17 @@ export const getCaseList = async (): Promise<Case[]> => {
     return newResponseData;
   } catch (error) {
     throw new Error("Failed to fetch cases: " + error);
+  }
+};
+
+export const createCase = async (
+  caseItem: Omit<CaseDetail, "id">
+): Promise<CaseDetail> => {
+  try {
+    const response = await casesApi.post("/api/cases", caseItem);
+
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to create case: " + error);
   }
 };
