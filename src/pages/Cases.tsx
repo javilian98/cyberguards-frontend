@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { useCaseStore } from "@/stores/useCaseStore";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 
@@ -19,9 +20,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import FixedHeader from "@/components/Layouts/Header/FixedHeader";
 import { casesColumns } from "@/components/DataTable/Cases/CasesColumns";
-import { casesData } from "@/components/DataTable/Cases/casesData";
+// import { casesData } from "@/components/DataTable/Cases/casesData";
 
 import { LuPlus } from "react-icons/lu";
+import { getCaseList } from "@/api/casesApi";
 
 function Cases() {
   const cases = useCaseStore((state) => state.cases);
@@ -39,6 +41,11 @@ function Cases() {
     (state) => state.setSingleRowActionDialogOpen
   );
 
+  const casesQuery = useQuery({
+    queryKey: ["cases"],
+    queryFn: () => getCaseList(),
+  });
+
   const handleDelete = () => {
     const newCases = cases.filter((item) => item.id !== currentSelectedCase.id);
     setCases(newCases);
@@ -53,9 +60,9 @@ function Cases() {
     setSelectedCases([]);
   };
 
-  useEffect(() => {
-    setCases(casesData);
-  }, [setCases]);
+  // useEffect(() => {
+  //   setCases(casesData);
+  // }, [setCases]);
 
   return (
     <>
@@ -85,7 +92,7 @@ function Cases() {
         <TabsContent value="all cases" className="mt-4">
           <DataTable
             columns={casesColumns}
-            data={cases}
+            data={casesQuery.data ?? []}
             actionDelete={handleDeleteAllSelected}
           />
         </TabsContent>

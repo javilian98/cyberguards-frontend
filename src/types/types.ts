@@ -1,9 +1,9 @@
 export interface Case {
   id: string;
   title: string;
-  riskStatus: "low" | "medium" | "high";
-  riskScore: number;
-  caseDateTime: string;
-  assignee: string;
-  assignedDateTime: string;
+  risk_status: "low" | "medium" | "high";
+  risk_score: number;
+  created_at: string;
+  assignee?: string;
+  assigned_date_time?: string;
 }
