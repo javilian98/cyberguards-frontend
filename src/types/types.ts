@@ -3,7 +3,19 @@ export interface Case {
   title: string;
   riskStatus: "low" | "medium" | "high";
   riskScore: number;
-  caseDateTime: string;
-  assignee: string;
-  assignedDateTime: string;
+  createdAt: string;
+  assignee?: string;
+  assignedDateTime?: string;
+}
+
+export interface CaseDetail {
+  id: string;
+  title: string;
+  description: string;
+  riskStatus: "low" | "medium" | "high";
+  riskScore: number;
+  createdAt?: string;
+  assignee?: string;
+  assignedDateTime?: string;
+  threatPageUrl: string;
 }

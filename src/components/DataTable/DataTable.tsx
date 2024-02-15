@@ -188,7 +188,9 @@ export function DataTable<TData, TValue>({
             >
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={actionDelete}>Delete Rows</AlertDialogAction>
+            <AlertDialogAction onClick={actionDelete}>
+              Delete Rows
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
