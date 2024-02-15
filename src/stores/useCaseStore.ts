@@ -16,7 +16,7 @@ const initCurrentSelectedCase: Case = {
   title: "",
   riskStatus: "low",
   riskScore: 0,
-  caseDateTime: "",
+  createdAt: "",
   assignee: "",
   assignedDateTime: "",
 };

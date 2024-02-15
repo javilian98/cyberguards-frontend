@@ -1,21 +1,21 @@
 export interface Case {
   id: string;
   title: string;
-  risk_status: "low" | "medium" | "high";
-  risk_score: number;
-  created_at: string;
+  riskStatus: "low" | "medium" | "high";
+  riskScore: number;
+  createdAt: string;
   assignee?: string;
-  assigned_date_time?: string;
+  assignedDateTime?: string;
 }
 
 export interface CaseDetail {
   id: string;
   title: string;
   description: string;
-  risk_status: "low" | "medium" | "high";
-  risk_score: number;
-  created_at?: string;
+  riskStatus: "low" | "medium" | "high";
+  riskScore: number;
+  createdAt?: string;
   assignee?: string;
-  assigned_date_time?: string;
-  threat_page_url: string;
+  assignedDateTime?: string;
+  threatPageUrl: string;
 }

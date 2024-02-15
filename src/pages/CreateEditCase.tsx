@@ -65,9 +65,9 @@ function CreateEditCase() {
       createCase({
         title: caseItem.title,
         description: caseItem.description,
-        risk_status: caseItem.riskStatus,
-        risk_score: caseItem.riskScore,
-        threat_page_url: caseItem.threatPageUrl,
+        riskStatus: caseItem.riskStatus,
+        riskScore: caseItem.riskScore,
+        threatPageUrl: caseItem.threatPageUrl,
       }),
     onError: () => {},
     onSuccess: async (data) => {
