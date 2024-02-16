@@ -23,7 +23,7 @@ import { casesColumns } from "@/components/DataTable/Cases/CasesColumns";
 
 import { LuPlus } from "react-icons/lu";
 import { deleteCase, getCaseList } from "@/api/casesApi";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 function Cases() {
   const cases = useCaseStore((state) => state.cases);
@@ -167,8 +167,6 @@ function Cases() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <Toaster position="top-right" closeButton richColors />
     </>
   );
 }

@@ -24,6 +24,24 @@ export const getCaseList = async (): Promise<Case[]> => {
   }
 };
 
+export const getCase = async (id: string): Promise<CaseDetail> => {
+  try {
+    const response = await casesApi.get(`/api/cases/${id}`);
+
+    const newResponseData: CaseDetail = response.data;
+
+    const caseDetailData = {
+      ...newResponseData,
+      createdAt: formatDateTime(newResponseData.createdAt),
+      assignee: "-",
+    };
+
+    return caseDetailData;
+  } catch (error) {
+    throw new Error("Failed to fetch case detail: " + error);
+  }
+};
+
 export const createCase = async (
   caseItem: Omit<CaseDetail, "id">
 ): Promise<CaseDetail> => {
@@ -33,6 +51,19 @@ export const createCase = async (
     return response.data;
   } catch (error) {
     throw new Error("Failed to create case: " + error);
+  }
+};
+
+export const updateCase = async (
+  caseItem: Omit<CaseDetail, "id">,
+  id: string
+): Promise<CaseDetail> => {
+  try {
+    const response = await casesApi.put(`/api/cases/${id}`, caseItem);
+
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to update case: " + error);
   }
 };
 
