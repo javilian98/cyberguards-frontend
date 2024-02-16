@@ -1,24 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
+
 import { useCaseStore } from "@/stores/useCaseStore";
 import { Column, ColumnDef } from "@tanstack/react-table";
-import {
-  LuArrowUpDown,
-  LuEye,
-  LuMoreHorizontal,
-  LuPencilLine,
-  LuTrash2,
-} from "react-icons/lu";
+import { LuArrowUpDown } from "react-icons/lu";
 import { Case } from "@/types/types";
+
+import ActionsMenu from "@/components/DataTable/Cases/ActionsMenu";
 
 const renderSortButton = (column: Column<Case>, columnName: string) => {
   return (
@@ -112,48 +100,6 @@ export const casesColumns: ColumnDef<Case>[] = [
   // },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const { currentSelectedCase, setCurrentSelectedCase } =
-        useCaseStore.getState();
-
-      const { setSingleRowActionDialogOpen } = useAlertDialogStore.getState();
-
-      const handleDeleteDialogVisibility = () => {
-        setCurrentSelectedCase(row.original);
-        setSingleRowActionDialogOpen(true);
-
-        console.log(currentSelectedCase);
-      };
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <LuMoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <LuEye className="w-4 h-4 mr-2" />
-              View Case
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <LuPencilLine className="w-4 h-4 mr-2" />
-              Edit Case
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-red-600"
-              onClick={handleDeleteDialogVisibility}
-            >
-              <LuTrash2 className="w-4 h-4 mr-2" />
-              Delete Case
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <ActionsMenu row={row} />,
   },
 ];
