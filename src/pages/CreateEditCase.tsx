@@ -152,16 +152,6 @@ function CreateEditCase() {
     setFormEdited(form.formState.isDirty);
   }, [form.formState.isDirty]);
 
-  // Watch for changes in specific form fields
-  const { watch } = form;
-  const watchFields = watch([
-    "title",
-    "description",
-    "riskStatus",
-    "riskScore",
-    "threatPageUrl",
-  ]);
-
   // Check if the form is edited
   // const isFormEdited =
   //   JSON.stringify(watchFields) !== JSON.stringify(form.getValues());
