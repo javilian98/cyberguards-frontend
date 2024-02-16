@@ -7,9 +7,13 @@ type SliderProps = React.ComponentProps<typeof Slider>;
 
 interface RiskScoreSliderProps {
   defaultValue: SliderProps["defaultValue"];
+  handleValueChange: (value: number) => void;
 }
 
-function RiskScoreSlider({ defaultValue }: RiskScoreSliderProps) {
+function RiskScoreSlider({
+  defaultValue,
+  handleValueChange,
+}: RiskScoreSliderProps) {
   const [value, setValue] = useState(defaultValue);
 
   const renderRiskValueColor = () => {
@@ -47,8 +51,12 @@ function RiskScoreSlider({ defaultValue }: RiskScoreSliderProps) {
       <Slider
         max={100}
         defaultValue={value}
+        value={value}
         step={10}
-        onValueChange={setValue}
+        onValueChange={(value) => {
+          setValue(value);
+          handleValueChange(value as unknown as number);
+        }}
         className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
         aria-label="Risk Score"
       />
