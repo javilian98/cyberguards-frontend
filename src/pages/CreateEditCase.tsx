@@ -49,6 +49,7 @@ import { z } from "zod";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -133,6 +134,8 @@ function CreateEditCase() {
     },
   });
 
+  const [isFormEdited, setFormEdited] = useState(false);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -145,6 +148,10 @@ function CreateEditCase() {
     },
   });
 
+  useEffect(() => {
+    setFormEdited(form.formState.isDirty);
+  }, [form.formState.isDirty]);
+
   // Watch for changes in specific form fields
   const { watch } = form;
   const watchFields = watch([
@@ -156,8 +163,8 @@ function CreateEditCase() {
   ]);
 
   // Check if the form is edited
-  const isFormEdited =
-    JSON.stringify(watchFields) !== JSON.stringify(form.getValues());
+  // const isFormEdited =
+  //   JSON.stringify(watchFields) !== JSON.stringify(form.getValues());
 
   // Handle form submission
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
@@ -174,7 +181,10 @@ function CreateEditCase() {
   };
 
   const handleBackDialogVisibility = () => {
-    if (!isFormEdited) return;
+    if (!isFormEdited) {
+      navigate("/cases");
+      return;
+    }
     setSingleRowActionDialogOpen(true);
   };
 
@@ -188,7 +198,7 @@ function CreateEditCase() {
 
     if (caseDetailData) {
       return (
-        <Button className="w-[150px]" type="submit">
+        <Button className="w-[150px]" type="submit" disabled={!isFormEdited}>
           <LuCheckCircle className="w-5 h-5 mr-2" />
           Update Case
         </Button>
