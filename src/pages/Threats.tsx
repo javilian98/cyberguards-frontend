@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,11 +7,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { VictoryChart, VictoryTheme, VictoryArea, VictoryPie, VictoryLabel } from 'victory';
+import { VictoryChart, VictoryTheme, VictoryArea, VictoryPie } from "victory";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -45,7 +44,7 @@ const stats = {
   highRiskUserPercentage: 0,
   usersDiscoveredFromEvents: 79,
   usersImportedFromDirectory: 26,
-  activeAnalytics: { current: 84, total: 215 }
+  activeAnalytics: { current: 84, total: 215 },
 };
 
 // Async function to fetch data
@@ -82,7 +81,8 @@ const dummyLogData: LogEntry[] = [
   {
     offenseNumber: "#665",
     username: "Jay Blue",
-    description: "Multiple Login Failures for the Same User preceded by Multiple Login Failures to the Same Destination preceded by Login Failures Followed By Success from the same Username containing Failed Password For SSH",
+    description:
+      "Multiple Login Failures for the Same User preceded by Multiple Login Failures to the Same Destination preceded by Login Failures Followed By Success from the same Username containing Failed Password For SSH",
     eventCount: 44036,
     flowCount: 0,
     magnitude: 5,
@@ -91,7 +91,8 @@ const dummyLogData: LogEntry[] = [
   {
     offenseNumber: "#633",
     username: "Ray Sharrer",
-    description: "Multiple Login Failures for the Same User preceded by Multiple Login Failures to the Same Destination preceded by Login Failures Followed By Success from the same Username containing Login attempt - failed",
+    description:
+      "Multiple Login Failures for the Same User preceded by Multiple Login Failures to the Same Destination preceded by Login Failures Followed By Success from the same Username containing Login attempt - failed",
     eventCount: 190597,
     flowCount: 0,
     magnitude: 5,
@@ -102,28 +103,27 @@ const dummyLogData: LogEntry[] = [
 
 // Define some dummy data for the area chart
 const areaData = [
-  { x: new Date('Dec 12 2020 00:00'), y: 200 },
-  { x: new Date('Dec 12 2020 06:00'), y: 250 },
-  { x: new Date('Dec 12 2020 12:00'), y: 220 },
-  { x: new Date('Dec 12 2020 18:00'), y: 215 },
-  { x: new Date('Dec 13 2020 00:00'), y: 225 },
-  { x: new Date('Dec 13 2020 06:00'), y: 240 },
-  { x: new Date('Dec 13 2020 12:00'), y: 230 },
+  { x: new Date("Dec 12 2020 00:00"), y: 200 },
+  { x: new Date("Dec 12 2020 06:00"), y: 250 },
+  { x: new Date("Dec 12 2020 12:00"), y: 220 },
+  { x: new Date("Dec 12 2020 18:00"), y: 215 },
+  { x: new Date("Dec 13 2020 00:00"), y: 225 },
+  { x: new Date("Dec 13 2020 06:00"), y: 240 },
+  { x: new Date("Dec 13 2020 12:00"), y: 230 },
 ];
 
 // Define some dummy data for the pie chart
 const pieData = [
   { x: "User Behavior", y: 75 },
-  { x: "UBA Machine Learning Anomaly", y: 25 }
+  { x: "UBA Machine Learning Anomaly", y: 25 },
 ];
-
 
 const Threats: React.FC = () => {
   const [threatData, setThreatData] = useState<Threat[]>([]);
 
   useEffect(() => {
     let isMounted = true;
-    getData().then(data => {
+    getData().then((data) => {
       if (isMounted) {
         setThreatData(data);
       }
@@ -159,7 +159,9 @@ const Threats: React.FC = () => {
         <StatCard
           title="Active Analytics"
           value={`${stats.activeAnalytics.current} of ${stats.activeAnalytics.total}`}
-          progress={(stats.activeAnalytics.current / stats.activeAnalytics.total) * 100}
+          progress={
+            (stats.activeAnalytics.current / stats.activeAnalytics.total) * 100
+          }
         />
       </div>
 
@@ -184,7 +186,7 @@ const Threats: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {dummyLogData.map(log => (
+                {dummyLogData.map((log) => (
                   <TableRow key={log.offenseNumber}>
                     <TableCell>{log.offenseNumber}</TableCell>
                     <TableCell>{log.username}</TableCell>
@@ -192,9 +194,11 @@ const Threats: React.FC = () => {
                     <TableCell>{log.eventCount}</TableCell>
                     <TableCell>{log.flowCount}</TableCell>
                     <TableCell>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
                         <Progress value={(log.magnitude / 10) * 100} />
-                        <span style={{ marginLeft: '8px' }}>{`${log.magnitude}/10`}</span>
+                        <span
+                          style={{ marginLeft: "8px" }}
+                        >{`${log.magnitude}/10`}</span>
                       </div>
                     </TableCell>
                     <TableCell>{log.updatedTime}</TableCell>
@@ -207,7 +211,8 @@ const Threats: React.FC = () => {
         <div className="flex flex-wrap justify-between">
           <div className="w-full lg:w-1/3 lg:pr-2">
             <Card>
-              <VictoryChart width={600}
+              <VictoryChart
+                width={600}
                 theme={VictoryTheme.material}
                 scale={{ x: "time" }}
               >
@@ -229,10 +234,11 @@ const Threats: React.FC = () => {
                   labels: { fill: "black", fontSize: 12, fontWeight: "bold" },
                   data: {
                     fill: ({ datum }) => {
-                      const color = datum.x === "User Behavior" ? "#4c9aff" : "#ff8c00";
+                      const color =
+                        datum.x === "User Behavior" ? "#4c9aff" : "#ff8c00";
                       return datum.y > 0 ? color : "transparent"; // Only color the slice if there is a value
-                    }
-                  }
+                    },
+                  },
                 }}
                 labels={({ datum }) => `${datum.x}: ${datum.y}%`}
               />
@@ -241,9 +247,7 @@ const Threats: React.FC = () => {
         </div>
       </div>
     </div>
-
   );
-
 };
 
 export default Threats;
