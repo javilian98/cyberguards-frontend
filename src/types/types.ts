@@ -24,9 +24,9 @@ export interface UserListItem {
   id: string;
   firstName: string;
   lastName: string;
-  employeeType: number;
+  profession: string;
   riskScore: number;
-  suspectType: number;
+  suspectCaseId: number;
   lastAccessAt: string;
 }
 export interface UserDetail {

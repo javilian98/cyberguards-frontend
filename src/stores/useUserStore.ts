@@ -15,7 +15,7 @@ const initCurrentSelectedUser: UserListItem = {
   id: "",
   firstName: "",
   lastName: "",
-  employeeType: 0,
+  profession: "",
   riskScore: 0,
   suspectType: 0,
   lastAccessAt: "",
