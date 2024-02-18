@@ -32,7 +32,6 @@ export const getUser = async (id: string): Promise<UserDetail> => {
     const userDetailData = {
       ...newResponseData,
       lastAccessAt: formatDateTime(newResponseData.lastAccessAt),
-      assignee: "-",
     };
 
     return userDetailData;

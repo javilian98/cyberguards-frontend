@@ -33,10 +33,10 @@ export interface UserDetail {
   id: string;
   firstName: string;
   lastName: string;
-  employeeType: number;
+  profession: string;
   userRole: number;
   riskStatus: string;
   riskScore: number;
-  suspectType: number;
+  suspectCaseId: number;
   lastAccessAt: string;
 }
