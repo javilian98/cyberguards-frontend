@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import Search from "@/components/Search/Search";
 import { getUserList } from "@/api/usersApi";
 import { useUserStore } from "@/stores/useUserStore";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  // useQueryClient
+} from "@tanstack/react-query";
 import { usersColumns } from "@/components/DataTable/Users/UsersColumns";
 import { DataTable } from "@/components/DataTable/DataTable";
 import {
@@ -24,11 +27,11 @@ import FixedHeader from "@/components/Layouts/Header/FixedHeader";
 function Users() {
   const users = useUserStore((state) => state.users);
   const setUsers = useUserStore((state) => state.setUsers);
-  const selectedUsers = useUserStore((state) => state.selectedUsers);
-  const setSelectedUsers = useUserStore((state) => state.setSelectedUsers);
-  const currentSelectedUser = useUserStore(
-    (state) => state.currentSelectedUser
-  );
+  // const selectedUsers = useUserStore((state) => state.selectedUsers);
+  // const setSelectedUsers = useUserStore((state) => state.setSelectedUsers);
+  // const currentSelectedUser = useUserStore(
+  //   (state) => state.currentSelectedUser
+  // );
   const isSingleRowActionDialogOpen = useAlertDialogStore(
     (state) => state.isSingleRowActionDialogOpen
   );
@@ -55,7 +58,7 @@ function Users() {
   //   },
   // });
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const usersQuery = useQuery({
     queryKey: ["users"],
