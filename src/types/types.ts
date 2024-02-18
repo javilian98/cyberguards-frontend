@@ -19,3 +19,24 @@ export interface CaseDetail {
   assignedDateTime?: string;
   threatPageUrl: string;
 }
+
+export interface UserListItem {
+  id: string;
+  firstName: string;
+  lastName: string;
+  employeeType: number;
+  riskScore: number;
+  suspectType: number;
+  lastAccessAt: string;
+}
+export interface UserDetail {
+  id: string;
+  firstName: string;
+  lastName: string;
+  employeeType: number;
+  userRole: number;
+  riskStatus: string;
+  riskScore: number;
+  suspectType: number;
+  lastAccessAt: string;
+}
