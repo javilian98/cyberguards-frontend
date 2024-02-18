@@ -38,11 +38,6 @@ export default function Sidebar() {
       icon: <FiUsers className="h-5 w-5 mr-3" />,
     },
     {
-      path: "/userdetail",
-      name: "UserDetail",
-      icon: <FiUsers className="h-5 w-5 mr-3" />,
-    },
-    {
       path: "/cases",
       name: "Cases",
       icon: <FiFolderMinus className="h-5 w-5 mr-3" />,
