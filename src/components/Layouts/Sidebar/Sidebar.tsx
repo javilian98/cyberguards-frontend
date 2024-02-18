@@ -50,8 +50,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <div>
-      <div className="space-y-4 py-4 border-r-2 min-h-dvh w-[300px] flex flex-col justify-between">
+    <>
+      <div className="fixed z-10 bg-white space-y-4 py-4 border-r-2 min-h-dvh w-[300px] flex flex-col justify-between">
         <div>
           <div className="px-7 py-2">
             <div className="flex items-center mb-6">
@@ -85,6 +85,6 @@ export default function Sidebar() {
           <AvatarMenu name="John Doe" imgSrc="https://github.com/shadcn.png" />
         </div>
       </div>
-    </div>
+    </>
   );
 }
