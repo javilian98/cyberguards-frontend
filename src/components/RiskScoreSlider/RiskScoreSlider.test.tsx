@@ -5,8 +5,8 @@ vi.mock("@/components/ui/slider", () => ({
     Slider: vi.fn((props) => (
       <input
         type="range"
-        value={props.value}
-        onChange={(e) => props.onValueChange(parseInt(e.target.value))}
+        value={props.value[0]} 
+      onChange={(e) => props.onValueChange([parseInt(e.target.value)])}
       />
     )),
   }));
@@ -16,7 +16,7 @@ vi.mock("@/components/ui/slider", () => ({
       const defaultValue = 50;
       const handleValueChange = vi.fn();
       render(
-        <RiskScoreSlider defaultValue={defaultValue} handleValueChange={handleValueChange} />
+        <RiskScoreSlider defaultValue={[50]} handleValueChange={handleValueChange} />
       );
   
       const riskScoreLabel = screen.getByText(/Risk Score/i);
@@ -28,12 +28,12 @@ vi.mock("@/components/ui/slider", () => ({
   
     it("updates value when slider is changed", async () => {
         const handleValueChange = vi.fn().mockResolvedValue(undefined); 
-        render(<RiskScoreSlider defaultValue={50} handleValueChange={handleValueChange} />);
+        render(<RiskScoreSlider defaultValue={[50]} handleValueChange={handleValueChange} />);
     
         const slider = screen.getByRole("slider");
         fireEvent.change(slider, { target: { value: 40 } });
         await waitFor(() => {
-            expect(handleValueChange).toHaveBeenCalledWith(40);
+            expect(handleValueChange).toHaveBeenCalledWith([40]);
     });
   });
 });
