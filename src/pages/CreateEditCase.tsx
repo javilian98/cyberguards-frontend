@@ -130,6 +130,8 @@ function CreateEditCase() {
 
       console.log("data ", data);
 
+      console.log("data ", data);
+
       // Object.keys(data).forEach((key) => {
       //   console.log("key", key);
       // });
@@ -139,6 +141,10 @@ function CreateEditCase() {
       form.setValue("riskStatus", data.riskStatus);
       form.setValue("riskScore", [data.riskScore]);
       form.setValue("threatPageUrl", data.threatPageUrl);
+      form.setValue("assignee", {
+        id: data.assigneeId ?? null,
+        fullName: data.assignee?.fullName ?? null,
+      });
       form.setValue("assignee", {
         id: data.assigneeId ?? null,
         fullName: data.assignee?.fullName ?? null,
@@ -195,6 +201,7 @@ function CreateEditCase() {
           riskScore: caseItem.riskScore[0],
           assigneeId: assigneeFound?.id,
         },
+
         id as string
       );
     },
@@ -273,6 +280,7 @@ function CreateEditCase() {
   };
 
   const renderSubmitButton = () => {
+    // console.log("caseDetailData ", caseDetailData);
     // console.log("caseDetailData ", caseDetailData);
 
     if (caseDetailData) {
