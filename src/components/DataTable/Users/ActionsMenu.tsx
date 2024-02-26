@@ -34,9 +34,14 @@ function ActionsMenu({ row }: ActionsMenuProps) {
   );
   const navigate = useNavigate();
 
-  const handleEditUser = () => {
+  const handleViewUser = () => {
     setCurrentSelectedUser(row.original);
-    navigate(`/cases/${row.original.id}`);
+    navigate(`/users/${row.original.id}`);
+  };
+
+  const handleEditUser = () => {
+    // setCurrentSelectedUser(row.original);
+    // navigate(`/users/${row.original.id}`);
   };
 
   const handleDeleteDialogVisibility = () => {
@@ -54,7 +59,7 @@ function ActionsMenu({ row }: ActionsMenuProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleViewUser}>
           <LuEye className="w-4 h-4 mr-2" />
           View User
         </DropdownMenuItem>
