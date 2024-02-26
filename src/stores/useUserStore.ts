@@ -15,13 +15,11 @@ const initCurrentSelectedUser: UserListItem = {
   id: "",
   firstName: "",
   lastName: "",
-  employeeType: 0,
+  profession: "",
   riskScore: 0,
-  suspectType: 0,
   lastAccessAt: "",
   roleId: 0,
-  profession: "",
-  suspectCaseId: 0
+  suspectCaseId: 0,
 };
 
 export const useUserStore = create<UserStore>((set) => ({

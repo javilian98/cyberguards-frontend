@@ -46,24 +46,3 @@ export interface UserDetail {
   suspectCaseId: number;
   lastAccessAt: string;
 }
-
-export interface UserListItem {
-  id: string;
-  firstName: string;
-  lastName: string;
-  employeeType: number;
-  riskScore: number;
-  suspectType: number;
-  lastAccessAt: string;
-}
-export interface UserDetail {
-  id: string;
-  firstName: string;
-  lastName: string;
-  profession: string;
-  userRole: number;
-  riskStatus: string;
-  riskScore: number;
-  suspectCaseId: number;
-  lastAccessAt: string;
-}
