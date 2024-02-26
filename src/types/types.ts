@@ -4,7 +4,9 @@ export interface Case {
   riskStatus: "low" | "medium" | "high";
   riskScore: number;
   createdAt: string;
-  assignee?: string;
+  assignee?: {
+    fullName: string | null;
+  };
   assignedDateTime?: string;
 }
 
@@ -15,13 +17,17 @@ export interface CaseDetail {
   riskStatus: "low" | "medium" | "high";
   riskScore: number;
   createdAt?: string;
-  assignee?: string;
+  assigneeId?: string;
   assignedDateTime?: string;
   threatPageUrl: string;
+  assignee?: {
+    fullName: string | null;
+  };
 }
 
 export interface UserListItem {
   id: string;
+  roleId: number;
   firstName: string;
   lastName: string;
   profession: string;
