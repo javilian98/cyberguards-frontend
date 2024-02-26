@@ -59,8 +59,8 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
     header: ({ column }) => renderSortButton(column, "Username"),
   },
   {
-    accessorKey: "employeeType",
-    header: ({ column }) => renderSortButton(column, "Employee Type"),
+    accessorKey: "profession",
+    header: ({ column }) => renderSortButton(column, "Profession"),
   },
   {
     accessorKey: "riskScore",
@@ -71,7 +71,7 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
     header: ({ column }) => renderSortButton(column, "Last Access Date"),
   },
   {
-    accessorKey: "suspectType",
+    accessorKey: "suspectCaseId",
     header: ({ column }) => renderSortButton(column, "Current Suspect Type"),
   },
 
