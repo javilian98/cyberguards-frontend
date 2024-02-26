@@ -19,6 +19,9 @@ const initCurrentSelectedUser: UserListItem = {
   riskScore: 0,
   suspectType: 0,
   lastAccessAt: "",
+  roleId: 0,
+  profession: "",
+  suspectCaseId: 0
 };
 
 export const useUserStore = create<UserStore>((set) => ({
