@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
@@ -15,6 +15,11 @@ function RiskScoreSlider({
   handleValueChange,
 }: RiskScoreSliderProps) {
   const [value, setValue] = useState(defaultValue);
+
+  // update the value on component mount when defaultValue changes
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   const renderRiskValueColor = () => {
     const valueNum = value?.[0];

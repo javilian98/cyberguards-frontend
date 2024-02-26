@@ -4,6 +4,7 @@ import Home from "@/pages/Home";
 import Threats from "@/pages/Threats";
 import Users from "@/pages/Users";
 import Cases from "@/pages/Cases";
+import UserDetail from "./pages/UserDetail";
 import Sign from "@/pages/Sign";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import CreateEditCase from "./pages/CreateEditCase";
@@ -26,7 +27,10 @@ function App() {
             <Route element={<PrivateRoutes />}>
               <Route index path="/" element={<Home />} />
               <Route path="/threats" element={<Threats />} />
-              <Route path="/users" element={<Users />} />
+              <Route path="users">
+              <Route index element={<Users />} />
+                <Route path=":id" element={<UserDetail />} />
+              </Route>
               <Route path="cases">
                 <Route index element={<Cases />} />
                 <Route path="create" element={<CreateEditCase />} />
