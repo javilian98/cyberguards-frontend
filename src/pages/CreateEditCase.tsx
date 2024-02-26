@@ -117,6 +117,8 @@ function CreateEditCase() {
     (state) => state.setSingleRowActionDialogOpen
   );
 
+  const [isFormEdited, setFormEdited] = useState(false);
+
   const {
     data: caseDetailData,
     error: caseDetailError,
@@ -218,8 +220,6 @@ function CreateEditCase() {
   });
 
   console.log("assigneeListData ", assigneeListData);
-
-  const [isFormEdited, setFormEdited] = useState(false);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
