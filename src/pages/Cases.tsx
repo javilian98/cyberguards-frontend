@@ -138,7 +138,9 @@ function Cases() {
         <TabsContent value="my cases">
           <DataTable
             columns={casesColumns}
-            data={cases.filter((item) => item.assignee === "John Doe")}
+            data={cases.filter(
+              (item) => item.assignee?.fullName === "John Doe"
+            )}
           />
         </TabsContent>
       </Tabs>
