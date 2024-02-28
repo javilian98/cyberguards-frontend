@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import FixedHeader from "@/components/Layouts/Header/FixedHeader";
+import { Link } from "react-router-dom";
 
 function Users() {
   const users = useUserStore((state) => state.users);
@@ -75,12 +76,12 @@ function Users() {
         <Search placeholderText="Search username" drawerTitle="Filter Users">
           asd
         </Search>
-        {/* <Link to="/cases/create"> */}
-        <Button>
-          <LuPlus className="w-5 h-5 mr-2 text-white" />
-          Create User
-        </Button>
-        {/* </Link> */}
+        <Link to="/users/create">
+          <Button>
+            <LuPlus className="w-5 h-5 mr-2 text-white" />
+            Create User
+          </Button>
+        </Link>
       </FixedHeader>
 
       <div className="mt-16">

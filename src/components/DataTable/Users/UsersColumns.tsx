@@ -56,7 +56,11 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
   },
   {
     accessorKey: "firstName",
-    header: ({ column }) => renderSortButton(column, "Username"),
+    header: ({ column }) => renderSortButton(column, "First Name"),
+  },
+  {
+    accessorKey: "lastName",
+    header: ({ column }) => renderSortButton(column, "Last Name"),
   },
   {
     accessorKey: "profession",
@@ -64,7 +68,10 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
   },
   {
     accessorKey: "riskScore",
-    header: ({ column }) => renderSortButton(column, "Employee Type"),
+    header: ({ column }) => renderSortButton(column, "Risk Score"),
+    cell: ({ row }) => (
+      <div className="text-left">{row.getValue("riskScore")}</div>
+    ),
   },
   {
     accessorKey: "lastAccessAt",
@@ -73,6 +80,9 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
   {
     accessorKey: "suspectCaseId",
     header: ({ column }) => renderSortButton(column, "Current Suspect Type"),
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("riskScore")}</div>
+    ),
   },
 
   {

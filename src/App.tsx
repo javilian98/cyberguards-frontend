@@ -9,6 +9,7 @@ import Sign from "@/pages/Sign";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import CreateEditCase from "./pages/CreateEditCase";
 import { Toaster } from "sonner";
+import CreateEditUser from "./pages/CreateEditUser";
 
 function App() {
   const location = useLocation(); // This hook gives you access to the location object
@@ -28,8 +29,10 @@ function App() {
               <Route index path="/" element={<Home />} />
               <Route path="/threats" element={<Threats />} />
               <Route path="users">
-              <Route index element={<Users />} />
+                <Route index element={<Users />} />
                 <Route path=":id" element={<UserDetail />} />
+                <Route path="create" element={<CreateEditUser />} />
+                <Route path="edit/:id" element={<CreateEditUser />} />
               </Route>
               <Route path="cases">
                 <Route index element={<Cases />} />

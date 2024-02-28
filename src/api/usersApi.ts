@@ -2,8 +2,8 @@ import { UserListItem, UserDetail } from "@/types/types";
 import { formatDateTime } from "@/utils/utils";
 import axios from "axios";
 
-export const usersApi = axios.create({
-  baseURL: "http://localhost:10001",
+const bffApi = axios.create({
+  baseURL: "http://localhost:9999",
 });
 
 type GetUserListArgs = {
@@ -17,7 +17,7 @@ export const getUserList = async ({
   take = 10,
 }: GetUserListArgs = {}): Promise<UserListItem[]> => {
   try {
-    const response = await usersApi.get("/api/users", {
+    const response = await bffApi.get("/api/users", {
       params: {
         roleId,
         skip,
@@ -40,7 +40,7 @@ export const getUserList = async ({
 
 export const getUser = async (id: string): Promise<UserDetail> => {
   try {
-    const response = await usersApi.get(`/api/users/${id}`);
+    const response = await bffApi.get(`/api/users/${id}`);
 
     const newResponseData: UserDetail = response.data;
 
@@ -55,9 +55,58 @@ export const getUser = async (id: string): Promise<UserDetail> => {
   }
 };
 
+export const createUser = async (
+  userItem: Omit<
+    UserDetail,
+    "id" | "lastAccessAt" | "riskStatus" | "riskScore" | "suspectCaseId"
+  >
+): Promise<UserDetail> => {
+  try {
+    const userItemFormatted = {
+      firstName: userItem.firstName,
+      lastName: userItem.lastName,
+      profession: userItem.profession,
+      roleId: userItem.roleId,
+      riskStatus: "low",
+      riskScore: 0,
+      suspectCaseId: 0,
+    };
+    const response = await bffApi.post("/api/users", userItemFormatted);
+
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to create user: " + error);
+  }
+};
+
+export const updateUser = async (
+  userItem: Omit<
+    UserDetail,
+    "id" | "lastAccessAt" | "riskStatus" | "riskScore" | "suspectCaseId"
+  >,
+  id: string
+): Promise<UserDetail> => {
+  try {
+    const userItemFormatted = {
+      firstName: userItem.firstName,
+      lastName: userItem.lastName,
+      profession: userItem.profession,
+      roleId: userItem.roleId,
+      riskStatus: "low",
+      riskScore: 0,
+      suspectCaseId: 0,
+    };
+    const response = await bffApi.put(`/api/users/${id}`, userItemFormatted);
+
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to update user: " + error);
+  }
+};
+
 export const deleteUser = async (id: string): Promise<void> => {
   try {
-    const response = await usersApi.delete(`/api/users/${id}`);
+    const response = await bffApi.delete(`/api/users/${id}`);
     return response.data;
   } catch (error) {
     throw new Error("Failed to create case: " + error);
