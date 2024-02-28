@@ -40,7 +40,7 @@ export interface UserDetail {
   firstName: string;
   lastName: string;
   profession: string;
-  userRole: number;
+  roleId: number;
   riskStatus: string;
   riskScore: number;
   suspectCaseId: number;
