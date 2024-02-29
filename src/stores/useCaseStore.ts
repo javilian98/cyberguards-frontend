@@ -21,6 +21,7 @@ const initCurrentSelectedCase: Case = {
     fullName: "",
   },
   assignedDateTime: "",
+  caseStatus: 0,
 };
 
 export const useCaseStore = create<CaseStore>((set) => ({
