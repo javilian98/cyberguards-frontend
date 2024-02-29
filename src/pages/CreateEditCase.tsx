@@ -35,7 +35,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import RiskScoreSlider from "@/components/RiskScoreSlider/RiskScoreSlider";
 
@@ -76,7 +75,7 @@ import { toast } from "sonner";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { CASE_STATUS, UserListItem } from "@/types/types";
+import { CASE_STATUS, SUSPECT_TYPE, UserListItem } from "@/types/types";
 
 const assigneeSuspectedUserSchema = z
   .object({
@@ -105,6 +104,9 @@ const formSchema = z.object({
   suspectedUser: z
     .union([assigneeSuspectedUserSchema, z.undefined()])
     .optional(),
+  suspectTypeId: z.nativeEnum(SUSPECT_TYPE, {
+    required_error: "Suspect Type must be selected.",
+  }),
   caseStatus: z.nativeEnum(CASE_STATUS, {
     required_error: "Case Status Must be selected.",
   }),
@@ -156,6 +158,10 @@ function CreateEditCase() {
         id: data.suspectedUserId ?? null,
         fullName: data.suspectedUser?.fullName ?? null,
       });
+      form.setValue(
+        "suspectTypeId",
+        data.suspectTypeId as unknown as SUSPECT_TYPE
+      );
       form.setValue("caseStatus", data.caseStatus as unknown as CASE_STATUS);
 
       if (data.suspectedUser?.fullName == null) {
@@ -196,6 +202,7 @@ function CreateEditCase() {
         assigneeId: assigneeFound?.id,
         caseStatus: Number(caseItem.caseStatus),
         suspectedUserId: suspectedUserFound?.id,
+        suspectTypeId: Number(caseItem.suspectTypeId),
       });
     },
     onError: () => {},
@@ -238,6 +245,7 @@ function CreateEditCase() {
           assigneeId: assigneeFound?.id,
           caseStatus: Number(caseItem.caseStatus),
           suspectedUserId: suspectedUserFound?.id,
+          suspectTypeId: Number(caseItem.suspectTypeId),
         },
         id as string
       );
@@ -290,6 +298,7 @@ function CreateEditCase() {
         id: "",
         fullName: "",
       },
+      suspectTypeId: undefined,
       caseStatus: caseDetailData
         ? (caseDetailData.caseStatus as unknown as CASE_STATUS)
         : (1 as unknown as CASE_STATUS),
@@ -463,7 +472,7 @@ function CreateEditCase() {
                 />
               </div>
 
-              <div className="flex ">
+              <div className="flex">
                 <div className="grid w-full max-w-sm items-center gap-2 mt-8">
                   {!showSuspectDropdown && (
                     <>
@@ -592,26 +601,69 @@ function CreateEditCase() {
                   )}
                 </div>
                 <div className="grid w-full max-w-sm items-center gap-2 mt-8">
-                  <Label htmlFor="suspect-type">Suspect Type</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Select a user as suspect for this case.
-                  </p>
-                  <Select>
-                    <SelectTrigger className="w-[250px]">
-                      <SelectValue placeholder="Select Suspect Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Suspect Type</SelectLabel>
-                        <SelectItem value="type-1">Type 1</SelectItem>
-                        <SelectItem value="type-2">Type 2</SelectItem>
-                        <SelectItem value="type-3">Type 3</SelectItem>
-                        <SelectItem value="type-4">Type 4</SelectItem>
-                        <SelectItem value="type-5">Type 5</SelectItem>
-                        <SelectItem value="type-6">Type 6</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                  <FormField
+                    control={form.control}
+                    name="suspectTypeId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Suspect Type</FormLabel>
+                        <p className="text-sm text-muted-foreground">
+                          Select type of threat suspected user is involved.
+                        </p>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select Suspect Type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Suspect Type</SelectLabel>
+
+                              <SelectItem value={SUSPECT_TYPE.none.toString()}>
+                                None
+                              </SelectItem>
+                              <SelectItem
+                                value={SUSPECT_TYPE.afterHourLogin.toString()}
+                              >
+                                After hour login
+                              </SelectItem>
+                              <SelectItem
+                                value={SUSPECT_TYPE.potentialAccountSharing.toString()}
+                              >
+                                Potential account sharing
+                              </SelectItem>
+                              <SelectItem
+                                value={SUSPECT_TYPE.terminatedEmployeeLogin.toString()}
+                              >
+                                Terminated employee login
+                              </SelectItem>
+                              <SelectItem
+                                value={SUSPECT_TYPE.failedAttemptToEnterBuilding.toString()}
+                              >
+                                Failed attempt to enter building
+                              </SelectItem>
+                              <SelectItem
+                                value={SUSPECT_TYPE.impossibleTraveller.toString()}
+                              >
+                                Impossible traveller
+                              </SelectItem>
+                              <SelectItem
+                                value={SUSPECT_TYPE.potentialDataExfiltration.toString()}
+                              >
+                                Potential data exfiltration
+                              </SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </div>
 

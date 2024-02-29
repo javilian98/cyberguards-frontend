@@ -59,6 +59,7 @@ export const createCase = async (
       riskStatus: caseItem.riskStatus,
       assigneeId: "Alice Doe",
       threatPageUrl: caseItem.threatPageUrl,
+      suspectTypeId: caseItem.suspectTypeId,
     };
     const response = await bffApi.post("/api/cases", caseItemFormatted);
 

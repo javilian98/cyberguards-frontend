@@ -29,7 +29,7 @@ const userLogs = [
     dateTime: "24 Jan 2024, 4:00pm",
     riskStatus: "High",
     riskPercentage: 80,
-    suspectType: "Access from Restricted Location",
+    suspectType: "Potential account sharing",
     detailInfo: {
       reason: "Logged in at 9:43pm on a Wednesday.",
       lastAccessDate: "24 Jan 2024, 4:00pm",
@@ -41,7 +41,7 @@ const userLogs = [
     dateTime: "23 Jan 2024, 3:40pm",
     riskStatus: "Low",
     riskPercentage: 20,
-    suspectType: "Multiple Failed Logins",
+    suspectType: "Potential account sharing",
     detailInfo: {
       reason: "Logged in at 3:40pm on a Tuesday.",
       lastAccessDate: "23 Jan 2024, 3:40pm",
@@ -53,7 +53,7 @@ const userLogs = [
     dateTime: "22 Jan 2024, 1:15am",
     riskStatus: "Medium",
     riskPercentage: 50,
-    suspectType: "Unusual IP Address",
+    suspectType: "Impossible traveller",
     detailInfo: {
       reason: "Logged in at 1:15am on a Monday.",
       lastAccessDate: "22 Jan 2024, 1:15am",

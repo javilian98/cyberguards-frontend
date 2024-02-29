@@ -31,6 +31,7 @@ export interface CaseDetail {
   suspectedUser?: {
     fullName: string | null;
   };
+  suspectTypeId: number;
   caseStatus: number;
 }
 
@@ -67,4 +68,14 @@ export enum ROLE_ID {
   normal = "0",
   analyst = "1",
   admin = "2",
+}
+
+export enum SUSPECT_TYPE {
+  none = "0",
+  afterHourLogin = "1",
+  potentialAccountSharing = "2",
+  terminatedEmployeeLogin = "3",
+  failedAttemptToEnterBuilding = "4",
+  impossibleTraveller = "5",
+  potentialDataExfiltration = "6",
 }
