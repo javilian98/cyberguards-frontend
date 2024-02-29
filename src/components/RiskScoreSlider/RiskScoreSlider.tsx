@@ -46,7 +46,7 @@ function RiskScoreSlider({
   return (
     <>
       <div className="flex items-center gap-2">
-        <Label htmlFor="email">Risk Score</Label>
+        <Label htmlFor="riskScore">Risk Score</Label>
         <div className="flex items-center gap-2">
           <span className={`font-semibold ${renderRiskValueColor()}`}>
             {value} %
@@ -54,6 +54,7 @@ function RiskScoreSlider({
         </div>
       </div>
       <Slider
+        id="riskScore"
         max={100}
         defaultValue={value}
         value={value}
