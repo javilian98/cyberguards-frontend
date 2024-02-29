@@ -8,6 +8,7 @@ export interface Case {
     fullName: string | null;
   };
   assignedDateTime?: string;
+  caseStatus: number;
 }
 
 export interface CaseDetail {
@@ -23,6 +24,7 @@ export interface CaseDetail {
   assignee?: {
     fullName: string | null;
   };
+  caseStatus: number;
 }
 
 export interface UserListItem {
@@ -45,4 +47,17 @@ export interface UserDetail {
   riskScore: number;
   suspectCaseId: number;
   lastAccessAt: string;
+}
+
+export enum CASE_STATUS {
+  open = "1",
+  assigned = "2",
+  inProgress = "3",
+  closed = "0",
+}
+
+export enum ROLE_ID {
+  normal = "0",
+  analyst = "1",
+  admin = "2",
 }

@@ -47,13 +47,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useEffect, useState } from "react";
-import { UserListItem } from "@/types/types";
+import { ROLE_ID, UserListItem } from "@/types/types";
 
-enum ROLE_ID {
-  normal = "0",
-  analyst = "1",
-  admin = "2",
-}
 const formSchema = z.object({
   firstName: z.string().min(1, {
     message: "First name cannot be empty.",
@@ -159,7 +154,9 @@ function CreateEditUser() {
       firstName: "",
       lastName: "",
       profession: "",
-      roleId: 0 as unknown as ROLE_ID,
+      roleId: userDetailData
+        ? (userDetailData.roleId as unknown as ROLE_ID)
+        : (0 as unknown as ROLE_ID),
     },
   });
 

@@ -74,7 +74,7 @@ import { toast } from "sonner";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { UserListItem } from "@/types/types";
+import { CASE_STATUS, UserListItem } from "@/types/types";
 
 const assigneeSchema = z
   .object({
@@ -100,6 +100,9 @@ const formSchema = z.object({
   //   })
   //   .optional(),
   assignee: z.union([assigneeSchema, z.undefined()]).optional(),
+  caseStatus: z.nativeEnum(CASE_STATUS, {
+    required_error: "Case Status Must be selected.",
+  }),
   // suspectType: z.number(),
   threatPageUrl: z.string().url(),
 });
@@ -143,6 +146,9 @@ function CreateEditCase() {
         id: data.assigneeId ?? null,
         fullName: data.assignee?.fullName ?? null,
       });
+      form.setValue("caseStatus", data.caseStatus as unknown as CASE_STATUS);
+
+      console.log("form values ", form.getValues());
 
       return data;
     },
@@ -164,6 +170,7 @@ function CreateEditCase() {
         ...caseItem,
         riskScore: caseItem.riskScore[0],
         assigneeId: assigneeFound?.id,
+        caseStatus: Number(caseItem.caseStatus),
       });
     },
     onError: () => {},
@@ -194,6 +201,7 @@ function CreateEditCase() {
           ...caseItem,
           riskScore: caseItem.riskScore[0],
           assigneeId: assigneeFound?.id,
+          caseStatus: Number(caseItem.caseStatus),
         },
         id as string
       );
@@ -219,8 +227,6 @@ function CreateEditCase() {
     },
   });
 
-  console.log("assigneeListData ", assigneeListData);
-
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -233,6 +239,9 @@ function CreateEditCase() {
         id: "",
         fullName: "",
       },
+      caseStatus: caseDetailData
+        ? (caseDetailData.caseStatus as unknown as CASE_STATUS)
+        : (1 as unknown as CASE_STATUS),
       threatPageUrl: "",
     },
   });
@@ -240,10 +249,6 @@ function CreateEditCase() {
   useEffect(() => {
     setFormEdited(form.formState.isDirty);
   }, [form.formState.isDirty]);
-
-  // Check if the form is edited
-  // const isFormEdited =
-  //   JSON.stringify(watchFields) !== JSON.stringify(form.getValues());
 
   // Handle form submission
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
@@ -379,7 +384,7 @@ function CreateEditCase() {
                         </FormControl>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>Status</SelectLabel>
+                            <SelectLabel>Risk Status</SelectLabel>
                             <SelectItem value="low">Low</SelectItem>
                             <SelectItem value="medium">Medium</SelectItem>
                             <SelectItem value="high">High</SelectItem>
@@ -497,6 +502,48 @@ function CreateEditCase() {
                           Unable to select an assignee at the moment
                         </FormDescription>
                       )}
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid w-full max-w-sm items-center gap-2 mt-6">
+                <FormField
+                  control={form.control}
+                  name="caseStatus"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Case Status</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value.toString()}
+                        value={field.value.toString()}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Case Status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Case Status</SelectLabel>
+                            <SelectItem value={CASE_STATUS.open.toString()}>
+                              Open
+                            </SelectItem>
+                            <SelectItem value={CASE_STATUS.assigned.toString()}>
+                              Assigned
+                            </SelectItem>
+                            <SelectItem
+                              value={CASE_STATUS.inProgress.toString()}
+                            >
+                              In-Progress
+                            </SelectItem>
+                            <SelectItem value={CASE_STATUS.closed.toString()}>
+                              Closed
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
