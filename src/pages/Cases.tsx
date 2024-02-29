@@ -106,7 +106,10 @@ function Cases() {
   return (
     <>
       <FixedHeader>
-        <Search placeholderText="Search case title" drawerTitle="Filter Cases">
+        <Search
+          placeholderText="Search case title"
+          drawerTitle="Filter Cases"
+        >
           asd
         </Search>
 
