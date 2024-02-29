@@ -46,7 +46,7 @@ const userLogs = [
       reason: "Logged in at 3:40pm on a Tuesday.",
       lastAccessDate: "23 Jan 2024, 3:40pm",
       lastAccessLocation: "Singapore",
-      lastWebsiteVisit: "https://stackoverflow.com/questions/6784567/qa",
+      lastWebsiteVisit: "https://github.com/colinhacks/zod/issues/2686",
     },
   },
   {
@@ -58,7 +58,7 @@ const userLogs = [
       reason: "Logged in at 1:15am on a Monday.",
       lastAccessDate: "22 Jan 2024, 1:15am",
       lastAccessLocation: "Singapore",
-      lastWebsiteVisit: "https://stackoverflow.com/questions/6784567/qa",
+      lastWebsiteVisit: "https://tailwindcss.com/docs/border-radius",
     },
   },
   {
@@ -70,7 +70,7 @@ const userLogs = [
       reason: "Logged in at 9:43pm on a Sunday.",
       lastAccessDate: "21 Jan 2024, 2:30pm",
       lastAccessLocation: "Singapore",
-      lastWebsiteVisit: "https://stackoverflow.com/questions/6784567/qa",
+      lastWebsiteVisit: "https://ui.shadcn.com/docs/components/button#outline",
     },
   },
 ];

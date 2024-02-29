@@ -8,6 +8,9 @@ export interface Case {
     fullName: string | null;
   };
   assignedDateTime?: string;
+  suspectedUser?: {
+    fullName: string | null;
+  };
   caseStatus: number;
 }
 
@@ -22,6 +25,10 @@ export interface CaseDetail {
   assignedDateTime?: string;
   threatPageUrl: string;
   assignee?: {
+    fullName: string | null;
+  };
+  suspectedUserId?: string;
+  suspectedUser?: {
     fullName: string | null;
   };
   caseStatus: number;

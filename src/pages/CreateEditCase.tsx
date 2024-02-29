@@ -44,7 +44,9 @@ import {
   LuCheck,
   LuCheckCircle,
   LuChevronsUpDown,
+  LuExternalLink,
   LuImport,
+  LuMoreHorizontal,
   LuPlus,
   LuTrash2,
 } from "react-icons/lu";
@@ -69,14 +71,14 @@ import { getUserList } from "@/api/usersApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { CASE_STATUS, UserListItem } from "@/types/types";
 
-const assigneeSchema = z
+const assigneeSuspectedUserSchema = z
   .object({
     id: z.string().nullable(),
     fullName: z.string().nullable(),
@@ -99,7 +101,10 @@ const formSchema = z.object({
   //     message: "You must select an assignee",
   //   })
   //   .optional(),
-  assignee: z.union([assigneeSchema, z.undefined()]).optional(),
+  assignee: z.union([assigneeSuspectedUserSchema, z.undefined()]).optional(),
+  suspectedUser: z
+    .union([assigneeSuspectedUserSchema, z.undefined()])
+    .optional(),
   caseStatus: z.nativeEnum(CASE_STATUS, {
     required_error: "Case Status Must be selected.",
   }),
@@ -121,6 +126,7 @@ function CreateEditCase() {
   );
 
   const [isFormEdited, setFormEdited] = useState(false);
+  const [showSuspectDropdown, setShowSuspectDropdown] = useState(false);
 
   const {
     data: caseDetailData,
@@ -146,6 +152,10 @@ function CreateEditCase() {
         id: data.assigneeId ?? null,
         fullName: data.assignee?.fullName ?? null,
       });
+      form.setValue("suspectedUser", {
+        id: data.suspectedUserId ?? null,
+        fullName: data.suspectedUser?.fullName ?? null,
+      });
       form.setValue("caseStatus", data.caseStatus as unknown as CASE_STATUS);
 
       console.log("form values ", form.getValues());
@@ -159,6 +169,7 @@ function CreateEditCase() {
     mutationKey: ["cases"],
     mutationFn: async (caseItem: z.infer<typeof formSchema>) => {
       const assigneeFormValue = form.getValues().assignee;
+      const suspectedUserFormValue = form.getValues().suspectedUser;
 
       const assigneeFound = assigneeListData?.find((assignee) => {
         const fullName = assignee.firstName + " " + assignee.lastName;
@@ -166,11 +177,21 @@ function CreateEditCase() {
         return fullName === assigneeFormValue?.fullName;
       });
 
+      const suspectedUserFound = suspectedUserListData?.find(
+        (suspectedUser) => {
+          const fullName =
+            suspectedUser.firstName + " " + suspectedUser.lastName;
+
+          return fullName === suspectedUserFormValue?.fullName;
+        }
+      );
+
       return await createCase({
         ...caseItem,
         riskScore: caseItem.riskScore[0],
         assigneeId: assigneeFound?.id,
         caseStatus: Number(caseItem.caseStatus),
+        suspectedUserId: suspectedUserFound?.id,
       });
     },
     onError: () => {},
@@ -187,12 +208,22 @@ function CreateEditCase() {
     mutationKey: ["updatecase", id],
     mutationFn: async (caseItem: z.infer<typeof formSchema>) => {
       const assigneeFormValue = form.getValues().assignee;
+      const suspectedUserFormValue = form.getValues().suspectedUser;
 
       const assigneeFound = assigneeListData?.find((assignee) => {
         const fullName = assignee.firstName + " " + assignee.lastName;
 
         return fullName === assigneeFormValue?.fullName;
       });
+
+      const suspectedUserFound = suspectedUserListData?.find(
+        (suspectedUser) => {
+          const fullName =
+            suspectedUser.firstName + " " + suspectedUser.lastName;
+
+          return fullName === suspectedUserFormValue?.fullName;
+        }
+      );
 
       console.log("updateCase ", caseItem);
 
@@ -202,6 +233,7 @@ function CreateEditCase() {
           riskScore: caseItem.riskScore[0],
           assigneeId: assigneeFound?.id,
           caseStatus: Number(caseItem.caseStatus),
+          suspectedUserId: suspectedUserFound?.id,
         },
         id as string
       );
@@ -227,6 +259,17 @@ function CreateEditCase() {
     },
   });
 
+  const { data: suspectedUserListData } = useQuery({
+    queryKey: ["suspectedUsers"],
+    queryFn: async () => {
+      // roleId: 1 is analyst
+      const data = await getUserList({ roleId: 0 });
+
+      // setUsers(data);
+      return data;
+    },
+  });
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -236,6 +279,10 @@ function CreateEditCase() {
       riskStatus: undefined,
       riskScore: [0],
       assignee: {
+        id: "",
+        fullName: "",
+      },
+      suspectedUser: {
         id: "",
         fullName: "",
       },
@@ -296,9 +343,12 @@ function CreateEditCase() {
     );
   };
 
-  const computeFullName = (user: UserListItem | undefined) => {
+  const computeFullName = (
+    user: UserListItem | undefined,
+    defaultText: string = ""
+  ) => {
     if (user == undefined) {
-      return "Select Assignee";
+      return defaultText;
     }
     return `${user.firstName} ${user.lastName}`;
   };
@@ -324,7 +374,7 @@ function CreateEditCase() {
                 Case Details
                 <Button>
                   <LuImport className="w-5 h-5 mr-3" />
-                  Import Case
+                  Import Threat
                 </Button>
               </CardTitle>
               <CardDescription>
@@ -408,24 +458,158 @@ function CreateEditCase() {
                   )}
                 />
               </div>
-              <div className="grid w-full max-w-sm items-center gap-2 mt-8">
-                <Label htmlFor="suspect-type">Suspect Type</Label>
-                <Select>
-                  <SelectTrigger className="w-[250px]">
-                    <SelectValue placeholder="Select Suspect Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Suspect Type</SelectLabel>
-                      <SelectItem value="type-1">Type 1</SelectItem>
-                      <SelectItem value="type-2">Type 2</SelectItem>
-                      <SelectItem value="type-3">Type 3</SelectItem>
-                      <SelectItem value="type-4">Type 4</SelectItem>
-                      <SelectItem value="type-5">Type 5</SelectItem>
-                      <SelectItem value="type-6">Type 6</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+
+              <div className="flex ">
+                <div className="grid w-full max-w-sm items-center gap-2 mt-8">
+                  {caseDetailData?.suspectedUser?.fullName &&
+                    !showSuspectDropdown && (
+                      <>
+                        <FormLabel>User Suspect</FormLabel>
+                        <p className="text-sm text-muted-foreground">
+                          Select a user as suspect for this case.
+                        </p>
+                        <div className="flex gap-2">
+                          <Link to={`/users/${caseDetailData.suspectedUserId}`}>
+                            <Button
+                              type="button"
+                              variant={"destructive"}
+                              className="w-fit"
+                            >
+                              <LuExternalLink className="w-4 h-4 mr-2" />
+                              {caseDetailData?.suspectedUser?.fullName ??
+                                form.getValues().suspectedUser?.fullName}
+                            </Button>
+                          </Link>
+                          <Button
+                            type="button"
+                            variant={"outline"}
+                            className="w-fit"
+                            onClick={() =>
+                              setShowSuspectDropdown(!showSuspectDropdown)
+                            }
+                          >
+                            <LuMoreHorizontal />
+                          </Button>
+                        </div>
+                      </>
+                    )}
+
+                  {showSuspectDropdown && (
+                    <FormField
+                      control={form.control}
+                      name="suspectedUser"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>User Suspect</FormLabel>
+                          <p className="text-sm text-muted-foreground">
+                            Select a user as suspect for this case.
+                          </p>
+
+                          <Popover>
+                            <div className="flex gap-2">
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    disabled={!suspectedUserListData}
+                                    variant="outline"
+                                    role="combobox"
+                                    className={cn(
+                                      "w-[200px] justify-between",
+                                      !field.value && "text-muted-foreground"
+                                    )}
+                                  >
+                                    {computeFullName(
+                                      suspectedUserListData?.find(
+                                        (suspectedUser) =>
+                                          computeFullName(suspectedUser) ===
+                                          field.value?.fullName
+                                      ),
+                                      "Select User Suspect"
+                                    )}
+                                    <LuChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <Button
+                                type="button"
+                                variant={"outline"}
+                                className="w-fit"
+                                onClick={() =>
+                                  setShowSuspectDropdown(!showSuspectDropdown)
+                                }
+                              >
+                                <LuMoreHorizontal />
+                              </Button>
+                            </div>
+                            <PopoverContent className="w-[200px] p-0">
+                              <Command>
+                                <CommandInput placeholder="Search user suspect..." />
+                                <CommandEmpty>No user found.</CommandEmpty>
+                                <CommandGroup>
+                                  {suspectedUserListData?.map(
+                                    (suspectedUser) => (
+                                      <CommandItem
+                                        value={computeFullName(suspectedUser)}
+                                        key={computeFullName(suspectedUser)}
+                                        onSelect={() => {
+                                          form.setValue("suspectedUser", {
+                                            id: suspectedUser.id,
+                                            fullName:
+                                              computeFullName(suspectedUser),
+                                          });
+                                        }}
+                                      >
+                                        <LuCheck
+                                          className={cn(
+                                            "mr-2 h-4 w-4",
+                                            computeFullName(suspectedUser) ===
+                                              field.value?.fullName
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                        {computeFullName(suspectedUser)}
+                                      </CommandItem>
+                                    )
+                                  )}
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                          {!assigneeListData && (
+                            <FormDescription className="flex items-center gap-1 text-red-500">
+                              <LuAlertCircle />
+                              Unable to select a user suspect at the moment
+                            </FormDescription>
+                          )}
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+                <div className="grid w-full max-w-sm items-center gap-2 mt-8">
+                  <Label htmlFor="suspect-type">Suspect Type</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Select a user as suspect for this case.
+                  </p>
+                  <Select>
+                    <SelectTrigger className="w-[250px]">
+                      <SelectValue placeholder="Select Suspect Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Suspect Type</SelectLabel>
+                        <SelectItem value="type-1">Type 1</SelectItem>
+                        <SelectItem value="type-2">Type 2</SelectItem>
+                        <SelectItem value="type-3">Type 3</SelectItem>
+                        <SelectItem value="type-4">Type 4</SelectItem>
+                        <SelectItem value="type-5">Type 5</SelectItem>
+                        <SelectItem value="type-6">Type 6</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="grid w-full max-w-sm items-center gap-2 mt-8">
@@ -450,22 +634,21 @@ function CreateEditCase() {
                                 !field.value && "text-muted-foreground"
                               )}
                             >
-                              {field.value
-                                ? computeFullName(
-                                    assigneeListData?.find(
-                                      (assignee) =>
-                                        computeFullName(assignee) ===
-                                        field.value?.fullName
-                                    )
-                                  )
-                                : "Select Assignee"}
+                              {computeFullName(
+                                assigneeListData?.find(
+                                  (assignee) =>
+                                    computeFullName(assignee) ===
+                                    field.value?.fullName
+                                ),
+                                "Select Assignee"
+                              )}
                               <LuChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className="w-[200px] p-0">
                           <Command>
-                            <CommandInput placeholder="Search language..." />
+                            <CommandInput placeholder="Search analyst..." />
                             <CommandEmpty>No user found.</CommandEmpty>
                             <CommandGroup>
                               {assigneeListData?.map((assignee) => (
