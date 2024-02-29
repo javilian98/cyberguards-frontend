@@ -81,7 +81,7 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
     accessorKey: "suspectCaseId",
     header: ({ column }) => renderSortButton(column, "Current Suspect Type"),
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("riskScore")}</div>
+      <div className="text-center">{row.getValue("suspectCaseId")}</div>
     ),
   },
 

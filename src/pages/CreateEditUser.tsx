@@ -260,6 +260,7 @@ function CreateEditUser() {
                   )}
                 />
               </div>
+
               <div className="grid w-full items-center gap-2 mt-6">
                 <FormField
                   control={form.control}
@@ -275,6 +276,23 @@ function CreateEditUser() {
                   )}
                 />
               </div>
+
+              <div className="grid w-full max-w-sm items-center gap-2 mt-6">
+                <FormField
+                  control={form.control}
+                  name="profession"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Profession</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Profession" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <div className="grid w-full max-w-sm items-center gap-2 mt-6">
                 <FormField
                   control={form.control}

@@ -126,7 +126,7 @@ function CreateEditCase() {
   );
 
   const [isFormEdited, setFormEdited] = useState(false);
-  const [showSuspectDropdown, setShowSuspectDropdown] = useState(false);
+  const [showSuspectDropdown, setShowSuspectDropdown] = useState(true);
 
   const {
     data: caseDetailData,
@@ -158,7 +158,11 @@ function CreateEditCase() {
       });
       form.setValue("caseStatus", data.caseStatus as unknown as CASE_STATUS);
 
-      console.log("form values ", form.getValues());
+      if (data.suspectedUser?.fullName == null) {
+        setShowSuspectDropdown(true);
+      } else {
+        setShowSuspectDropdown(false);
+      }
 
       return data;
     },
@@ -461,38 +465,37 @@ function CreateEditCase() {
 
               <div className="flex ">
                 <div className="grid w-full max-w-sm items-center gap-2 mt-8">
-                  {caseDetailData?.suspectedUser?.fullName &&
-                    !showSuspectDropdown && (
-                      <>
-                        <FormLabel>User Suspect</FormLabel>
-                        <p className="text-sm text-muted-foreground">
-                          Select a user as suspect for this case.
-                        </p>
-                        <div className="flex gap-2">
-                          <Link to={`/users/${caseDetailData.suspectedUserId}`}>
-                            <Button
-                              type="button"
-                              variant={"destructive"}
-                              className="w-fit"
-                            >
-                              <LuExternalLink className="w-4 h-4 mr-2" />
-                              {caseDetailData?.suspectedUser?.fullName ??
-                                form.getValues().suspectedUser?.fullName}
-                            </Button>
-                          </Link>
+                  {!showSuspectDropdown && (
+                    <>
+                      <FormLabel>User Suspect</FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        Select a user as suspect for this case.
+                      </p>
+                      <div className="flex gap-2">
+                        <Link to={`/users/${caseDetailData?.suspectedUserId}`}>
                           <Button
                             type="button"
-                            variant={"outline"}
+                            variant={"destructive"}
                             className="w-fit"
-                            onClick={() =>
-                              setShowSuspectDropdown(!showSuspectDropdown)
-                            }
                           >
-                            <LuMoreHorizontal />
+                            <LuExternalLink className="w-4 h-4 mr-2" />
+                            {caseDetailData?.suspectedUser?.fullName ??
+                              form.getValues().suspectedUser?.fullName}
                           </Button>
-                        </div>
-                      </>
-                    )}
+                        </Link>
+                        <Button
+                          type="button"
+                          variant={"outline"}
+                          className="w-fit"
+                          onClick={() =>
+                            setShowSuspectDropdown(!showSuspectDropdown)
+                          }
+                        >
+                          <LuMoreHorizontal />
+                        </Button>
+                      </div>
+                    </>
+                  )}
 
                   {showSuspectDropdown && (
                     <FormField
