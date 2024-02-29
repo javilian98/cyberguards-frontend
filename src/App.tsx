@@ -4,15 +4,19 @@ import Home from "@/pages/Home";
 import Threats from "@/pages/Threats";
 import Users from "@/pages/Users";
 import Cases from "@/pages/Cases";
+import UserDetail from "./pages/UserDetail";
 import Sign from "@/pages/Sign";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import CreateEditCase from "./pages/CreateEditCase";
+import { Toaster } from "sonner";
+import CreateEditUser from "./pages/CreateEditUser";
 
 function App() {
   const location = useLocation(); // This hook gives you access to the location object
   const showSidebar = location.pathname !== "/login"; // Check if we're not on the sign-in page (which is the root)
   return (
     <>
+      <Toaster richColors position="top-right" closeButton />
       {/* Center the content if there's no sidebar */}
       <div className={`flex ${!showSidebar && "justify-center"}`}>
         {/* Render the Sidebar only if showSidebar is true */}
@@ -24,10 +28,16 @@ function App() {
             <Route element={<PrivateRoutes />}>
               <Route index path="/" element={<Home />} />
               <Route path="/threats" element={<Threats />} />
-              <Route path="/users" element={<Users />} />
+              <Route path="users">
+                <Route index element={<Users />} />
+                <Route path=":id" element={<UserDetail />} />
+                <Route path="create" element={<CreateEditUser />} />
+                <Route path="edit/:id" element={<CreateEditUser />} />
+              </Route>
               <Route path="cases">
                 <Route index element={<Cases />} />
                 <Route path="create" element={<CreateEditCase />} />
+                <Route path=":id" element={<CreateEditCase />} />
               </Route>
             </Route>
           </Routes>

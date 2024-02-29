@@ -16,9 +16,12 @@ const initCurrentSelectedCase: Case = {
   title: "",
   riskStatus: "low",
   riskScore: 0,
-  caseDateTime: "",
-  assignee: "",
+  createdAt: "",
+  assignee: {
+    fullName: "",
+  },
   assignedDateTime: "",
+  caseStatus: 0,
 };
 
 export const useCaseStore = create<CaseStore>((set) => ({

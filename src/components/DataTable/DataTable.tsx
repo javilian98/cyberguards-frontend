@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import {
+  Cell,
   ColumnDef,
   SortingState,
   flexRender,
@@ -81,6 +82,22 @@ export function DataTable<TData, TValue>({
     table.resetRowSelection();
   }, [data, table]);
 
+  const isCellEmpty = (cell: Cell<TData, unknown>) => {
+    return (
+      !cell.id.includes("_select") &&
+      !cell.id.includes("_actions") &&
+      cell.getValue() == null
+    );
+  };
+
+  const renderCellValue = (cell: Cell<TData, unknown>) => {
+    if (isCellEmpty(cell)) {
+      return "Unassigned";
+    }
+
+    return flexRender(cell.column.columnDef.cell, cell.getContext());
+  };
+
   return (
     <>
       <div>
@@ -140,11 +157,11 @@ export function DataTable<TData, TValue>({
                     data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                      <TableCell
+                        key={cell.id}
+                        className={isCellEmpty(cell) ? "text-red-500" : ""}
+                      >
+                        {renderCellValue(cell)}
                       </TableCell>
                     ))}
                   </TableRow>
@@ -188,7 +205,9 @@ export function DataTable<TData, TValue>({
             >
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={actionDelete}>Delete Rows</AlertDialogAction>
+            <AlertDialogAction onClick={actionDelete}>
+              Delete Rows
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

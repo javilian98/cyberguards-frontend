@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCaseStore } from "@/stores/useCaseStore";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 
@@ -19,9 +20,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import FixedHeader from "@/components/Layouts/Header/FixedHeader";
 import { casesColumns } from "@/components/DataTable/Cases/CasesColumns";
-import { casesData } from "@/components/DataTable/Cases/casesData";
 
 import { LuPlus } from "react-icons/lu";
+import { deleteCase, getCaseList } from "@/api/casesApi";
+import { toast } from "sonner";
 
 function Cases() {
   const cases = useCaseStore((state) => state.cases);
@@ -39,28 +41,75 @@ function Cases() {
     (state) => state.setSingleRowActionDialogOpen
   );
 
+  const queryClient = useQueryClient();
+
+  const casesQuery = useQuery({
+    queryKey: ["cases"],
+    queryFn: async () => {
+      const data = await getCaseList();
+      setCases(data);
+      return data;
+    },
+  });
+
+  const deleteCaseMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await deleteCase(id);
+    },
+    onSuccess: () => {
+      const newCases = cases.filter(
+        (item) => item.id !== currentSelectedCase.id
+      );
+      setCases(newCases);
+      toast.success("Case deleted successfully");
+    },
+    onSettled: async (_, error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        await queryClient.invalidateQueries({ queryKey: ["cases"] });
+      }
+    },
+  });
+
+  const deleteMultipleCasesMutation = useMutation({
+    mutationFn: async (ids: string[]) => {
+      await Promise.all(ids.map((id) => deleteCase(id)));
+    },
+    onSuccess: () => {
+      const newCases = cases.filter(
+        (item) =>
+          !selectedCases.some((selectedCase) => selectedCase.id === item.id)
+      );
+      setCases(newCases);
+      setSelectedCases([]);
+      toast.success("Cases deleted successfully");
+    },
+    onSettled: async (_, error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        await queryClient.invalidateQueries({ queryKey: ["cases"] });
+      }
+    },
+  });
+
   const handleDelete = () => {
-    const newCases = cases.filter((item) => item.id !== currentSelectedCase.id);
-    setCases(newCases);
+    deleteCaseMutation.mutate(currentSelectedCase.id);
   };
 
   const handleDeleteAllSelected = () => {
-    const newCases = cases.filter(
-      (item) =>
-        !selectedCases.some((selectedCase) => selectedCase.id === item.id)
-    );
-    setCases(newCases);
-    setSelectedCases([]);
+    const selectedCaseIds = selectedCases.map((caseItem) => caseItem.id);
+    deleteMultipleCasesMutation.mutate(selectedCaseIds);
   };
-
-  useEffect(() => {
-    setCases(casesData);
-  }, [setCases]);
 
   return (
     <>
       <FixedHeader>
-        <Search placeholderText="Search case title" drawerTitle="Filter Cases">
+        <Search
+          placeholderText="Search case title"
+          drawerTitle="Filter Cases"
+        >
           asd
         </Search>
 
@@ -85,14 +134,16 @@ function Cases() {
         <TabsContent value="all cases" className="mt-4">
           <DataTable
             columns={casesColumns}
-            data={cases}
+            data={casesQuery.isLoading ? [] : cases}
             actionDelete={handleDeleteAllSelected}
           />
         </TabsContent>
         <TabsContent value="my cases">
           <DataTable
             columns={casesColumns}
-            data={cases.filter((item) => item.assignee === "John Doe")}
+            data={cases.filter(
+              (item) => item.assignee?.fullName === "John Doe"
+            )}
           />
         </TabsContent>
       </Tabs>

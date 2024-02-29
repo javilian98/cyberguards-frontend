@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
@@ -7,10 +7,19 @@ type SliderProps = React.ComponentProps<typeof Slider>;
 
 interface RiskScoreSliderProps {
   defaultValue: SliderProps["defaultValue"];
+  handleValueChange: (value: number) => void;
 }
 
-function RiskScoreSlider({ defaultValue }: RiskScoreSliderProps) {
+function RiskScoreSlider({
+  defaultValue,
+  handleValueChange,
+}: RiskScoreSliderProps) {
   const [value, setValue] = useState(defaultValue);
+
+  // update the value on component mount when defaultValue changes
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   const renderRiskValueColor = () => {
     const valueNum = value?.[0];
@@ -37,7 +46,7 @@ function RiskScoreSlider({ defaultValue }: RiskScoreSliderProps) {
   return (
     <>
       <div className="flex items-center gap-2">
-        <Label htmlFor="email">Risk Score</Label>
+        <Label htmlFor="riskScore">Risk Score</Label>
         <div className="flex items-center gap-2">
           <span className={`font-semibold ${renderRiskValueColor()}`}>
             {value} %
@@ -45,10 +54,15 @@ function RiskScoreSlider({ defaultValue }: RiskScoreSliderProps) {
         </div>
       </div>
       <Slider
+        id="riskScore"
         max={100}
         defaultValue={value}
+        value={value}
         step={10}
-        onValueChange={setValue}
+        onValueChange={(value) => {
+          setValue(value);
+          handleValueChange(value as unknown as number);
+        }}
         className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
         aria-label="Risk Score"
       />

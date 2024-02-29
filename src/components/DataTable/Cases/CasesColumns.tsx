@@ -1,24 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
+
 import { useCaseStore } from "@/stores/useCaseStore";
 import { Column, ColumnDef } from "@tanstack/react-table";
-import {
-  LuArrowUpDown,
-  LuEye,
-  LuMoreHorizontal,
-  LuPencilLine,
-  LuTrash2,
-} from "react-icons/lu";
-import { Case } from "@/types/types";
+import { LuArrowUpDown } from "react-icons/lu";
+import { CASE_STATUS, Case } from "@/types/types";
+
+import ActionsMenu from "@/components/DataTable/Cases/ActionsMenu";
 
 const renderSortButton = (column: Column<Case>, columnName: string) => {
   return (
@@ -30,6 +18,40 @@ const renderSortButton = (column: Column<Case>, columnName: string) => {
       <LuArrowUpDown className="ml-2 h-4 w-4" />
     </Button>
   );
+};
+
+// Function to convert enum value to string
+export const computeStatusString = (status: CASE_STATUS): string => {
+  console.log("status ", status);
+
+  switch (status.toString()) {
+    case CASE_STATUS.open:
+      return "Open";
+    case CASE_STATUS.assigned:
+      return "Assigned";
+    case CASE_STATUS.inProgress:
+      return "In-Progress";
+    case CASE_STATUS.closed:
+      return "Closed";
+    default:
+      throw new Error(`Unknown status: ${status}`);
+  }
+};
+
+export const renderStatusColor = (status: CASE_STATUS) => {
+  const baseStyles = "font-medium ";
+  switch (status.toString()) {
+    case CASE_STATUS.open:
+      return baseStyles + "text-green-500 border-green-500";
+    case CASE_STATUS.assigned:
+      return baseStyles + "text-orange-500 border-orange-500";
+    case CASE_STATUS.inProgress:
+      return baseStyles + "text-blue-500 font-medium border-blue-500";
+    case CASE_STATUS.closed:
+      return baseStyles + "text-gray-500 border-gray-500";
+    default:
+      throw new Error(`Unknown status: ${status}`);
+  }
 };
 
 export const casesColumns: ColumnDef<Case>[] = [
@@ -83,8 +105,18 @@ export const casesColumns: ColumnDef<Case>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id",
-    header: "Case ID",
+    accessorKey: "caseStatus",
+    header: ({ column }) => renderSortButton(column, "Case Status"),
+    cell: ({ row }) => {
+      const status = row.getValue("caseStatus") as CASE_STATUS;
+      return (
+        <span
+          className={`border rounded-sm py-1 px-2 ${renderStatusColor(status)}`}
+        >
+          {computeStatusString(status)}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "title",
@@ -99,7 +131,7 @@ export const casesColumns: ColumnDef<Case>[] = [
     header: ({ column }) => renderSortButton(column, "Risk Score"),
   },
   {
-    accessorKey: "caseDateTime",
+    accessorKey: "createdAt",
     header: ({ column }) => renderSortButton(column, "Case Date Time"),
   },
   {
@@ -112,48 +144,6 @@ export const casesColumns: ColumnDef<Case>[] = [
   // },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const { currentSelectedCase, setCurrentSelectedCase } =
-        useCaseStore.getState();
-
-      const { setSingleRowActionDialogOpen } = useAlertDialogStore.getState();
-
-      const handleDeleteDialogVisibility = () => {
-        setCurrentSelectedCase(row.original);
-        setSingleRowActionDialogOpen(true);
-
-        console.log(currentSelectedCase);
-      };
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <LuMoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <LuEye className="w-4 h-4 mr-2" />
-              View Case
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <LuPencilLine className="w-4 h-4 mr-2" />
-              Edit Case
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-red-600"
-              onClick={handleDeleteDialogVisibility}
-            >
-              <LuTrash2 className="w-4 h-4 mr-2" />
-              Delete Case
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <ActionsMenu row={row} />,
   },
 ];
