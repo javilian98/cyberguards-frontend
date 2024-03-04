@@ -40,8 +40,8 @@ function ActionsMenu({ row }: ActionsMenuProps) {
   };
 
   const handleEditUser = () => {
-    // setCurrentSelectedUser(row.original);
-    // navigate(`/users/${row.original.id}`);
+    setCurrentSelectedUser(row.original);
+    navigate(`/users/edit/${row.original.id}`);
   };
 
   const handleDeleteDialogVisibility = () => {

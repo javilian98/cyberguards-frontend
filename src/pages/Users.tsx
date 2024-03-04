@@ -4,10 +4,12 @@ import { LuPlus } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 
 import Search from "@/components/Search/Search";
-import { getUserList } from "@/api/usersApi";
+import { deleteUser, getUserList } from "@/api/usersApi";
 import { useUserStore } from "@/stores/useUserStore";
 import {
+  useMutation,
   useQuery,
+  useQueryClient,
   // useQueryClient
 } from "@tanstack/react-query";
 import { usersColumns } from "@/components/DataTable/Users/UsersColumns";
@@ -24,15 +26,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import FixedHeader from "@/components/Layouts/Header/FixedHeader";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 function Users() {
   const users = useUserStore((state) => state.users);
   const setUsers = useUserStore((state) => state.setUsers);
-  // const selectedUsers = useUserStore((state) => state.selectedUsers);
-  // const setSelectedUsers = useUserStore((state) => state.setSelectedUsers);
-  // const currentSelectedUser = useUserStore(
-  //   (state) => state.currentSelectedUser
-  // );
+  const selectedUsers = useUserStore((state) => state.selectedUsers);
+  const setSelectedUsers = useUserStore((state) => state.setSelectedUsers);
+  const currentSelectedUser = useUserStore(
+    (state) => state.currentSelectedUser
+  );
   const isSingleRowActionDialogOpen = useAlertDialogStore(
     (state) => state.isSingleRowActionDialogOpen
   );
@@ -59,16 +62,76 @@ function Users() {
   //   },
   // });
 
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const usersQuery = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
       const data = await getUserList();
+      console.log("users ", data);
+
       setUsers(data);
       return data;
     },
   });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await deleteUser(id);
+    },
+    onSuccess: () => {
+      const newUsers = users.filter(
+        (item) => item.id !== currentSelectedUser.id
+      );
+      setUsers(newUsers);
+      toast.success("User deleted successfully");
+    },
+    onSettled: async (_, error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        await queryClient.invalidateQueries({ queryKey: ["users"] });
+      }
+    },
+  });
+
+  const deleteMultipleUsersMutation = useMutation({
+    mutationFn: async (ids: string[]) => {
+      console.log("ids ", ids);
+
+      await Promise.all(ids.map((id) => deleteUser(id)));
+    },
+    onSuccess: () => {
+      const newUsers = users.filter(
+        (item) =>
+          !selectedUsers.some((selectedUser) => selectedUser.id === item.id)
+      );
+
+      console.log("newUsers ", newUsers);
+
+      setUsers(newUsers);
+      setSelectedUsers([]);
+      toast.success("Users deleted successfully");
+    },
+    onSettled: async (_, error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        await queryClient.invalidateQueries({ queryKey: ["users"] });
+      }
+    },
+  });
+
+  const handleDelete = () => {
+    deleteUserMutation.mutate(currentSelectedUser.id);
+  };
+
+  const handleDeleteAllSelected = () => {
+    const selectedUserIds = selectedUsers.map((userItem) => userItem.id);
+    console.log("selectedUserIds ", selectedUserIds);
+
+    deleteMultipleUsersMutation.mutate(selectedUserIds);
+  };
 
   return (
     <>
@@ -88,7 +151,7 @@ function Users() {
         <DataTable
           columns={usersColumns}
           data={usersQuery.isLoading ? [] : users}
-          // actionDelete={handleDeleteAllSelected}
+          actionDelete={handleDeleteAllSelected}
         />
       </div>
 
@@ -112,7 +175,7 @@ function Users() {
             >
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction>Delete</AlertDialogAction>
+            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

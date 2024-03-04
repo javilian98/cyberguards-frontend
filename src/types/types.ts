@@ -66,9 +66,9 @@ export enum CASE_STATUS {
 }
 
 export enum ROLE_ID {
-  normal = "0",
-  analyst = "1",
-  admin = "2",
+  normal = 0,
+  analyst = 1,
+  admin = 2,
 }
 
 export enum SUSPECT_TYPE {

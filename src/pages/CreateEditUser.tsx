@@ -59,9 +59,15 @@ const formSchema = z.object({
   profession: z.string().min(1, {
     message: "Profession cannot be empty.",
   }),
-  roleId: z.nativeEnum(ROLE_ID, {
-    required_error: "Account Role must be selected.",
-  }),
+  roleId: z.number().refine(
+    (value) => {
+      // Custom validation logic for suspectTypeId
+      return Object.values(ROLE_ID).includes(value as ROLE_ID);
+    },
+    {
+      message: "Invalid user role type.",
+    }
+  ),
 });
 
 function CreateEditUser() {
@@ -301,7 +307,7 @@ function CreateEditUser() {
                     <FormItem>
                       <FormLabel>User Account Role</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => field.onChange(Number(value))}
                         defaultValue={field.value.toString()}
                       >
                         <FormControl>
