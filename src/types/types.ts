@@ -4,6 +4,7 @@ export interface Case {
   riskStatus: "low" | "medium" | "high";
   riskScore: number;
   createdAt: string;
+  assigneeId?: string;
   assignee?: {
     fullName: string | null;
   };
@@ -58,10 +59,10 @@ export interface UserDetail {
 }
 
 export enum CASE_STATUS {
-  open = "1",
-  assigned = "2",
-  inProgress = "3",
-  closed = "0",
+  open = 1,
+  assigned = 2,
+  inProgress = 3,
+  closed = 0,
 }
 
 export enum ROLE_ID {
@@ -71,11 +72,11 @@ export enum ROLE_ID {
 }
 
 export enum SUSPECT_TYPE {
-  none = "0",
-  afterHourLogin = "1",
-  potentialAccountSharing = "2",
-  terminatedEmployeeLogin = "3",
-  failedAttemptToEnterBuilding = "4",
-  impossibleTraveller = "5",
-  potentialDataExfiltration = "6",
+  none = 0,
+  afterHourLogin = 1,
+  potentialAccountSharing = 2,
+  terminatedEmployeeLogin = 3,
+  failedAttemptToEnterBuilding = 4,
+  impossibleTraveller = 5,
+  potentialDataExfiltration = 6,
 }
