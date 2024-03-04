@@ -94,23 +94,31 @@ const formSchema = z.object({
     required_error: "Risk Status must be selected.",
   }),
   riskScore: z.array(z.number()).length(1),
-  // assignee: z
-  //   .string()
-  //   .min(2, {
-  //     message: "You must select an assignee",
-  //   })
-  //   .optional(),
   assignee: z.union([assigneeSuspectedUserSchema, z.undefined()]).optional(),
   suspectedUser: z
     .union([assigneeSuspectedUserSchema, z.undefined()])
     .optional(),
-  suspectTypeId: z.nativeEnum(SUSPECT_TYPE, {
-    required_error: "Suspect Type must be selected.",
-  }),
-  caseStatus: z.nativeEnum(CASE_STATUS, {
-    required_error: "Case Status Must be selected.",
-  }),
-  // suspectType: z.number(),
+  // suspectTypeId: z.nativeEnum(SUSPECT_TYPE, {
+  //   required_error: "Suspect Type must be selected.",
+  // }),
+  suspectTypeId: z.number().refine(
+    (value) => {
+      // Custom validation logic for suspectTypeId
+      return Object.values(SUSPECT_TYPE).includes(value as SUSPECT_TYPE);
+    },
+    {
+      message: "Invalid suspect type.",
+    }
+  ),
+  caseStatus: z.number().refine(
+    (value) => {
+      // Custom validation logic for caseStatus
+      return Object.values(CASE_STATUS).includes(value as CASE_STATUS);
+    },
+    {
+      message: "Invalid case status.",
+    }
+  ),
   threatPageUrl: z.string().url(),
 });
 
@@ -158,11 +166,8 @@ function CreateEditCase() {
         id: data.suspectedUserId ?? null,
         fullName: data.suspectedUser?.fullName ?? null,
       });
-      form.setValue(
-        "suspectTypeId",
-        data.suspectTypeId as unknown as SUSPECT_TYPE
-      );
-      form.setValue("caseStatus", data.caseStatus as unknown as CASE_STATUS);
+      form.setValue("suspectTypeId", Number(data.suspectTypeId));
+      form.setValue("caseStatus", data.caseStatus);
 
       if (data.suspectedUser?.fullName == null) {
         setShowSuspectDropdown(true);
@@ -200,12 +205,14 @@ function CreateEditCase() {
         ...caseItem,
         riskScore: caseItem.riskScore[0],
         assigneeId: assigneeFound?.id,
-        caseStatus: Number(caseItem.caseStatus),
+        caseStatus: caseItem.caseStatus,
         suspectedUserId: suspectedUserFound?.id,
-        suspectTypeId: Number(caseItem.suspectTypeId),
+        suspectTypeId: caseItem.suspectTypeId,
       });
     },
-    onError: () => {},
+    onError: (error) => {
+      toast.error(error.message);
+    },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ["cases"] });
       console.log(`Case "${data.title}" has been created`);
@@ -243,14 +250,16 @@ function CreateEditCase() {
           ...caseItem,
           riskScore: caseItem.riskScore[0],
           assigneeId: assigneeFound?.id,
-          caseStatus: Number(caseItem.caseStatus),
+          caseStatus: caseItem.caseStatus,
           suspectedUserId: suspectedUserFound?.id,
-          suspectTypeId: Number(caseItem.suspectTypeId),
+          suspectTypeId: caseItem.suspectTypeId,
         },
         id as string
       );
     },
-    onError: () => {},
+    onError: (error) => {
+      toast.error(error.message);
+    },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ["cases"] });
       console.log(`Case "${data.title}" has been updated`);
@@ -299,16 +308,19 @@ function CreateEditCase() {
         fullName: "",
       },
       suspectTypeId: undefined,
-      caseStatus: caseDetailData
-        ? (caseDetailData.caseStatus as unknown as CASE_STATUS)
-        : (1 as unknown as CASE_STATUS),
+      caseStatus: caseDetailData ? caseDetailData.caseStatus : CASE_STATUS.open,
       threatPageUrl: "",
     },
   });
 
+  const [isAssigneeChanged, setIsAssigneeChanged] = useState(false);
+  const [isSuspectedUserChanged, setIsSuspectedUserChanged] = useState(false);
+
   useEffect(() => {
-    setFormEdited(form.formState.isDirty);
-  }, [form.formState.isDirty]);
+    setFormEdited(
+      form.formState.isDirty || isAssigneeChanged || isSuspectedUserChanged
+    );
+  }, [form.formState.isDirty, isAssigneeChanged, isSuspectedUserChanged]);
 
   // Handle form submission
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
@@ -569,6 +581,7 @@ function CreateEditCase() {
                                             fullName:
                                               computeFullName(suspectedUser),
                                           });
+                                          setIsSuspectedUserChanged(true);
                                         }}
                                       >
                                         <LuCheck
@@ -611,9 +624,11 @@ function CreateEditCase() {
                           Select type of threat suspected user is involved.
                         </p>
                         <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          value={field.value}
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={field.value?.toString()}
+                          value={field.value?.toString()}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -715,6 +730,10 @@ function CreateEditCase() {
                                       id: assignee.id,
                                       fullName: computeFullName(assignee),
                                     });
+
+                                    console.log("assigneeee");
+
+                                    setIsAssigneeChanged(true);
                                   }}
                                 >
                                   <LuCheck
@@ -752,9 +771,9 @@ function CreateEditCase() {
                     <FormItem>
                       <FormLabel>Case Status</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value.toString()}
-                        value={field.value.toString()}
+                        onValueChange={(value) => field.onChange(Number(value))}
+                        defaultValue={field.value?.toString()}
+                        value={field.value?.toString()}
                       >
                         <FormControl>
                           <SelectTrigger>
