@@ -47,6 +47,9 @@ function Cases() {
     queryKey: ["cases"],
     queryFn: async () => {
       const data = await getCaseList();
+
+      console.log("data ", data);
+
       setCases(data);
       return data;
     },
@@ -106,10 +109,7 @@ function Cases() {
   return (
     <>
       <FixedHeader>
-        <Search
-          placeholderText="Search case title"
-          drawerTitle="Filter Cases"
-        >
+        <Search placeholderText="Search case title" drawerTitle="Filter Cases">
           asd
         </Search>
 
@@ -142,7 +142,8 @@ function Cases() {
           <DataTable
             columns={casesColumns}
             data={cases.filter(
-              (item) => item.assignee?.fullName === "John Doe"
+              (item) =>
+                item.assigneeId === "77e748dc-1bb4-4a16-bc0f-b44ee5d441e3"
             )}
           />
         </TabsContent>
