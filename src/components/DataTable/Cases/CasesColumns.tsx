@@ -22,16 +22,14 @@ const renderSortButton = (column: Column<Case>, columnName: string) => {
 
 // Function to convert enum value to string
 export const computeStatusString = (status: CASE_STATUS): string => {
-  console.log("status ", status);
-
   switch (status.toString()) {
-    case CASE_STATUS.open:
+    case CASE_STATUS.open.toString():
       return "Open";
-    case CASE_STATUS.assigned:
+    case CASE_STATUS.assigned.toString():
       return "Assigned";
-    case CASE_STATUS.inProgress:
+    case CASE_STATUS.inProgress.toString():
       return "In-Progress";
-    case CASE_STATUS.closed:
+    case CASE_STATUS.closed.toString():
       return "Closed";
     default:
       throw new Error(`Unknown status: ${status}`);
@@ -41,13 +39,13 @@ export const computeStatusString = (status: CASE_STATUS): string => {
 export const renderStatusColor = (status: CASE_STATUS) => {
   const baseStyles = "font-medium ";
   switch (status.toString()) {
-    case CASE_STATUS.open:
+    case CASE_STATUS.open.toString():
       return baseStyles + "text-green-500 border-green-500";
-    case CASE_STATUS.assigned:
+    case CASE_STATUS.assigned.toString():
       return baseStyles + "text-orange-500 border-orange-500";
-    case CASE_STATUS.inProgress:
+    case CASE_STATUS.inProgress.toString():
       return baseStyles + "text-blue-500 font-medium border-blue-500";
-    case CASE_STATUS.closed:
+    case CASE_STATUS.closed.toString():
       return baseStyles + "text-gray-500 border-gray-500";
     default:
       throw new Error(`Unknown status: ${status}`);
