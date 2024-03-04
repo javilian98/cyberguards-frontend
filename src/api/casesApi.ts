@@ -14,6 +14,7 @@ export const getCaseList = async (): Promise<Case[]> => {
       return {
         ...item,
         createdAt: formatDateTime(item.createdAt),
+        assigneeId: item.assigneeId,
         assignee: item.assignee?.fullName ? item.assignee?.fullName : null,
       };
     });
@@ -55,11 +56,13 @@ export const createCase = async (
     const caseItemFormatted = {
       title: caseItem.title,
       description: caseItem.description,
-      riskScore: caseItem.riskScore,
       riskStatus: caseItem.riskStatus,
-      assigneeId: "Alice Doe",
+      riskScore: caseItem.riskScore,
+      assigneeId: caseItem.assigneeId,
       threatPageUrl: caseItem.threatPageUrl,
+      suspectedUserId: caseItem.suspectedUserId,
       suspectTypeId: caseItem.suspectTypeId,
+      caseStatus: caseItem.caseStatus,
     };
     const response = await bffApi.post("/api/cases", caseItemFormatted);
 
