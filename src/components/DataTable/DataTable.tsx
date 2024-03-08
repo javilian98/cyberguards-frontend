@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import {
   Cell,
   ColumnDef,
+  Row,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -46,12 +47,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   actionDelete?: () => void;
+  setSelectedRow?: (row: Row<TData>) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   actionDelete,
+  setSelectedRow,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -82,52 +85,40 @@ export function DataTable<TData, TValue>({
     table.resetRowSelection();
   }, [data, table]);
 
-  const isCellEmpty = (cell: Cell<TData, unknown>) => {
-    return (
-      !cell.id.includes("_select") &&
-      !cell.id.includes("_actions") &&
-      cell.getValue() == null
-    );
-  };
-
-  const renderCellValue = (cell: Cell<TData, unknown>) => {
-    if (isCellEmpty(cell)) {
-      return "Unassigned";
-    }
-
-    return flexRender(cell.column.columnDef.cell, cell.getContext());
-  };
-
   return (
     <>
-      <div>
-        <div className="inline-flex items-center gap-4 mt-6 mb-4">
-          <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
+      <div className={actionDelete ? "" : "pt-6"}>
+        {actionDelete && (
+          <div className="inline-flex items-center gap-4 mt-6 mb-4">
+            <div className="flex-1 text-sm text-muted-foreground">
+              {table.getFilteredSelectedRowModel().rows.length} of{" "}
+              {table.getFilteredRowModel().rows.length} row(s) selected.
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="ml-auto"
+                  disabled={
+                    table.getFilteredSelectedRowModel().rows.length === 0
+                  }
+                >
+                  Action
+                  <LuChevronDown className="w-4 h-4 ml-2" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  className="text-red-600"
+                  onClick={() => setMultipleRowsActionDialogOpen(true)}
+                >
+                  <LuTrash2 className="mr-2 h-4 w-4" />
+                  <span>Delete Rows</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="ml-auto"
-                disabled={table.getFilteredSelectedRowModel().rows.length === 0}
-              >
-                Action
-                <LuChevronDown className="w-4 h-4 ml-2" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                className="text-red-600"
-                onClick={() => setMultipleRowsActionDialogOpen(true)}
-              >
-                <LuTrash2 className="mr-2 h-4 w-4" />
-                <span>Delete Rows</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        )}
 
         <div className="rounded-md border">
           <Table>
@@ -155,13 +146,18 @@ export function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
+                    onClick={() => {
+                      console.log(row);
+                      setSelectedRow && setSelectedRow(row);
+                    }}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className={isCellEmpty(cell) ? "text-red-500" : ""}
-                      >
-                        {renderCellValue(cell)}
+                      <TableCell key={cell.id}>
+                        {/* {renderCellValue(cell)} */}
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>

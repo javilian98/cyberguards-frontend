@@ -98,6 +98,7 @@ function Cases() {
   });
 
   const handleDelete = () => {
+    console.log("currentSelectedCase.id ", currentSelectedCase.id);
     deleteCaseMutation.mutate(currentSelectedCase.id);
   };
 

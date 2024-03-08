@@ -4,8 +4,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useUserStore } from "@/stores/useUserStore";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
-import { ROLE_ID, UserListItem } from "@/types/types";
-import ActionsMenu from "@/components/DataTable/Users/ActionsMenu";
+import { EmployeeListItem, ROLE_ID, UserListItem } from "@/types/types";
+import ActionsMenu from "@/components/DataTable/Threats/ActionsMenu";
 
 const renderSortButton = (column: Column<UserListItem>, columnName: string) => {
   return (
@@ -46,7 +46,7 @@ export const renderRoleTag = (roleId: ROLE_ID) => {
   }
 };
 
-export const usersColumns: ColumnDef<UserListItem>[] = [
+export const threatsColumns: ColumnDef<EmployeeListItem>[] = [
   {
     id: "select",
     header: ({ table }) => {
@@ -104,31 +104,24 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
     accessorKey: "lastName",
     header: ({ column }) => renderSortButton(column, "Last Name"),
   },
-  // {
-  //   accessorKey: "profession",
-  //   header: ({ column }) => renderSortButton(column, "Profession"),
-  // },
-  // {
-  //   accessorKey: "riskScore",
-  //   header: ({ column }) => renderSortButton(column, "Risk Score"),
-  //   cell: ({ row }) => (
-  //     <div className="text-left">{row.getValue("riskScore")}</div>
-  //   ),
-  // },
-  // {
-  //   accessorKey: "roleId",
-  //   header: ({ column }) => renderSortButton(column, "Role"),
-  //   cell: ({ row }) => (
-  //     <div className="text-left">{renderRoleTag(row.getValue("roleId"))}</div>
-  //   ),
-  // },
-  // {
-  //   accessorKey: "suspectCaseId",
-  //   header: ({ column }) => renderSortButton(column, "Total Cases Handed"),
-  //   cell: ({ row }) => (
-  //     <div className="text-center">{row.getValue("suspectCaseId")}</div>
-  //   ),
-  // },
+  {
+    accessorKey: "businessUnit",
+    header: ({ column }) => renderSortButton(column, "Business Unit"),
+  },
+  {
+    accessorKey: "riskScore",
+    header: ({ column }) => renderSortButton(column, "Overall Risk (%)"),
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("riskScore")}</div>
+    ),
+  },
+  {
+    accessorKey: "totalOffences",
+    header: ({ column }) => renderSortButton(column, "No. of Offences"),
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("totalOffences")}</div>
+    ),
+  },
 
   {
     id: "actions",

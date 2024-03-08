@@ -1,14 +1,14 @@
-import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
-import { useUserStore } from "@/stores/useUserStore";
+// import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
+// import { useUserStore } from "@/stores/useUserStore";
 
 import {
   LuEye,
   LuMoreHorizontal,
-  LuPencilLine,
-  LuTrash2,
+  // LuPencilLine,
+  // LuTrash2,
 } from "react-icons/lu";
 
-import { UserListItem } from "@/types/types";
+import { EmployeeListItem } from "@/types/types";
 import { Row } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 
@@ -17,37 +17,38 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
+  // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useThreatStore } from "@/stores/useThreatStore";
 
 interface ActionsMenuProps {
-  row: Row<UserListItem>;
+  row: Row<EmployeeListItem>;
 }
 function ActionsMenu({ row }: ActionsMenuProps) {
-  const setCurrentSelectedUser = useUserStore(
-    (state) => state.setCurrentSelectedUser
+  const setCurrentSelectedEmployee = useThreatStore(
+    (state) => state.setCurrentSelectedEmployee
   );
-  const setSingleRowActionDialogOpen = useAlertDialogStore(
-    (state) => state.setSingleRowActionDialogOpen
-  );
+  // const setSingleRowActionDialogOpen = useAlertDialogStore(
+  //   (state) => state.setSingleRowActionDialogOpen
+  // );
   const navigate = useNavigate();
 
-  // const handleViewUser = () => {
+  const handleViewEmployee = () => {
+    setCurrentSelectedEmployee(row.original);
+    navigate(`/threats/employee/${row.original.id}/buildingaccess`);
+  };
+
+  // const handleEditUser = () => {
   //   setCurrentSelectedUser(row.original);
-  //   navigate(`/users/${row.original.id}`);
+  //   navigate(`/users/edit/${row.original.id}`);
   // };
 
-  const handleEditUser = () => {
-    setCurrentSelectedUser(row.original);
-    navigate(`/users/edit/${row.original.id}`);
-  };
-
-  const handleDeleteDialogVisibility = () => {
-    setCurrentSelectedUser(row.original);
-    setSingleRowActionDialogOpen(true);
-  };
+  // const handleDeleteDialogVisibility = () => {
+  //   setCurrentSelectedUser(row.original);
+  //   setSingleRowActionDialogOpen(true);
+  // };
 
   return (
     <DropdownMenu>
@@ -59,22 +60,22 @@ function ActionsMenu({ row }: ActionsMenuProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        {/* <DropdownMenuItem onClick={handleViewUser}>
+        <DropdownMenuItem onClick={handleViewEmployee}>
           <LuEye className="w-4 h-4 mr-2" />
-          View Analyst
-        </DropdownMenuItem> */}
-        <DropdownMenuItem onClick={handleEditUser}>
-          <LuPencilLine className="w-4 h-4 mr-2" />
-          Edit Analyst
+          View Employee
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
+        {/* <DropdownMenuItem onClick={handleEditUser}>
+          <LuPencilLine className="w-4 h-4 mr-2" />
+          Edit Employee
+        </DropdownMenuItem>
+        <DropdownMenuSeparator /> */}
+        {/* <DropdownMenuItem
           className="text-red-600"
           onClick={handleDeleteDialogVisibility}
         >
           <LuTrash2 className="w-4 h-4 mr-2" />
-          Delete Analyst
-        </DropdownMenuItem>
+          Delete User
+        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

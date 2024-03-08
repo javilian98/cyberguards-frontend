@@ -1,5 +1,5 @@
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
-import { useUserStore } from "@/stores/useUserStore";
+import { useCaseStore } from "@/stores/useCaseStore";
 
 import {
   LuEye,
@@ -8,7 +8,7 @@ import {
   LuTrash2,
 } from "react-icons/lu";
 
-import { UserListItem } from "@/types/types";
+import { Case } from "@/types/types";
 import { Row } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 
@@ -23,29 +23,26 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface ActionsMenuProps {
-  row: Row<UserListItem>;
+  row: Row<Case>;
 }
 function ActionsMenu({ row }: ActionsMenuProps) {
-  const setCurrentSelectedUser = useUserStore(
-    (state) => state.setCurrentSelectedUser
+  const setCurrentSelectedCase = useCaseStore(
+    (state) => state.setCurrentSelectedCase
   );
   const setSingleRowActionDialogOpen = useAlertDialogStore(
     (state) => state.setSingleRowActionDialogOpen
   );
   const navigate = useNavigate();
 
-  // const handleViewUser = () => {
-  //   setCurrentSelectedUser(row.original);
-  //   navigate(`/users/${row.original.id}`);
-  // };
-
-  const handleEditUser = () => {
-    setCurrentSelectedUser(row.original);
-    navigate(`/users/edit/${row.original.id}`);
+  const handleEditCase = () => {
+    setCurrentSelectedCase(row.original);
+    navigate(`/cases/${row.original.id}`);
   };
 
   const handleDeleteDialogVisibility = () => {
-    setCurrentSelectedUser(row.original);
+    console.log("roww ", row.original);
+
+    setCurrentSelectedCase(row.original);
     setSingleRowActionDialogOpen(true);
   };
 
@@ -59,13 +56,13 @@ function ActionsMenu({ row }: ActionsMenuProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        {/* <DropdownMenuItem onClick={handleViewUser}>
+        <DropdownMenuItem>
           <LuEye className="w-4 h-4 mr-2" />
-          View Analyst
-        </DropdownMenuItem> */}
-        <DropdownMenuItem onClick={handleEditUser}>
+          View Case
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleEditCase}>
           <LuPencilLine className="w-4 h-4 mr-2" />
-          Edit Analyst
+          Edit Case
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -73,7 +70,7 @@ function ActionsMenu({ row }: ActionsMenuProps) {
           onClick={handleDeleteDialogVisibility}
         >
           <LuTrash2 className="w-4 h-4 mr-2" />
-          Delete Analyst
+          Delete Case
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

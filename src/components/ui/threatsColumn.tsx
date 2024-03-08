@@ -1,8 +1,8 @@
 // threatsColumns.tsx
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import { EmployeeListItem } from "@/types/types";
 
 export type Threat = {
   username: string;
@@ -32,7 +33,7 @@ export const threats: Threat[] = [
   // ...more data
 ];
 
-export const threatColumns: ColumnDef<Threat>[] = [
+export const threatColumns: ColumnDef<EmployeeListItem>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -56,7 +57,7 @@ export const threatColumns: ColumnDef<Threat>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'username',
+    accessorKey: "username",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -68,15 +69,19 @@ export const threatColumns: ColumnDef<Threat>[] = [
     ),
   },
   {
-    accessorKey: 'recent_risk',
-    header: 'Recent Risk',
+    accessorKey: "recent_risk",
+    header: "Recent Risk",
   },
   {
-    accessorKey: 'overall_risk',
-    header: 'Overall Risk',
+    accessorKey: "overall_risk",
+    header: "Overall Risk",
   },
   {
-    id: 'actions',
+    accessorKey: "overall_risk",
+    header: "Offences",
+  },
+  {
+    id: "actions",
     cell: ({ row }) => {
       const threat = row.original;
 

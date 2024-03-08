@@ -54,10 +54,10 @@ function ActionsMenu({ row }: ActionsMenuProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem>
+        {/* <DropdownMenuItem>
           <LuEye className="w-4 h-4 mr-2" />
           View Case
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem onClick={handleEditCase}>
           <LuPencilLine className="w-4 h-4 mr-2" />
           Edit Case

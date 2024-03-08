@@ -1,6 +1,6 @@
 import Sidebar from "@/components/Layouts/Sidebar/Sidebar";
 import Home from "@/pages/Home";
-import Threats from "@/pages/Threats";
+import Threats from "@/pages/Threats-copy";
 import { render, screen, userEvent } from "@/utils/test-utils";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 

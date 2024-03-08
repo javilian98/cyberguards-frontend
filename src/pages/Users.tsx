@@ -43,25 +43,6 @@ function Users() {
     (state) => state.setSingleRowActionDialogOpen
   );
 
-  // const table = useReactTable({
-  //   data: users,
-  //   columns,
-  //   onSortingChange: setSorting,
-  //   onColumnFiltersChange: setColumnFilters,
-  //   getCoreRowModel: getCoreRowModel(),
-  //   getPaginationRowModel: getPaginationRowModel(),
-  //   getSortedRowModel: getSortedRowModel(),
-  //   getFilteredRowModel: getFilteredRowModel(),
-  //   onColumnVisibilityChange: setColumnVisibility,
-  //   onRowSelectionChange: setRowSelection,
-  //   state: {
-  //     sorting,
-  //     columnFilters,
-  //     columnVisibility,
-  //     rowSelection,
-  //   },
-  // });
-
   const queryClient = useQueryClient();
 
   const usersQuery = useQuery({
@@ -84,7 +65,7 @@ function Users() {
         (item) => item.id !== currentSelectedUser.id
       );
       setUsers(newUsers);
-      toast.success("User deleted successfully");
+      toast.success("Analyst deleted successfully");
     },
     onSettled: async (_, error) => {
       if (error) {
@@ -136,13 +117,13 @@ function Users() {
   return (
     <>
       <FixedHeader>
-        <Search placeholderText="Search username" drawerTitle="Filter Users">
+        <Search placeholderText="Search analyst" drawerTitle="Filter Analysts">
           asd
         </Search>
         <Link to="/users/create">
           <Button>
             <LuPlus className="w-5 h-5 mr-2 text-white" />
-            Create User
+            Create Analyst
           </Button>
         </Link>
       </FixedHeader>

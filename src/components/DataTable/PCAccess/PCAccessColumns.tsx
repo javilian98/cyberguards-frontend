@@ -4,11 +4,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useCaseStore } from "@/stores/useCaseStore";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
-import { CASE_STATUS, Case } from "@/types/types";
+import { CASE_STATUS, Case, PCAccessLogs } from "@/types/types";
 
 import ActionsMenu from "@/components/DataTable/Cases/ActionsMenu";
 
-const renderSortButton = (column: Column<Case>, columnName: string) => {
+const renderSortButton = (column: Column<PCAccessLogs>, columnName: string) => {
   return (
     <Button
       variant="ghost"
@@ -52,7 +52,7 @@ export const renderStatusColor = (status: CASE_STATUS) => {
   }
 };
 
-export const casesColumns: ColumnDef<Case>[] = [
+export const pcAccessColumns: ColumnDef<PCAccessLogs>[] = [
   {
     id: "select",
     header: ({ table }) => {
@@ -78,7 +78,7 @@ export const casesColumns: ColumnDef<Case>[] = [
       );
     },
     cell: ({ row }) => {
-      const { selectedCases, setSelectedCases } = useCaseStore.getState();
+      // const { selectedCases, setSelectedCases } = useCaseStore.getState();
 
       return (
         <Checkbox
@@ -86,14 +86,14 @@ export const casesColumns: ColumnDef<Case>[] = [
           onCheckedChange={(value) => {
             row.toggleSelected(!!value);
 
-            if (row.getIsSelected()) {
-              const newSelectedCases = selectedCases.filter(
-                (item) => item.id !== row.original.id
-              );
-              setSelectedCases(newSelectedCases);
-            } else {
-              setSelectedCases([...selectedCases, row.original]);
-            }
+            // if (row.getIsSelected()) {
+            //   const newSelectedCases = selectedCases.filter(
+            //     (item) => item.id !== row.original.id
+            //   );
+            //   setSelectedCases(newSelectedCases);
+            // } else {
+            //   setSelectedCases([...selectedCases, row.original]);
+            // }
           }}
           aria-label="Select row"
         />
@@ -103,51 +103,39 @@ export const casesColumns: ColumnDef<Case>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "caseStatus",
-    header: ({ column }) => renderSortButton(column, "Case Status"),
-    cell: ({ row }) => {
-      const status = row.getValue("caseStatus") as CASE_STATUS;
-      return (
-        <span
-          className={`border rounded-sm py-1 px-2 ${renderStatusColor(status)}`}
-        >
-          {computeStatusString(status)}
-        </span>
-      );
-    },
+    accessorKey: "accessDateTime",
+    header: ({ column }) => renderSortButton(column, "Access Date Time"),
+  },
+  // {
+  //   accessorKey: "logOnOffStatus",
+  //   header: ({ column }) => renderSortButton(column, "Log On/Off"),
+  // },
+  // {
+  //   accessorKey: "caseStatus",
+  //   header: ({ column }) => renderSortButton(column, "Status"),
+  //   cell: ({ row }) => {
+  //     const status = row.getValue("caseStatus") as CASE_STATUS;
+  //     return (
+  //       <span
+  //         className={`border rounded-sm py-1 px-2 ${renderStatusColor(status)}`}
+  //       >
+  //         {computeStatusString(status)}
+  //       </span>
+  //     );
+  //   },
+  // },
+  {
+    accessorKey: "machineName",
+    header: ({ column }) => renderSortButton(column, "Machine Name"),
   },
   {
-    accessorKey: "title",
-    header: ({ column }) => renderSortButton(column, "Case Title"),
+    accessorKey: "machineLocation",
+    header: ({ column }) => renderSortButton(column, "Machine Location"),
   },
-  {
-    accessorKey: "riskStatus",
-    header: ({ column }) => renderSortButton(column, "Risk Status"),
-  },
-  {
-    accessorKey: "riskScore",
-    header: ({ column }) => renderSortButton(column, "Risk Score"),
-  },
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => renderSortButton(column, "Case Date Time"),
-  },
-  {
-    accessorKey: "assignee",
-    header: ({ column }) => renderSortButton(column, "Assignee"),
-    cell: ({ row }) => {
-      const cellValue: string | null | undefined =
-        row.getValue("assignee") != null
-          ? row.getValue("assignee")
-          : "Unassigned";
-
-      return (
-        <span className={cellValue == "Unassigned" ? "text-red-500" : ""}>
-          {cellValue}
-        </span>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "suspectType",
+  //   header: ({ column }) => renderSortButton(column, "Suspect Type"),
+  // },
   // {
   //   accessorKey: "assignedDateTime",
   //   header: ({ column }) => renderSortButton(column, "Assigned Date Time"),

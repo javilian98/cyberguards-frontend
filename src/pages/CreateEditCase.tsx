@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
+  // CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -43,9 +43,9 @@ import {
   LuCheck,
   LuCheckCircle,
   LuChevronsUpDown,
-  LuExternalLink,
-  LuImport,
-  LuMoreHorizontal,
+  // LuExternalLink,
+  // LuImport,
+  // LuMoreHorizontal,
   LuPlus,
   LuTrash2,
 } from "react-icons/lu";
@@ -70,12 +70,20 @@ import { getUserList } from "@/api/usersApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  // Link,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { toast } from "sonner";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { CASE_STATUS, SUSPECT_TYPE, UserListItem } from "@/types/types";
+import {
+  CASE_STATUS,
+  // SUSPECT_TYPE,
+  UserListItem,
+} from "@/types/types";
 
 const assigneeSuspectedUserSchema = z
   .object({
@@ -95,21 +103,21 @@ const formSchema = z.object({
   }),
   riskScore: z.array(z.number()).length(1),
   assignee: z.union([assigneeSuspectedUserSchema, z.undefined()]).optional(),
-  suspectedUser: z
-    .union([assigneeSuspectedUserSchema, z.undefined()])
-    .optional(),
+  // suspectedUser: z
+  //   .union([assigneeSuspectedUserSchema, z.undefined()])
+  //   .optional(),
   // suspectTypeId: z.nativeEnum(SUSPECT_TYPE, {
   //   required_error: "Suspect Type must be selected.",
   // }),
-  suspectTypeId: z.number().refine(
-    (value) => {
-      // Custom validation logic for suspectTypeId
-      return Object.values(SUSPECT_TYPE).includes(value as SUSPECT_TYPE);
-    },
-    {
-      message: "Invalid suspect type.",
-    }
-  ),
+  // suspectTypeId: z.number().refine(
+  //   (value) => {
+  //     // Custom validation logic for suspectTypeId
+  //     return Object.values(SUSPECT_TYPE).includes(value as SUSPECT_TYPE);
+  //   },
+  //   {
+  //     message: "Invalid suspect type.",
+  //   }
+  // ),
   caseStatus: z.number().refine(
     (value) => {
       // Custom validation logic for caseStatus
@@ -136,7 +144,7 @@ function CreateEditCase() {
   );
 
   const [isFormEdited, setFormEdited] = useState(false);
-  const [showSuspectDropdown, setShowSuspectDropdown] = useState(true);
+  // const [showSuspectDropdown, setShowSuspectDropdown] = useState(true);
 
   const {
     data: caseDetailData,
@@ -162,18 +170,18 @@ function CreateEditCase() {
         id: data.assigneeId ?? null,
         fullName: data.assignee?.fullName ?? null,
       });
-      form.setValue("suspectedUser", {
-        id: data.suspectedUserId ?? null,
-        fullName: data.suspectedUser?.fullName ?? null,
-      });
-      form.setValue("suspectTypeId", Number(data.suspectTypeId));
+      // form.setValue("suspectedUser", {
+      //   id: data.suspectedUserId ?? null,
+      //   fullName: data.suspectedUser?.fullName ?? null,
+      // });
+      // form.setValue("suspectTypeId", Number(data.suspectTypeId));
       form.setValue("caseStatus", data.caseStatus);
 
-      if (data.suspectedUser?.fullName == null) {
-        setShowSuspectDropdown(true);
-      } else {
-        setShowSuspectDropdown(false);
-      }
+      // if (data.suspectedUser?.fullName == null) {
+      //   setShowSuspectDropdown(true);
+      // } else {
+      //   setShowSuspectDropdown(false);
+      // }
 
       return data;
     },
@@ -184,7 +192,7 @@ function CreateEditCase() {
     mutationKey: ["cases"],
     mutationFn: async (caseItem: z.infer<typeof formSchema>) => {
       const assigneeFormValue = form.getValues().assignee;
-      const suspectedUserFormValue = form.getValues().suspectedUser;
+      // const suspectedUserFormValue = form.getValues().suspectedUser;
 
       const assigneeFound = assigneeListData?.find((assignee) => {
         const fullName = assignee.firstName + " " + assignee.lastName;
@@ -192,22 +200,24 @@ function CreateEditCase() {
         return fullName === assigneeFormValue?.fullName;
       });
 
-      const suspectedUserFound = suspectedUserListData?.find(
-        (suspectedUser) => {
-          const fullName =
-            suspectedUser.firstName + " " + suspectedUser.lastName;
+      // const suspectedUserFound = suspectedUserListData?.find(
+      //   (suspectedUser) => {
+      //     const fullName =
+      //       suspectedUser.firstName + " " + suspectedUser.lastName;
 
-          return fullName === suspectedUserFormValue?.fullName;
-        }
-      );
+      //     return fullName === suspectedUserFormValue?.fullName;
+      //   }
+      // );
 
       return await createCase({
         ...caseItem,
         riskScore: caseItem.riskScore[0],
         assigneeId: assigneeFound?.id,
         caseStatus: caseItem.caseStatus,
-        suspectedUserId: suspectedUserFound?.id,
-        suspectTypeId: caseItem.suspectTypeId,
+        // suspectedUserId: suspectedUserFound?.id,
+        // suspectTypeId: caseItem.suspectTypeId,
+        suspectedUserId: "0",
+        suspectTypeId: 0,
       });
     },
     onError: (error) => {
@@ -226,7 +236,7 @@ function CreateEditCase() {
     mutationKey: ["updatecase", id],
     mutationFn: async (caseItem: z.infer<typeof formSchema>) => {
       const assigneeFormValue = form.getValues().assignee;
-      const suspectedUserFormValue = form.getValues().suspectedUser;
+      // const suspectedUserFormValue = form.getValues().suspectedUser;
 
       const assigneeFound = assigneeListData?.find((assignee) => {
         const fullName = assignee.firstName + " " + assignee.lastName;
@@ -234,14 +244,14 @@ function CreateEditCase() {
         return fullName === assigneeFormValue?.fullName;
       });
 
-      const suspectedUserFound = suspectedUserListData?.find(
-        (suspectedUser) => {
-          const fullName =
-            suspectedUser.firstName + " " + suspectedUser.lastName;
+      // const suspectedUserFound = suspectedUserListData?.find(
+      //   (suspectedUser) => {
+      //     const fullName =
+      //       suspectedUser.firstName + " " + suspectedUser.lastName;
 
-          return fullName === suspectedUserFormValue?.fullName;
-        }
-      );
+      //     return fullName === suspectedUserFormValue?.fullName;
+      //   }
+      // );
 
       console.log("updateCase ", caseItem);
 
@@ -251,8 +261,8 @@ function CreateEditCase() {
           riskScore: caseItem.riskScore[0],
           assigneeId: assigneeFound?.id,
           caseStatus: caseItem.caseStatus,
-          suspectedUserId: suspectedUserFound?.id,
-          suspectTypeId: caseItem.suspectTypeId,
+          suspectedUserId: "0",
+          suspectTypeId: 0,
         },
         id as string
       );
@@ -273,23 +283,23 @@ function CreateEditCase() {
     queryKey: ["assignees"],
     queryFn: async () => {
       // roleId: 1 is analyst
-      const data = await getUserList({ roleId: 1 });
+      const data = await getUserList();
 
       // setUsers(data);
       return data;
     },
   });
 
-  const { data: suspectedUserListData } = useQuery({
-    queryKey: ["suspectedUsers"],
-    queryFn: async () => {
-      // roleId: 1 is analyst
-      const data = await getUserList({ roleId: 0 });
+  // const { data: suspectedUserListData } = useQuery({
+  //   queryKey: ["suspectedUsers"],
+  //   queryFn: async () => {
+  //     // roleId: 1 is analyst
+  //     const data = await getUserList({ roleId: 0 });
 
-      // setUsers(data);
-      return data;
-    },
-  });
+  //     // setUsers(data);
+  //     return data;
+  //   },
+  // });
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -303,24 +313,29 @@ function CreateEditCase() {
         id: "",
         fullName: "",
       },
-      suspectedUser: {
-        id: "",
-        fullName: "",
-      },
-      suspectTypeId: undefined,
+      // suspectedUser: {
+      //   id: "",
+      //   fullName: "",
+      // },
+      // suspectTypeId: undefined,
       caseStatus: caseDetailData ? caseDetailData.caseStatus : CASE_STATUS.open,
       threatPageUrl: "",
     },
   });
 
   const [isAssigneeChanged, setIsAssigneeChanged] = useState(false);
-  const [isSuspectedUserChanged, setIsSuspectedUserChanged] = useState(false);
+  // const [isSuspectedUserChanged, setIsSuspectedUserChanged] = useState(false);
 
   useEffect(() => {
     setFormEdited(
-      form.formState.isDirty || isAssigneeChanged || isSuspectedUserChanged
+      form.formState.isDirty || isAssigneeChanged
+      // || isSuspectedUserChanged
     );
-  }, [form.formState.isDirty, isAssigneeChanged, isSuspectedUserChanged]);
+  }, [
+    form.formState.isDirty,
+    isAssigneeChanged,
+    // isSuspectedUserChanged
+  ]);
 
   // Handle form submission
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
@@ -397,15 +412,15 @@ function CreateEditCase() {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 Case Details
-                <Button>
+                {/* <Button>
                   <LuImport className="w-5 h-5 mr-3" />
                   Import Threat
-                </Button>
+                </Button> */}
               </CardTitle>
-              <CardDescription>
+              {/* <CardDescription>
                 You can populate a case by clicking on the import case button or
                 input the case details manually.
-              </CardDescription>
+              </CardDescription> */}
             </CardHeader>
             <CardContent>
               <div className="grid w-full items-center gap-2">
@@ -433,6 +448,7 @@ function CreateEditCase() {
                       <FormControl>
                         <Textarea
                           placeholder="Type your message here."
+                          rows={8}
                           {...field}
                         />
                       </FormControl>
@@ -484,8 +500,8 @@ function CreateEditCase() {
                 />
               </div>
 
-              <div className="flex">
-                <div className="grid w-full max-w-sm items-center gap-2 mt-8">
+              {/* <div className="flex"> */}
+              {/* <div className="grid w-full max-w-sm items-center gap-2 mt-8">
                   {!showSuspectDropdown && (
                     <>
                       <FormLabel>User Suspect</FormLabel>
@@ -612,8 +628,8 @@ function CreateEditCase() {
                       )}
                     />
                   )}
-                </div>
-                <div className="grid w-full max-w-sm items-center gap-2 mt-8">
+                </div> */}
+              {/* <div className="grid w-full max-w-sm items-center gap-2 mt-8">
                   <FormField
                     control={form.control}
                     name="suspectTypeId"
@@ -680,7 +696,7 @@ function CreateEditCase() {
                     )}
                   />
                 </div>
-              </div>
+              </div> */}
 
               <div className="grid w-full max-w-sm items-center gap-2 mt-8">
                 <FormField

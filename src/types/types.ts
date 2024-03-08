@@ -58,6 +58,67 @@ export interface UserDetail {
   lastAccessAt: string;
 }
 
+export interface EmployeeListItem {
+  id: string;
+  firstName: string;
+  lastName: string;
+  businessUnit: string;
+  riskScore: number;
+  totalOffences: number;
+}
+
+export interface BuildingAccessLogsDetails {
+  accessDateTime: string;
+  direction: string;
+  status: string;
+  officeLocation: string;
+  suspectType: number;
+}
+export interface BuildingAccessLogs {
+  employeeId: string;
+  accessDateTime: string;
+  officeLocation: string;
+  details: {
+    accessIn: BuildingAccessLogsDetails;
+    accessOut: BuildingAccessLogsDetails;
+  };
+}
+
+export interface PCAccessLogsDetails {
+  accessDateTime: string;
+  status: string;
+  machineName: string;
+  machineLocation: string;
+  suspectType: number;
+}
+export type PCAccessLogs = {
+  employeeId: string;
+  accessDateTime: string;
+  machineLocation: string;
+  machineName: string;
+  details: {
+    logOn: PCAccessLogsDetails;
+    logOff: PCAccessLogsDetails;
+  };
+};
+
+export type ProxyLogsDetails = {
+  accessDateTime: string;
+  machineName: string;
+  url: string;
+  category: string;
+  bytesIn: number;
+  bytesOut: number;
+  suspectType: string;
+};
+export type ProxyLogs = {
+  employeeId: string;
+  accessDateTime: string;
+  bytesIn: number;
+  bytesOut: number;
+  details: ProxyLogsDetails;
+};
+
 export enum CASE_STATUS {
   open = 1,
   assigned = 2,
