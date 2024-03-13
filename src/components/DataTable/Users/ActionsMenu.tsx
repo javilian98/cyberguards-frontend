@@ -1,12 +1,7 @@
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useUserStore } from "@/stores/useUserStore";
 
-import {
-  LuEye,
-  LuMoreHorizontal,
-  LuPencilLine,
-  LuTrash2,
-} from "react-icons/lu";
+import { LuMoreHorizontal, LuPencilLine, LuTrash2 } from "react-icons/lu";
 
 import { UserListItem } from "@/types/types";
 import { Row } from "@tanstack/react-table";
