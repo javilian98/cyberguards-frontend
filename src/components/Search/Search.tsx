@@ -35,7 +35,7 @@ function Search({
   return (
     <Sheet>
       <div
-        className={`relative flex items-center justify-between max-w-[${width}] mb-2`}
+        className={`relative flex items-center justify-between w-full max-w-lg mb-2`}
       >
         <LuSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform" />
         <Input

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import {
-  FiHome,
+  // FiHome,
   FiAlertTriangle,
   FiUsers,
   FiFolderMinus,
@@ -12,21 +12,28 @@ import {
 
 import AvatarMenu from "@/components/AvatarMenu/AvatarMenu";
 
+import Logo from "@/assets/logo.jpg";
+
 export default function Sidebar() {
   const { pathname } = useLocation();
 
   const renderActiveLinkStyle = (pathname: string, selectedPath: string) => {
-    if (pathname === selectedPath) return "secondary";
+    if (
+      (selectedPath === "/threats" && pathname.includes("threats")) ||
+      (selectedPath === "/users" && pathname.includes("users")) ||
+      (selectedPath === "/cases" && pathname.includes("cases"))
+    )
+      return "bg-slate-700 text-white hover:bg-slate-900 hover:text-white";
 
     return "ghost";
   };
 
   const links = [
-    {
-      path: "/",
-      name: "Home",
-      icon: <FiHome className="h-5 w-5 mr-3" />,
-    },
+    // {
+    //   path: "/",
+    //   name: "Home",
+    //   icon: <FiHome className="h-5 w-5 mr-3" />,
+    // },
     {
       path: "/threats",
       name: "Threats",
@@ -34,7 +41,7 @@ export default function Sidebar() {
     },
     {
       path: "/users",
-      name: "Users",
+      name: "Analysts",
       icon: <FiUsers className="h-5 w-5 mr-3" />,
     },
     {
@@ -50,10 +57,15 @@ export default function Sidebar() {
         <div>
           <div className="px-7 py-2">
             <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-gray-600"></div>
-              <h2 className="px-4 text-lg font-semibold tracking-tight">
-                Cyberguards
-              </h2>
+              <Link to="/threats" className="flex items-center">
+                <div className="w-12 h-12 bg-gray-600">
+                  <img src={Logo} alt="Cyberguards Logo" />
+                </div>
+
+                <h2 className="px-4 text-lg font-semibold tracking-tight">
+                  Cyberguards
+                </h2>
+              </Link>
             </div>
           </div>
           <div className="px-3 py-2">
@@ -62,8 +74,12 @@ export default function Sidebar() {
                 return (
                   <Link key={linkItem.path} to={linkItem.path}>
                     <Button
-                      variant={renderActiveLinkStyle(pathname, linkItem.path)}
-                      className="w-full justify-start"
+                      // variant={renderActiveLinkStyle(pathname, linkItem.path)}
+                      variant="ghost"
+                      className={`w-full justify-start ${renderActiveLinkStyle(
+                        pathname,
+                        linkItem.path
+                      )}`}
                     >
                       {linkItem.icon}
                       {linkItem.name}

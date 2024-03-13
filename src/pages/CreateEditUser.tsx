@@ -2,19 +2,19 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
+  // CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectGroup,
+//   SelectItem,
+//   SelectLabel,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -47,7 +47,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useEffect, useState } from "react";
-import { ROLE_ID, UserListItem } from "@/types/types";
+import {
+  // ROLE_ID,
+  UserListItem,
+} from "@/types/types";
 
 const formSchema = z.object({
   firstName: z.string().min(1, {
@@ -56,18 +59,18 @@ const formSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name cannot be empty.",
   }),
-  profession: z.string().min(1, {
-    message: "Profession cannot be empty.",
-  }),
-  roleId: z.number().refine(
-    (value) => {
-      // Custom validation logic for suspectTypeId
-      return Object.values(ROLE_ID).includes(value as ROLE_ID);
-    },
-    {
-      message: "Invalid user role type.",
-    }
-  ),
+  // profession: z.string().min(1, {
+  //   message: "Profession cannot be empty.",
+  // }),
+  // roleId: z.number().refine(
+  //   (value) => {
+  //     // Custom validation logic for suspectTypeId
+  //     return Object.values(ROLE_ID).includes(value as ROLE_ID);
+  //   },
+  //   {
+  //     message: "Invalid user role type.",
+  //   }
+  // ),
 });
 
 function CreateEditUser() {
@@ -102,8 +105,8 @@ function CreateEditUser() {
 
       form.setValue("firstName", data.firstName);
       form.setValue("lastName", data.lastName);
-      form.setValue("profession", data.profession);
-      form.setValue("roleId", data.roleId as unknown as ROLE_ID);
+      // form.setValue("profession", data.profession);
+      // form.setValue("roleId", data.roleId as unknown as ROLE_ID);
 
       return data;
     },
@@ -115,7 +118,9 @@ function CreateEditUser() {
     mutationFn: async (userItem: z.infer<typeof formSchema>) => {
       return await createUser({
         ...userItem,
-        roleId: Number(userItem.roleId),
+        // roleId: Number(userItem.roleId),
+        roleId: 1,
+        profession: "",
       });
     },
     onError: () => {},
@@ -136,7 +141,8 @@ function CreateEditUser() {
       return await updateUser(
         {
           ...userItem,
-          roleId: Number(userItem.roleId),
+          roleId: 1,
+          profession: "",
         },
         id as string
       );
@@ -159,10 +165,10 @@ function CreateEditUser() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      profession: "",
-      roleId: userDetailData
-        ? (userDetailData.roleId as unknown as ROLE_ID)
-        : (0 as unknown as ROLE_ID),
+      // profession: "",
+      // roleId: userDetailData
+      //   ? (userDetailData.roleId as unknown as ROLE_ID)
+      //   : (0 as unknown as ROLE_ID),
     },
   });
 
@@ -204,14 +210,14 @@ function CreateEditUser() {
       return (
         <Button className="w-[150px]" type="submit" disabled={!isFormEdited}>
           <LuCheckCircle className="w-5 h-5 mr-2" />
-          Update User
+          Update Analyst
         </Button>
       );
     }
     return (
       <Button className="w-[150px]" type="submit">
         <LuPlus className="w-5 h-5 mr-2" />
-        Create User
+        Create Analyst
       </Button>
     );
   };
@@ -228,7 +234,7 @@ function CreateEditUser() {
   }
 
   if (userDetailError) {
-    return <div>Case Detail cannot be found.</div>;
+    return <div>Analyst Detail cannot be found.</div>;
   }
 
   return (
@@ -236,19 +242,19 @@ function CreateEditUser() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <h1 className="text-2xl font-semibold tracking-tight mb-10">
-            {"Edit User Profile" ?? "Create a User"}
+            {"Edit Analyst's Profile" ?? "Create an Analyst"}
           </h1>
           <Card className="max-w-[700px] mb-14">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 {userDetailData != undefined
                   ? `${computeFullName(userDetailData)}'s Profile`
-                  : "User's Profile"}
+                  : "Analyst's Profile"}
               </CardTitle>
-              <CardDescription>
+              {/* <CardDescription>
                 You can populate a case by clicking on the import case button or
                 input the case details manually.
-              </CardDescription>
+              </CardDescription> */}
             </CardHeader>
             <CardContent>
               <div className="grid w-full items-center gap-2">
@@ -283,7 +289,7 @@ function CreateEditUser() {
                 />
               </div>
 
-              <div className="grid w-full max-w-sm items-center gap-2 mt-6">
+              {/* <div className="grid w-full max-w-sm items-center gap-2 mt-6">
                 <FormField
                   control={form.control}
                   name="profession"
@@ -297,9 +303,9 @@ function CreateEditUser() {
                     </FormItem>
                   )}
                 />
-              </div>
+              </div> */}
 
-              <div className="grid w-full max-w-sm items-center gap-2 mt-6">
+              {/* <div className="grid w-full max-w-sm items-center gap-2 mt-6">
                 <FormField
                   control={form.control}
                   name="roleId"
@@ -334,7 +340,7 @@ function CreateEditUser() {
                     </FormItem>
                   )}
                 />
-              </div>
+              </div> */}
             </CardContent>
           </Card>
           <div className="fixed bottom-0 flex justify-center gap-4 w-[calc(100%-300px)] py-2 px-3 bg-white border-t-2">

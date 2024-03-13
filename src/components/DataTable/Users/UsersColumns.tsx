@@ -104,31 +104,31 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
     accessorKey: "lastName",
     header: ({ column }) => renderSortButton(column, "Last Name"),
   },
-  {
-    accessorKey: "profession",
-    header: ({ column }) => renderSortButton(column, "Profession"),
-  },
-  {
-    accessorKey: "riskScore",
-    header: ({ column }) => renderSortButton(column, "Risk Score"),
-    cell: ({ row }) => (
-      <div className="text-left">{row.getValue("riskScore")}</div>
-    ),
-  },
-  {
-    accessorKey: "roleId",
-    header: ({ column }) => renderSortButton(column, "Role"),
-    cell: ({ row }) => (
-      <div className="text-left">{renderRoleTag(row.getValue("roleId"))}</div>
-    ),
-  },
-  {
-    accessorKey: "suspectCaseId",
-    header: ({ column }) => renderSortButton(column, "Current Suspect Type"),
-    cell: ({ row }) => (
-      <div className="text-center">{row.getValue("suspectCaseId")}</div>
-    ),
-  },
+  // {
+  //   accessorKey: "profession",
+  //   header: ({ column }) => renderSortButton(column, "Profession"),
+  // },
+  // {
+  //   accessorKey: "riskScore",
+  //   header: ({ column }) => renderSortButton(column, "Risk Score"),
+  //   cell: ({ row }) => (
+  //     <div className="text-left">{row.getValue("riskScore")}</div>
+  //   ),
+  // },
+  // {
+  //   accessorKey: "roleId",
+  //   header: ({ column }) => renderSortButton(column, "Role"),
+  //   cell: ({ row }) => (
+  //     <div className="text-left">{renderRoleTag(row.getValue("roleId"))}</div>
+  //   ),
+  // },
+  // {
+  //   accessorKey: "suspectCaseId",
+  //   header: ({ column }) => renderSortButton(column, "Total Cases Handed"),
+  //   cell: ({ row }) => (
+  //     <div className="text-center">{row.getValue("suspectCaseId")}</div>
+  //   ),
+  // },
 
   {
     id: "actions",

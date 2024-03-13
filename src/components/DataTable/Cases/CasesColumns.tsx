@@ -121,10 +121,6 @@ export const casesColumns: ColumnDef<Case>[] = [
     header: ({ column }) => renderSortButton(column, "Case Title"),
   },
   {
-    accessorKey: "riskStatus",
-    header: ({ column }) => renderSortButton(column, "Risk Status"),
-  },
-  {
     accessorKey: "riskScore",
     header: ({ column }) => renderSortButton(column, "Risk Score"),
   },
@@ -135,6 +131,18 @@ export const casesColumns: ColumnDef<Case>[] = [
   {
     accessorKey: "assignee",
     header: ({ column }) => renderSortButton(column, "Assignee"),
+    cell: ({ row }) => {
+      const cellValue: string | null | undefined =
+        row.getValue("assignee") != null
+          ? row.getValue("assignee")
+          : "Unassigned";
+
+      return (
+        <span className={cellValue == "Unassigned" ? "text-red-500" : ""}>
+          {cellValue}
+        </span>
+      );
+    },
   },
   // {
   //   accessorKey: "assignedDateTime",

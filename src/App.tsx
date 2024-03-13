@@ -10,6 +10,7 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import CreateEditCase from "./pages/CreateEditCase";
 import { Toaster } from "sonner";
 import CreateEditUser from "./pages/CreateEditUser";
+import ThreatDetail from "./pages/ThreatDetail";
 
 function App() {
   const location = useLocation(); // This hook gives you access to the location object
@@ -27,7 +28,18 @@ function App() {
             {/* Other routes remain the same */}
             <Route element={<PrivateRoutes />}>
               <Route index path="/" element={<Home />} />
-              <Route path="/threats" element={<Threats />} />
+              {/* <Route path="/threats" element={<Threats />} /> */}
+              <Route path="threats">
+                <Route index element={<Threats />} />
+                <Route
+                  path="employee/:employeeid/:logtype"
+                  element={<ThreatDetail />}
+                />
+                <Route
+                  path="employee/:employeeid/:logtype/:logid"
+                  element={<ThreatDetail />}
+                />
+              </Route>
               <Route path="users">
                 <Route index element={<Users />} />
                 <Route path=":id" element={<UserDetail />} />

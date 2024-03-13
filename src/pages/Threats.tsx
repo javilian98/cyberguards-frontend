@@ -1,253 +1,130 @@
-import React, { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { VictoryChart, VictoryTheme, VictoryArea, VictoryPie } from "victory";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Threat, threatColumns } from "@/components/ui/threatsColumn";
-import { DataTable } from "@/components/ui/datatable";
+// import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 
-// Define a type for the props expected by the StatCard component
-type StatCardProps = {
-  title: string;
-  value: string;
-  progress?: number;
-};
+// import { LuPlus } from "react-icons/lu";
+// import { Button } from "@/components/ui/button";
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, progress }) => (
-  <Card className="flex-1 mx-2 my-2">
-    <CardHeader>
-      <CardTitle>{title}</CardTitle>
-    </CardHeader>
-    <CardContent className="flex justify-between items-center">
-      <CardDescription>{value}</CardDescription>
-      {progress !== undefined && <Progress value={progress} />}
-    </CardContent>
-  </Card>
-);
+import Search from "@/components/Search/Search";
+// import { deleteUser, getUserList } from "@/api/usersApi";
+// import { useUserStore } from "@/stores/useUserStore";
+// import {
+//   useMutation,
+//   useQuery,
+//   useQueryClient,
+//   // useQueryClient
+// } from "@tanstack/react-query";
 
-// Example data for stat cards, replace with actual data from your state or props
-const stats = {
-  monitoredUsers: 105,
-  highRiskUserPercentage: 0,
-  usersDiscoveredFromEvents: 79,
-  usersImportedFromDirectory: 26,
-  activeAnalytics: { current: 84, total: 215 },
-};
+import { DataTable } from "@/components/DataTable/DataTable";
+import FixedHeader from "@/components/Layouts/Header/FixedHeader";
+import { threatsColumns } from "@/components/DataTable/Threats/ThreatsColumns";
+import { useThreatStore } from "@/stores/useThreatStore";
 
-// Async function to fetch data
-async function getData(): Promise<Threat[]> {
-  // Replace with actual data fetching logic
-  return [
-    {
-      username: "Haiyang",
-      recent_risk: 9,
-      overall_risk: 72,
-    },
-    {
-      username: "Javier",
-      recent_risk: 0,
-      overall_risk: 8,
-    },
-    // ... more data
-  ];
-}
+function Threats() {
+  const employees = useThreatStore((state) => state.employees);
+  // const setEmployees = useThreatStore((state) => state.setEmployees);
 
-// Define the type for a log entry based on the provided image structure
-type LogEntry = {
-  offenseNumber: string;
-  username: string;
-  description: string;
-  eventCount: number;
-  flowCount: number;
-  magnitude: number;
-  updatedTime: string;
-};
+  // const currentSelectedEmployee = useThreatStore(
+  //   (state) => state.currentSelectedEmployee
+  // );
+  // const isSingleRowActionDialogOpen = useAlertDialogStore(
+  //   (state) => state.isSingleRowActionDialogOpen
+  // );
+  // const setSingleRowActionDialogOpen = useAlertDialogStore(
+  //   (state) => state.setSingleRowActionDialogOpen
+  // );
 
-// Create dummy log data based on the provided image
-const dummyLogData: LogEntry[] = [
-  {
-    offenseNumber: "#665",
-    username: "Jay Blue",
-    description:
-      "Multiple Login Failures for the Same User preceded by Multiple Login Failures to the Same Destination preceded by Login Failures Followed By Success from the same Username containing Failed Password For SSH",
-    eventCount: 44036,
-    flowCount: 0,
-    magnitude: 5,
-    updatedTime: "updated 3 minutes ago",
-  },
-  {
-    offenseNumber: "#633",
-    username: "Ray Sharrer",
-    description:
-      "Multiple Login Failures for the Same User preceded by Multiple Login Failures to the Same Destination preceded by Login Failures Followed By Success from the same Username containing Login attempt - failed",
-    eventCount: 190597,
-    flowCount: 0,
-    magnitude: 5,
-    updatedTime: "updated 3 minutes ago",
-  },
-  // ... more log entries
-];
+  // const queryClient = useQueryClient();
 
-// Define some dummy data for the area chart
-const areaData = [
-  { x: new Date("Dec 12 2020 00:00"), y: 200 },
-  { x: new Date("Dec 12 2020 06:00"), y: 250 },
-  { x: new Date("Dec 12 2020 12:00"), y: 220 },
-  { x: new Date("Dec 12 2020 18:00"), y: 215 },
-  { x: new Date("Dec 13 2020 00:00"), y: 225 },
-  { x: new Date("Dec 13 2020 06:00"), y: 240 },
-  { x: new Date("Dec 13 2020 12:00"), y: 230 },
-];
+  // const usersQuery = useQuery({
+  //   queryKey: ["users"],
+  //   queryFn: async () => {
+  //     const data = await getUserList();
+  //     console.log("users ", data);
 
-// Define some dummy data for the pie chart
-const pieData = [
-  { x: "User Behavior", y: 75 },
-  { x: "UBA Machine Learning Anomaly", y: 25 },
-];
+  //     setUsers(data);
+  //     return data;
+  //   },
+  // });
 
-const Threats: React.FC = () => {
-  const [threatData, setThreatData] = useState<Threat[]>([]);
+  // const deleteUserMutation = useMutation({
+  //   mutationFn: async (id: string) => {
+  //     await deleteUser(id);
+  //   },
+  //   onSuccess: () => {
+  //     const newUsers = users.filter(
+  //       (item) => item.id !== currentSelectedUser.id
+  //     );
+  //     setUsers(newUsers);
+  //     toast.success("User deleted successfully");
+  //   },
+  //   onSettled: async (_, error) => {
+  //     if (error) {
+  //       console.log(error);
+  //     } else {
+  //       await queryClient.invalidateQueries({ queryKey: ["users"] });
+  //     }
+  //   },
+  // });
 
-  useEffect(() => {
-    let isMounted = true;
-    getData().then((data) => {
-      if (isMounted) {
-        setThreatData(data);
-      }
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  // const deleteMultipleUsersMutation = useMutation({
+  //   mutationFn: async (ids: string[]) => {
+  //     console.log("ids ", ids);
+
+  //     await Promise.all(ids.map((id) => deleteUser(id)));
+  //   },
+  //   onSuccess: () => {
+  //     const newUsers = users.filter(
+  //       (item) =>
+  //         !selectedUsers.some((selectedUser) => selectedUser.id === item.id)
+  //     );
+
+  //     console.log("newUsers ", newUsers);
+
+  //     setUsers(newUsers);
+  //     setSelectedUsers([]);
+  //     toast.success("Users deleted successfully");
+  //   },
+  //   onSettled: async (_, error) => {
+  //     if (error) {
+  //       console.log(error);
+  //     } else {
+  //       await queryClient.invalidateQueries({ queryKey: ["users"] });
+  //     }
+  //   },
+  // });
+
+  // const handleDelete = () => {
+  //   deleteUserMutation.mutate(currentSelectedUser.id);
+  // };
+
+  // const handleDeleteAllSelected = () => {
+  //   const selectedUserIds = selectedUsers.map((userItem) => userItem.id);
+  //   console.log("selectedUserIds ", selectedUserIds);
+
+  //   deleteMultipleUsersMutation.mutate(selectedUserIds);
+  // };
 
   return (
-    <div className="container mx-auto py-10">
-      {/* Card collection */}
-      <div className="flex justify-between mb-8">
-        <StatCard
-          title="Monitored Users"
-          value={stats.monitoredUsers.toString()}
-        />
-        <StatCard
-          title="High Risk Users"
-          value={`${stats.highRiskUserPercentage}%`}
-          progress={stats.highRiskUserPercentage}
-        />
-        <StatCard
-          title="Discovered from Events"
-          value={`${stats.usersDiscoveredFromEvents}%`}
-          progress={stats.usersDiscoveredFromEvents}
-        />
-        <StatCard
-          title="Imported from Directory"
-          value={`${stats.usersImportedFromDirectory}%`}
-          progress={stats.usersImportedFromDirectory}
-        />
-        <StatCard
-          title="Active Analytics"
-          value={`${stats.activeAnalytics.current} of ${stats.activeAnalytics.total}`}
-          progress={
-            (stats.activeAnalytics.current / stats.activeAnalytics.total) * 100
-          }
-        />
-      </div>
+    <>
+      <FixedHeader>
+        <Search placeholderText="Search threats" drawerTitle="Filter Threats">
+          asd
+        </Search>
+        {/* <Link to="/users/create">
+          <Button>
+            <LuPlus className="w-5 h-5 mr-2 text-white" />
+            Create User
+          </Button>
+        </Link> */}
+      </FixedHeader>
 
-      <div className="flex flex-wrap justify-between">
-        <div className="w-full lg:w-1/3 lg:pr-2">
-          <Card>
-            <DataTable columns={threatColumns} data={threatData} />
-          </Card>
-        </div>
-        <div className="w-full lg:w-2/3 lg:pl-2">
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Offense</TableHead>
-                  <TableHead>Username</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Event Count</TableHead>
-                  <TableHead>Flow Count</TableHead>
-                  <TableHead>Magnitude</TableHead>
-                  <TableHead>Last Updated</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {dummyLogData.map((log) => (
-                  <TableRow key={log.offenseNumber}>
-                    <TableCell>{log.offenseNumber}</TableCell>
-                    <TableCell>{log.username}</TableCell>
-                    <TableCell>{log.description}</TableCell>
-                    <TableCell>{log.eventCount}</TableCell>
-                    <TableCell>{log.flowCount}</TableCell>
-                    <TableCell>
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <Progress value={(log.magnitude / 10) * 100} />
-                        <span
-                          style={{ marginLeft: "8px" }}
-                        >{`${log.magnitude}/10`}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>{log.updatedTime}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-        </div>
-        <div className="flex flex-wrap justify-between">
-          <div className="w-full lg:w-1/3 lg:pr-2">
-            <Card>
-              <VictoryChart
-                width={600}
-                theme={VictoryTheme.material}
-                scale={{ x: "time" }}
-              >
-                <VictoryArea
-                  style={{ data: { fill: "#c43a31" } }}
-                  data={areaData}
-                  interpolation="natural"
-                />
-              </VictoryChart>
-            </Card>
-          </div>
-          <div className="w-full lg:w-1/3 lg:pr-2">
-            <Card>
-              <VictoryPie
-                // padAngle={({ datum }) => datum.y}
-                // innerRadius={100}
-                data={pieData}
-                style={{
-                  labels: { fill: "black", fontSize: 12, fontWeight: "bold" },
-                  data: {
-                    fill: ({ datum }) => {
-                      const color =
-                        datum.x === "User Behavior" ? "#4c9aff" : "#ff8c00";
-                      return datum.y > 0 ? color : "transparent"; // Only color the slice if there is a value
-                    },
-                  },
-                }}
-                labels={({ datum }) => `${datum.x}: ${datum.y}%`}
-              />
-            </Card>
-          </div>
-        </div>
+      <div className="mt-16">
+        <DataTable
+          columns={threatsColumns}
+          data={employees}
+          // actionDelete={handleDeleteAllSelected}
+        />
       </div>
-    </div>
+    </>
   );
-};
-
+}
 export default Threats;

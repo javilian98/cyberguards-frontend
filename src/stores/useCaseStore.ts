@@ -14,7 +14,6 @@ interface CaseStore {
 const initCurrentSelectedCase: Case = {
   id: "",
   title: "",
-  riskStatus: "low",
   riskScore: 0,
   createdAt: "",
   assignee: {

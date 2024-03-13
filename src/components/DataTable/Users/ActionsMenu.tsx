@@ -1,12 +1,7 @@
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useUserStore } from "@/stores/useUserStore";
 
-import {
-  LuEye,
-  LuMoreHorizontal,
-  LuPencilLine,
-  LuTrash2,
-} from "react-icons/lu";
+import { LuMoreHorizontal, LuPencilLine, LuTrash2 } from "react-icons/lu";
 
 import { UserListItem } from "@/types/types";
 import { Row } from "@tanstack/react-table";
@@ -34,10 +29,10 @@ function ActionsMenu({ row }: ActionsMenuProps) {
   );
   const navigate = useNavigate();
 
-  const handleViewUser = () => {
-    setCurrentSelectedUser(row.original);
-    navigate(`/users/${row.original.id}`);
-  };
+  // const handleViewUser = () => {
+  //   setCurrentSelectedUser(row.original);
+  //   navigate(`/users/${row.original.id}`);
+  // };
 
   const handleEditUser = () => {
     setCurrentSelectedUser(row.original);
@@ -59,13 +54,13 @@ function ActionsMenu({ row }: ActionsMenuProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={handleViewUser}>
+        {/* <DropdownMenuItem onClick={handleViewUser}>
           <LuEye className="w-4 h-4 mr-2" />
-          View User
-        </DropdownMenuItem>
+          View Analyst
+        </DropdownMenuItem> */}
         <DropdownMenuItem onClick={handleEditUser}>
           <LuPencilLine className="w-4 h-4 mr-2" />
-          Edit User
+          Edit Analyst
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -73,7 +68,7 @@ function ActionsMenu({ row }: ActionsMenuProps) {
           onClick={handleDeleteDialogVisibility}
         >
           <LuTrash2 className="w-4 h-4 mr-2" />
-          Delete User
+          Delete Analyst
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
