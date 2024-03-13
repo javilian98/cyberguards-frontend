@@ -2,7 +2,6 @@ import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useCaseStore } from "@/stores/useCaseStore";
 
 import {
-  LuEye,
   LuMoreHorizontal,
   LuPencilLine,
   LuTrash2,

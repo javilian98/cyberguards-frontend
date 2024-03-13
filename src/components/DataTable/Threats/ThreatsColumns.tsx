@@ -1,13 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Checkbox } from "@/components/ui/checkbox";
 
-import { useUserStore } from "@/stores/useUserStore";
+// import { useUserStore } from "@/stores/useUserStore";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
-import { EmployeeListItem, ROLE_ID, UserListItem } from "@/types/types";
+import { EmployeeListItem, ROLE_ID } from "@/types/types";
 import ActionsMenu from "@/components/DataTable/Threats/ActionsMenu";
 
-const renderSortButton = (column: Column<UserListItem>, columnName: string) => {
+const renderSortButton = (
+  column: Column<EmployeeListItem>,
+  columnName: string
+) => {
   return (
     <Button
       variant="ghost"
@@ -47,55 +50,46 @@ export const renderRoleTag = (roleId: ROLE_ID) => {
 };
 
 export const threatsColumns: ColumnDef<EmployeeListItem>[] = [
-  {
-    id: "select",
-    header: ({ table }) => {
-      const { users, setSelectedUsers } = useUserStore.getState();
+  // {
+  //   id: "select",
+  //   header: ({ table }) => {
+  //     const { users, setSelectedUsers } = useUserStore.getState();
 
-      return (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => {
-            table.toggleAllPageRowsSelected(!!value);
+  //     return (
+  //       <Checkbox
+  //         checked={
+  //           table.getIsAllPageRowsSelected() ||
+  //           (table.getIsSomePageRowsSelected() && "indeterminate")
+  //         }
+  //         onCheckedChange={(value) => {
+  //           table.toggleAllPageRowsSelected(!!value);
 
-            if (table.getIsAllPageRowsSelected()) {
-              setSelectedUsers([]);
-            } else {
-              setSelectedUsers(users);
-            }
-          }}
-          aria-label="Select all"
-        />
-      );
-    },
-    cell: ({ row }) => {
-      const { selectedUsers, setSelectedUsers } = useUserStore.getState();
+  //           if (table.getIsAllPageRowsSelected()) {
+  //             setSelectedUsers([]);
+  //           } else {
+  //             setSelectedUsers(users);
+  //           }
+  //         }}
+  //         aria-label="Select all"
+  //       />
+  //     );
+  //   },
+  //   cell: ({ row }) => {
+  //     const { selectedUsers, setSelectedUsers } = useUserStore.getState();
 
-      return (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => {
-            row.toggleSelected(!!value);
-
-            if (row.getIsSelected()) {
-              const newSelectedUsers = selectedUsers.filter(
-                (item) => item.id !== row.original.id
-              );
-              setSelectedUsers(newSelectedUsers);
-            } else {
-              setSelectedUsers([...selectedUsers, row.original]);
-            }
-          }}
-          aria-label="Select row"
-        />
-      );
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
+  //     return (
+  //       <Checkbox
+  //         checked={row.getIsSelected()}
+  //         onCheckedChange={(value) => {
+  //           row.toggleSelected(!!value);
+  //         }}
+  //         aria-label="Select row"
+  //       />
+  //     );
+  //   },
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
     accessorKey: "firstName",
     header: ({ column }) => renderSortButton(column, "First Name"),
