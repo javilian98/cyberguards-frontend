@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 import {
-  Cell,
   ColumnDef,
   Row,
   SortingState,
@@ -147,7 +146,6 @@ export function DataTable<TData, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     onClick={() => {
-                      console.log(row);
                       setSelectedRow && setSelectedRow(row);
                     }}
                   >

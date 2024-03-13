@@ -121,10 +121,6 @@ export const casesColumns: ColumnDef<Case>[] = [
     header: ({ column }) => renderSortButton(column, "Case Title"),
   },
   {
-    accessorKey: "riskStatus",
-    header: ({ column }) => renderSortButton(column, "Risk Status"),
-  },
-  {
     accessorKey: "riskScore",
     header: ({ column }) => renderSortButton(column, "Risk Score"),
   },

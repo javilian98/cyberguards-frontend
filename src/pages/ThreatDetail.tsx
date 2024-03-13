@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link, useParams, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-// import { LuPencilLine } from "react-icons/lu";
+import { useEffect } from "react";
 import {
   Avatar,
   AvatarFallback,
@@ -19,205 +18,15 @@ import {
   ProxyLogs,
 } from "@/types/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Row } from "@tanstack/react-table";
 import { useThreatStore } from "@/stores/useThreatStore";
-
-const buildingAccessLogsData: BuildingAccessLogs[] = [
-  {
-    employeeId: "1",
-    accessDateTime: "2 Mar 2024",
-    officeLocation: "Singapore",
-    details: {
-      accessIn: {
-        accessDateTime: "2024-03-02 08:13:23.000000",
-        direction: "IN",
-        status: "Success",
-        officeLocation: "Singapore",
-        suspectType: 0,
-      },
-      accessOut: {
-        accessDateTime: "2024-03-02 16:30:23.000000",
-        direction: "OUT",
-        status: "Success",
-        officeLocation: "Singapore",
-        suspectType: 0,
-      },
-    },
-  },
-  {
-    employeeId: "1",
-    accessDateTime: "22 Feb 2024",
-    officeLocation: "Singapore",
-    details: {
-      accessIn: {
-        accessDateTime: "2024-02-22 04:37:55.000000",
-        direction: "IN",
-        status: "Success",
-        officeLocation: "Singapore",
-        suspectType: 0,
-      },
-      accessOut: {
-        accessDateTime: "2024-02-22 12:30:49.000000",
-        direction: "OUT",
-        status: "Success",
-        officeLocation: "Singapore",
-        suspectType: 0,
-      },
-    },
-  },
-  {
-    employeeId: "2",
-    accessDateTime: "4 Feb 2024",
-    officeLocation: "Singapore",
-    details: {
-      accessIn: {
-        accessDateTime: "2024-02-04 02:37:55.000000",
-        direction: "IN",
-        status: "Success",
-        officeLocation: "Singapore",
-        suspectType: 0,
-      },
-      accessOut: {
-        accessDateTime: "2024-02-04 10:30:49.000000",
-        direction: "OUT",
-        status: "Success",
-        officeLocation: "Singapore",
-        suspectType: 0,
-      },
-    },
-  },
-  {
-    employeeId: "3",
-    accessDateTime: "19 Feb 2024",
-    officeLocation: "Singapore",
-    details: {
-      accessIn: {
-        accessDateTime: "2024-02-19 05:37:55.000000",
-        direction: "IN",
-        status: "Success",
-        officeLocation: "Singapore",
-        suspectType: 0,
-      },
-      accessOut: {
-        accessDateTime: "2024-02-19 09:30:49.000000",
-        direction: "OUT",
-        status: "Success",
-        officeLocation: "Singapore",
-        suspectType: 0,
-      },
-    },
-  },
-];
-
-const pcAccessLogsData: PCAccessLogs[] = [
-  {
-    employeeId: "1",
-    accessDateTime: "21 Feb 2024",
-    machineLocation: "Singapore",
-    machineName: "PC_1",
-    details: {
-      logOn: {
-        accessDateTime: "2024-02-21 16:30:49.000000",
-        status: "Log On",
-        machineName: "PC_1",
-        machineLocation: "Singapore",
-        suspectType: 0,
-      },
-      logOff: {
-        accessDateTime: "2024-02-21 19:30:49.000000",
-        status: "Log Off",
-        machineName: "PC_1",
-        machineLocation: "Singapore",
-        suspectType: 0,
-      },
-    },
-  },
-  {
-    employeeId: "1",
-    accessDateTime: "17 Feb 2024",
-    machineLocation: "Singapore",
-    machineName: "PC_2",
-    details: {
-      logOn: {
-        accessDateTime: "2024-02-17 16:30:49.000000",
-        status: "Log On",
-        machineName: "PC_2",
-        machineLocation: "Singapore",
-        suspectType: 0,
-      },
-      logOff: {
-        accessDateTime: "2024-02-17 19:30:49.000000",
-        status: "Log Off",
-        machineName: "PC_2",
-        machineLocation: "Singapore",
-        suspectType: 0,
-      },
-    },
-  },
-];
-
-const proxyLogsData: ProxyLogs[] = [
-  {
-    employeeId: "1",
-    accessDateTime: "17 Feb 2024",
-    bytesIn: 3373816,
-    bytesOut: 2406833,
-    details: {
-      accessDateTime: "2024-02-17 19:30:49.000000",
-      machineName: "PC_1",
-      url: "https://www.careers.sl",
-      category: "Finance, Insurance",
-      bytesIn: 3373816,
-      bytesOut: 2406833,
-      suspectType: "6",
-    },
-  },
-  {
-    employeeId: "3",
-    accessDateTime: "5 Jan 2024",
-    bytesIn: 963286,
-    bytesOut: 4987004,
-    details: {
-      accessDateTime: "2024-01-05 12:39:24.000000",
-      machineName: "PC_1",
-      url: "https://www.careers.sl",
-      category: "Community and Society, Philanthropy",
-      bytesIn: 963286,
-      bytesOut: 4987004,
-      suspectType: "6",
-    },
-  },
-];
-
-// {
-//   "access_date": "2024-03-06",
-//   "office_location": "Singapore",
-//   "suspect": 0,
-//   "details": {
-//     "access_in": {
-//       "access_date_time": "2023-01-02 08:13:23.000000",
-//       "direction": "IN",
-//       "status": "Success",
-//       "office_location": "Singapore",
-//       "suspect": 0,
-//     },
-//     "access_out": {
-//       "access_date_time": "2023-01-02 16:30:23.000000",
-//       "direction": "OUT",
-//       "status": "Success",
-//       "office_location": "Singapore",
-//       "suspectType": 0,
-//     }
-//   }
-// }
+import { Separator } from "@/components/ui/separator";
+import { LuClipboardX, LuExternalLink, LuPlus } from "react-icons/lu";
+import { getCaseListByLogIds } from "@/api/casesApi";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const ThreatDetail = () => {
-  const [selectedLog, setSelectedLog] = useState<
-    BuildingAccessLogs | PCAccessLogs | ProxyLogs | undefined
-  >(undefined);
-
   const { pathname } = useLocation();
-  const { id } = useParams(); // Get the case ID from the URL params
+  const { employeeid, logtype, logid } = useParams();
 
   const employees = useThreatStore((state) => state.employees);
   const currentSelectedEmployee = useThreatStore(
@@ -227,20 +36,40 @@ const ThreatDetail = () => {
     (state) => state.setCurrentSelectedEmployee
   );
 
-  useEffect(() => {
-    const foundEmployee = employees.find((item) => item.id === id);
+  const setLogType = useThreatStore((state) => state.setLogType);
 
-    // if (foundEmployee == undefined) {
-    //   setCurrentSelectedEmployee(undefined);
-    // }
+  const currentSelectedLog = useThreatStore(
+    (state) => state.currentSelectedLog
+  );
+  const setCurrentSelectedLog = useThreatStore(
+    (state) => state.setCurrentSelectedLog
+  );
+
+  const logs = useThreatStore((state) => state.logs);
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const foundEmployee = employees.find((item) => item.id === employeeid);
+    const foundLog = logs.find((item) => item.logId === logid);
 
     setCurrentSelectedEmployee(foundEmployee as EmployeeListItem);
-  }, []);
+    setLogType(logtype as string);
+    setCurrentSelectedLog(foundLog);
+  }, [
+    employees,
+    employeeid,
+    logtype,
+    logid,
+    logs,
+    setCurrentSelectedEmployee,
+    setLogType,
+    setCurrentSelectedLog,
+  ]);
 
-  const countTotalOffences =
-    buildingAccessLogsData.filter((item) => item.employeeId === id).length +
-    pcAccessLogsData.filter((item) => item.employeeId === id).length +
-    proxyLogsData.filter((item) => item.employeeId === id).length;
+  const countTotalOffences = logs.filter(
+    (item) => item.employeeId === employeeid
+  ).length;
 
   const getCardTitle = () => {
     if (pathname.includes("/buildingaccess")) {
@@ -280,7 +109,6 @@ const ThreatDetail = () => {
     if (isBuildingAccessLogs(log)) {
       return (
         <div className="relative">
-          {/* {/* <Button className="absolute top-0 right-0">Assign Case</Button> */}
           <div className="details">
             <h2 style={{ fontWeight: "bold" }}>Access Date</h2>
             <p>{formatDateTime(log?.details.accessIn.accessDateTime)}</p>
@@ -316,7 +144,6 @@ const ThreatDetail = () => {
     if (isPCAccessLogs(log)) {
       return (
         <div className="relative">
-          {/* {/* <Button className="absolute top-0 right-0">Assign Case</Button> */}
           <div className="details">
             <h2 style={{ fontWeight: "bold" }}>Access Date</h2>
             <p>{formatDateTime(log?.accessDateTime)}</p>
@@ -351,7 +178,6 @@ const ThreatDetail = () => {
     if (isProxyLogs(log)) {
       return (
         <div className="relative">
-          {/* {/* <Button className="absolute top-0 right-0">Assign Case</Button> */}
           <div className="details">
             <h2 style={{ fontWeight: "bold" }}>Access Date</h2>
             <p>{formatDateTime(log?.details.accessDateTime)}</p>
@@ -373,7 +199,6 @@ const ThreatDetail = () => {
               </div>
             </div>
 
-            {/* <div className="grid grid-cols-2 mt-8"> */}
             <div className="mt-8">
               <h2 style={{ fontWeight: "bold" }}>Category</h2>
               <p>{log?.details.category}</p>
@@ -383,7 +208,6 @@ const ThreatDetail = () => {
               <h2 style={{ fontWeight: "bold" }}>URL</h2>
               <p>{log?.details.url}</p>
             </div>
-            {/* </div> */}
           </div>
         </div>
       );
@@ -392,32 +216,43 @@ const ThreatDetail = () => {
     return null;
   };
 
-  // const {
-  //   data: userDetailData,
-  //   error: userDetailError,
-  //   isLoading: isUserDetailLoading,
-  // } = useQuery({
-  //   queryKey: ["users", id],
-  //   queryFn: async () => {
-  //     const data = await getUser(id as string);
-  //     return data;
-  //   },
-  //   enabled: !!id, // query is only triggered if id is not undefined
-  // });
+  const {
+    data: caseDetailData,
+    error: caseDetailError,
+    isLoading: isCaseDetailLoading,
+  } = useQuery({
+    queryKey: ["cases_threatlogid", logid],
+    queryFn: async () => {
+      const cases = await getCaseListByLogIds(logs.map((item) => item.logId));
 
-  // if (isUserDetailLoading) {
-  //   return <div>Loading...</div>;
-  // }
+      const foundCase = cases.find((item) => item.logId === logid);
 
-  // if (userDetailError) {
-  //   return <div>User Detail cannot be found.</div>;
-  // }
+      console.log("cases ", cases);
+      console.log("foundCase ", foundCase);
+
+      return foundCase || null;
+    },
+    enabled: !!logid, // query is only triggered if id is not undefined
+  });
+
+  // Add a useEffect to invalidate the query when logid changes
+  useEffect(() => {
+    // Invalidate the query key when logid changes
+    queryClient.invalidateQueries({ queryKey: ["cases_threatlogid", logid] });
+  }, [logid, queryClient]);
+
+  if (isCaseDetailLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (caseDetailError) {
+    return <div>Threat Detail cannot be found.</div>;
+  }
 
   return (
     <div className="UserDetail">
       <div className="flex gap-6 py-2  mb-4">
         <div className="flex items-center">
-          {/* <div className=""> */}
           <Avatar className="w-24 h-24">
             {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
             <AvatarFallback className="text-xl font-bold">
@@ -426,7 +261,6 @@ const ThreatDetail = () => {
               )}
             </AvatarFallback>
           </Avatar>
-          {/* </div> */}
           <div className="flex flex-col ml-4">
             <h2 className="text-lg font-semibold tracking-tight">
               {currentSelectedEmployee?.firstName}{" "}
@@ -436,14 +270,6 @@ const ThreatDetail = () => {
               {currentSelectedEmployee?.businessUnit}
             </span>
           </div>
-        </div>
-        <div className="flex items-center">
-          {/* <Link to={`/users/edit/${id}`}>
-            <Button>
-              <LuPencilLine className="w-4 h-4 mr-3" />
-              View Profile
-            </Button>
-          </Link> */}
         </div>
         <div className="flex flex-col justify-center ml-5">
           <span className="text-2xl font-bold">
@@ -470,8 +296,8 @@ const ThreatDetail = () => {
                 asChild
               >
                 <Link
-                  to={`/threats/employee/${id}/buildingaccess`}
-                  onClick={() => setSelectedLog(undefined)}
+                  to={`/threats/employee/${employeeid}/buildingaccess`}
+                  onClick={() => setCurrentSelectedLog(undefined)}
                 >
                   Building Access
                 </Link>
@@ -487,8 +313,8 @@ const ThreatDetail = () => {
                 asChild
               >
                 <Link
-                  to={`/threats/employee/${id}/pcaccess`}
-                  onClick={() => setSelectedLog(undefined)}
+                  to={`/threats/employee/${employeeid}/pcaccess`}
+                  onClick={() => setCurrentSelectedLog(undefined)}
                 >
                   PC Access
                 </Link>
@@ -503,8 +329,8 @@ const ThreatDetail = () => {
                 asChild
               >
                 <Link
-                  to={`/threats/employee/${id}/proxy`}
-                  onClick={() => setSelectedLog(undefined)}
+                  to={`/threats/employee/${employeeid}/proxy`}
+                  onClick={() => setCurrentSelectedLog(undefined)}
                 >
                   Proxy Logs
                 </Link>
@@ -515,44 +341,97 @@ const ThreatDetail = () => {
           {pathname.includes("/buildingaccess") && (
             <DataTable
               columns={buildingAccessColumns}
-              data={buildingAccessLogsData.filter(
-                (item) => item.employeeId === id
+              data={(logs as BuildingAccessLogs[]).filter(
+                (item) =>
+                  item.employeeId === employeeid && isBuildingAccessLogs(item)
               )}
-              setSelectedRow={(row: Row<BuildingAccessLogs>) => {
-                setSelectedLog(row.original);
-                // window.location.hash = `#${row}`;
-              }}
             />
           )}
 
           {pathname.includes("/pcaccess") && (
             <DataTable
               columns={pcAccessColumns}
-              data={pcAccessLogsData.filter((item) => item.employeeId === id)}
-              setSelectedRow={(row: Row<PCAccessLogs>) =>
-                setSelectedLog(row.original)
-              }
+              data={(logs as PCAccessLogs[]).filter(
+                (item) => item.employeeId === employeeid && isPCAccessLogs(item)
+              )}
             />
           )}
 
           {pathname.includes("/proxy") && (
             <DataTable
               columns={proxyLogColumns}
-              data={proxyLogsData.filter((item) => item.employeeId === id)}
-              setSelectedRow={(row: Row<ProxyLogs>) =>
-                setSelectedLog(row.original)
-              }
+              data={(logs as ProxyLogs[]).filter(
+                (item) => item.employeeId === employeeid && isProxyLogs(item)
+              )}
             />
           )}
         </div>
 
         <Card className="w-full">
-          <CardHeader>
-            <CardTitle>{getCardTitle()}</CardTitle>
+          <CardHeader className="flex">
+            <CardTitle className="mb-4">{getCardTitle()}</CardTitle>
           </CardHeader>
           <CardContent>
-            {selectedLog ? (
-              <div>{renderLogDetails(selectedLog)}</div>
+            {currentSelectedLog ? (
+              <div>
+                {renderLogDetails(currentSelectedLog)}
+                <Separator className="my-4" />
+                {caseDetailData?.logId === logid ? (
+                  <>
+                    <h3 className="font-bold mb-2">Assigned Case To</h3>
+
+                    <div className="mb-4 flex items-center gap-8">
+                      <div className="flex items-center">
+                        {caseDetailData?.assignee?.fullName ? (
+                          <>
+                            <Avatar className="w-10 h-10 mr-3">
+                              {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+                              <AvatarFallback className="text-md font-bold bg-slate-800 text-white">
+                                {renderNameInitials(
+                                  `${
+                                    caseDetailData?.assignee?.fullName?.split(
+                                      " "
+                                    )[0]
+                                  } ${
+                                    caseDetailData?.assignee?.fullName?.split(
+                                      " "
+                                    )[1]
+                                  }`
+                                )}
+                              </AvatarFallback>
+                            </Avatar>
+                            <p>{caseDetailData?.assignee.fullName}</p>
+                          </>
+                        ) : (
+                          <>
+                            <Avatar className="w-10 h-10 mr-3">
+                              {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+                              <AvatarFallback className="text-md font-bold bg-slate-500 text-white">
+                                <LuClipboardX className="h-5 w-5" />
+                              </AvatarFallback>
+                            </Avatar>
+                            <p>Not assigned yet</p>
+                          </>
+                        )}
+                      </div>
+
+                      <Button className="w-fit" variant="secondary" asChild>
+                        <Link to={`/cases/${caseDetailData?.id}`}>
+                          Go To Case
+                          <LuExternalLink className="h-5 w-5 ml-3" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <Button className="w-fit" asChild>
+                    <Link to={"/cases/create"}>
+                      <LuPlus className="h-5 w-5 mr-3" />
+                      Create Case
+                    </Link>
+                  </Button>
+                )}
+              </div>
             ) : (
               <div>Select a row to view employee's log detail.</div>
             )}

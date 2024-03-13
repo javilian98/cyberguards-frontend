@@ -59,12 +59,14 @@ function Cases() {
     mutationFn: async (id: string) => {
       await deleteCase(id);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       const newCases = cases.filter(
         (item) => item.id !== currentSelectedCase.id
       );
       setCases(newCases);
       toast.success("Case deleted successfully");
+
+      await queryClient.invalidateQueries({ queryKey: ["cases_threatlogid"] });
     },
     onSettled: async (_, error) => {
       if (error) {

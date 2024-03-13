@@ -1,10 +1,10 @@
 export interface Case {
   id: string;
   title: string;
-  riskStatus: "low" | "medium" | "high";
   riskScore: number;
   createdAt: string;
   assigneeId?: string;
+  logId?: string;
   assignee?: {
     fullName: string | null;
   };
@@ -19,10 +19,10 @@ export interface CaseDetail {
   id: string;
   title: string;
   description: string;
-  riskStatus: "low" | "medium" | "high";
   riskScore: number;
   createdAt?: string;
   assigneeId?: string;
+  logId?: string;
   assignedDateTime?: string;
   threatPageUrl: string;
   assignee?: {
@@ -75,6 +75,7 @@ export interface BuildingAccessLogsDetails {
   suspectType: number;
 }
 export interface BuildingAccessLogs {
+  logId: string;
   employeeId: string;
   accessDateTime: string;
   officeLocation: string;
@@ -92,6 +93,7 @@ export interface PCAccessLogsDetails {
   suspectType: number;
 }
 export type PCAccessLogs = {
+  logId: string;
   employeeId: string;
   accessDateTime: string;
   machineLocation: string;
@@ -112,6 +114,7 @@ export type ProxyLogsDetails = {
   suspectType: string;
 };
 export type ProxyLogs = {
+  logId: string;
   employeeId: string;
   accessDateTime: string;
   bytesIn: number;

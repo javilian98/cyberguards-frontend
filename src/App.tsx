@@ -32,14 +32,13 @@ function App() {
               <Route path="threats">
                 <Route index element={<Threats />} />
                 <Route
-                  path="employee/:id/buildingaccess"
+                  path="employee/:employeeid/:logtype"
                   element={<ThreatDetail />}
                 />
                 <Route
-                  path="employee/:id/pcaccess"
+                  path="employee/:employeeid/:logtype/:logid"
                   element={<ThreatDetail />}
                 />
-                <Route path="employee/:id/proxy" element={<ThreatDetail />} />
               </Route>
               <Route path="users">
                 <Route index element={<Users />} />
