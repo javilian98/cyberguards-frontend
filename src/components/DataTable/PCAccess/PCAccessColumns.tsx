@@ -23,6 +23,10 @@ export const pcAccessColumns: ColumnDef<PCAccessLogs>[] = [
     header: ({ column }) => renderSortButton(column, "Access Date Time"),
   },
   {
+    accessorKey: "logOnOff",
+    header: ({ column }) => renderSortButton(column, "Log On/Off"),
+  },
+  {
     accessorKey: "machineName",
     header: ({ column }) => renderSortButton(column, "Machine Name"),
   },
@@ -31,23 +35,27 @@ export const pcAccessColumns: ColumnDef<PCAccessLogs>[] = [
     header: ({ column }) => renderSortButton(column, "Machine Location"),
   },
   {
-    id: "actions",
-    cell: ({ row }) => {
-      const { setCurrentSelectedLog, currentSelectedEmployee } =
-        useThreatStore.getState();
-
-      return (
-        <div>
-          <Button asChild variant="outline">
-            <Link
-              to={`/threats/employee/${currentSelectedEmployee?.id}/pcaccess/${row.original.logId}`}
-              onClick={() => setCurrentSelectedLog(row.original)}
-            >
-              View
-            </Link>
-          </Button>
-        </div>
-      );
-    },
+    accessorKey: "suspectType",
+    header: ({ column }) => renderSortButton(column, "Suspect"),
   },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const { setCurrentSelectedLog, currentSelectedEmployee } =
+  //       useThreatStore.getState();
+
+  //     return (
+  //       <div>
+  //         <Button asChild variant="outline">
+  //           <Link
+  //             to={`/threats/employee/${currentSelectedEmployee?.id}/pcaccess/${row.original.logId}`}
+  //             onClick={() => setCurrentSelectedLog(row.original)}
+  //           >
+  //             View
+  //           </Link>
+  //         </Button>
+  //       </div>
+  //     );
+  //   },
+  // },
 ];

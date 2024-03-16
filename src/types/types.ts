@@ -67,44 +67,27 @@ export interface EmployeeListItem {
   totalOffences: number;
 }
 
-export interface BuildingAccessLogsDetails {
+export interface BuildingAccessLogs {
+  logId: string;
+  employeeId: string;
   accessDateTime: string;
   direction: string;
   status: string;
   officeLocation: string;
   suspectType: number;
 }
-export interface BuildingAccessLogs {
-  logId: string;
-  employeeId: string;
-  accessDateTime: string;
-  officeLocation: string;
-  details: {
-    accessIn: BuildingAccessLogsDetails;
-    accessOut: BuildingAccessLogsDetails;
-  };
-}
-
-export interface PCAccessLogsDetails {
-  accessDateTime: string;
-  status: string;
-  machineName: string;
-  machineLocation: string;
-  suspectType: number;
-}
 export type PCAccessLogs = {
   logId: string;
   employeeId: string;
   accessDateTime: string;
-  machineLocation: string;
+  logOnOff: string;
   machineName: string;
-  details: {
-    logOn: PCAccessLogsDetails;
-    logOff: PCAccessLogsDetails;
-  };
+  machineLocation: string;
+  suspectType: number;
 };
-
-export type ProxyLogsDetails = {
+export type ProxyLogs = {
+  logId: string;
+  employeeId: string;
   accessDateTime: string;
   machineName: string;
   url: string;
@@ -112,14 +95,6 @@ export type ProxyLogsDetails = {
   bytesIn: number;
   bytesOut: number;
   suspectType: string;
-};
-export type ProxyLogs = {
-  logId: string;
-  employeeId: string;
-  accessDateTime: string;
-  bytesIn: number;
-  bytesOut: number;
-  details: ProxyLogsDetails;
 };
 
 export enum CASE_STATUS {

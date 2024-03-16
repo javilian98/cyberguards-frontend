@@ -27,29 +27,42 @@ export const buildingAccessColumns: ColumnDef<BuildingAccessLogs>[] = [
     header: ({ column }) => renderSortButton(column, "Access Date Time"),
   },
   {
+    accessorKey: "direction",
+    header: ({ column }) => renderSortButton(column, "Direction"),
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => renderSortButton(column, "Status"),
+  },
+  {
     accessorKey: "officeLocation",
     header: ({ column }) => renderSortButton(column, "Office Location"),
   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const { setCurrentSelectedLog, currentSelectedEmployee } =
-        useThreatStore.getState();
 
-      return (
-        <div>
-          <Button asChild variant="outline">
-            <Link
-              to={`/threats/employee/${currentSelectedEmployee?.id}/buildingaccess/${row.original.logId}`}
-              onClick={() => {
-                setCurrentSelectedLog(row.original);
-              }}
-            >
-              View
-            </Link>
-          </Button>
-        </div>
-      );
-    },
+  {
+    accessorKey: "suspectType",
+    header: ({ column }) => renderSortButton(column, "Suspect"),
   },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const { setCurrentSelectedLog, currentSelectedEmployee } =
+  //       useThreatStore.getState();
+
+  //     return (
+  //       <div>
+  //         <Button asChild variant="outline">
+  //           <Link
+  //             to={`/threats/employee/${currentSelectedEmployee?.id}/buildingaccess/${row.original.logId}`}
+  //             onClick={() => {
+  //               setCurrentSelectedLog(row.original);
+  //             }}
+  //           >
+  //             View
+  //           </Link>
+  //         </Button>
+  //       </div>
+  //     );
+  //   },
+  // },
 ];

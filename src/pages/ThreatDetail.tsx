@@ -71,19 +71,19 @@ const ThreatDetail = () => {
     (item) => item.employeeId === employeeid
   ).length;
 
-  const getCardTitle = () => {
-    if (pathname.includes("/buildingaccess")) {
-      return "Building Access Details";
-    }
+  // const getCardTitle = () => {
+  //   if (pathname.includes("/buildingaccess")) {
+  //     return "Building Access Details";
+  //   }
 
-    if (pathname.includes("/pcaccess")) {
-      return "PC Access Details";
-    }
+  //   if (pathname.includes("/pcaccess")) {
+  //     return "PC Access Details";
+  //   }
 
-    if (pathname.includes("/proxy")) {
-      return "Proxy Log Details";
-    }
-  };
+  //   if (pathname.includes("/proxy")) {
+  //     return "Proxy Log Details";
+  //   }
+  // };
 
   const isBuildingAccessLogs = (
     log: BuildingAccessLogs | PCAccessLogs | ProxyLogs
@@ -101,119 +101,6 @@ const ThreatDetail = () => {
     log: BuildingAccessLogs | PCAccessLogs | ProxyLogs
   ): log is ProxyLogs => {
     return (log as ProxyLogs).bytesIn !== undefined;
-  };
-
-  const renderLogDetails = (
-    log: BuildingAccessLogs | PCAccessLogs | ProxyLogs
-  ) => {
-    if (isBuildingAccessLogs(log)) {
-      return (
-        <div className="relative">
-          <div className="details">
-            <h2 style={{ fontWeight: "bold" }}>Access Date</h2>
-            <p>{formatDateTime(log?.details.accessIn.accessDateTime)}</p>
-
-            <div className="grid grid-cols-2 mt-8">
-              <div>
-                <h2 style={{ fontWeight: "bold" }}>Access Time In</h2>
-                <p>{formatTime(log?.details.accessIn.accessDateTime)}</p>
-                <br />
-                <h2 style={{ fontWeight: "bold" }}>Last Access Date</h2>
-                <p>{log?.details.accessIn.officeLocation}</p>
-                <br />
-                <h2 style={{ fontWeight: "bold" }}>Access Status</h2>
-                <p>{log?.details.accessIn.status}</p>
-              </div>
-
-              <div>
-                <h2 style={{ fontWeight: "bold" }}>Access Time Out</h2>
-                <p>{formatTime(log?.details.accessOut.accessDateTime)}</p>
-                <br />
-                <h2 style={{ fontWeight: "bold" }}>Last Access Date</h2>
-                <p>{log?.details.accessOut.officeLocation}</p>
-                <br />
-                <h2 style={{ fontWeight: "bold" }}>Access Status</h2>
-                <p>{log?.details.accessOut.status}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (isPCAccessLogs(log)) {
-      return (
-        <div className="relative">
-          <div className="details">
-            <h2 style={{ fontWeight: "bold" }}>Access Date</h2>
-            <p>{formatDateTime(log?.accessDateTime)}</p>
-
-            <br />
-
-            <h2 style={{ fontWeight: "bold" }}>Machine Name</h2>
-            <p>{log?.details.logOn.machineName}</p>
-
-            <div className="grid grid-cols-2 mt-8">
-              <div>
-                <h2 style={{ fontWeight: "bold" }}>Log On Time</h2>
-                <p>{formatTime(log?.details.logOn.accessDateTime)}</p>
-                <br />
-                <h2 style={{ fontWeight: "bold" }}>Machine Location</h2>
-                <p>{log?.details.logOn.machineLocation}</p>
-              </div>
-
-              <div>
-                <h2 style={{ fontWeight: "bold" }}>Log Off Time</h2>
-                <p>{formatTime(log?.details.logOff.accessDateTime)}</p>
-                <br />
-                <h2 style={{ fontWeight: "bold" }}>Machine Location</h2>
-                <p>{log?.details.logOff.machineLocation}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (isProxyLogs(log)) {
-      return (
-        <div className="relative">
-          <div className="details">
-            <h2 style={{ fontWeight: "bold" }}>Access Date</h2>
-            <p>{formatDateTime(log?.details.accessDateTime)}</p>
-
-            <br />
-
-            <h2 style={{ fontWeight: "bold" }}>Machine Name</h2>
-            <p>{log?.details.machineName}</p>
-
-            <div className="grid grid-cols-2 mt-8">
-              <div>
-                <h2 style={{ fontWeight: "bold" }}>Bytes In</h2>
-                <p>{log?.details.bytesIn}</p>
-              </div>
-
-              <div>
-                <h2 style={{ fontWeight: "bold" }}>Bytes Out</h2>
-                <p>{log?.details.bytesOut}</p>
-              </div>
-            </div>
-
-            <div className="mt-8">
-              <h2 style={{ fontWeight: "bold" }}>Category</h2>
-              <p>{log?.details.category}</p>
-            </div>
-            <br />
-            <div>
-              <h2 style={{ fontWeight: "bold" }}>URL</h2>
-              <p>{log?.details.url}</p>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    return null;
   };
 
   const {
@@ -281,8 +168,25 @@ const ThreatDetail = () => {
           <span className="text-2xl font-bold">{countTotalOffences}</span>
           <span className="text-sm">Total Offences</span>
         </div>
+        <div className="flex items-center ml-2 gap-3">
+          <Separator orientation="vertical" className="mr-2" />
+
+          <div className="flex items-center gap-3">
+            <span className="text-sm">Analyst Reviewing: </span>
+            <Avatar>
+              <AvatarFallback className="bg-black text-white">
+                JD
+              </AvatarFallback>
+            </Avatar>
+            <span>John Doe</span>
+          </div>
+          <Separator orientation="vertical" className="ml-2 mr-2" />
+          <Button>
+            Go To Case <LuExternalLink className="h-4 w-4 ml-3" />
+          </Button>
+        </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="">
         <div>
           <div className="w-full">
             <div className="flex gap-1 bg-gray-100 p-2 rounded-md">
@@ -366,77 +270,6 @@ const ThreatDetail = () => {
             />
           )}
         </div>
-
-        <Card className="w-full">
-          <CardHeader className="flex">
-            <CardTitle className="mb-4">{getCardTitle()}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {currentSelectedLog ? (
-              <div>
-                {renderLogDetails(currentSelectedLog)}
-                <Separator className="my-4" />
-                {caseDetailData?.logId === logid ? (
-                  <>
-                    <h3 className="font-bold mb-2">Assigned Case To</h3>
-
-                    <div className="mb-4 flex items-center gap-8">
-                      <div className="flex items-center">
-                        {caseDetailData?.assignee?.fullName ? (
-                          <>
-                            <Avatar className="w-10 h-10 mr-3">
-                              {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
-                              <AvatarFallback className="text-md font-bold bg-slate-800 text-white">
-                                {renderNameInitials(
-                                  `${
-                                    caseDetailData?.assignee?.fullName?.split(
-                                      " "
-                                    )[0]
-                                  } ${
-                                    caseDetailData?.assignee?.fullName?.split(
-                                      " "
-                                    )[1]
-                                  }`
-                                )}
-                              </AvatarFallback>
-                            </Avatar>
-                            <p>{caseDetailData?.assignee.fullName}</p>
-                          </>
-                        ) : (
-                          <>
-                            <Avatar className="w-10 h-10 mr-3">
-                              {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
-                              <AvatarFallback className="text-md font-bold bg-slate-500 text-white">
-                                <LuClipboardX className="h-5 w-5" />
-                              </AvatarFallback>
-                            </Avatar>
-                            <p>Not assigned yet</p>
-                          </>
-                        )}
-                      </div>
-
-                      <Button className="w-fit" variant="secondary" asChild>
-                        <Link to={`/cases/${caseDetailData?.id}`}>
-                          Go To Case
-                          <LuExternalLink className="h-5 w-5 ml-3" />
-                        </Link>
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <Button className="w-fit" asChild>
-                    <Link to={"/cases/create"}>
-                      <LuPlus className="h-5 w-5 mr-3" />
-                      Create Case
-                    </Link>
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <div>Select a row to view employee's log detail.</div>
-            )}
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
