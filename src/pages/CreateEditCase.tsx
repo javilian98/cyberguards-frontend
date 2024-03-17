@@ -229,7 +229,7 @@ function CreateEditCase() {
         caseAction: "CREATE",
         employeeId: employeeFound?.id as string,
         assignee: assigneeFound?.firstName + " " + assigneeFound?.lastName,
-        createdAt: "date string",
+        createdAt: formatDateTime(formatDate(Date.now())),
       };
       setCaseAuditLogs([...caseAuditLogs, newCaseAuditLog]);
 
