@@ -24,6 +24,7 @@ import { casesColumns } from "@/components/DataTable/Cases/CasesColumns";
 import { LuPlus } from "react-icons/lu";
 import { deleteCase, getCaseList } from "@/api/casesApi";
 import { toast } from "sonner";
+import { caseAuditLogColumns } from "@/components/DataTable/CaseAuditLog/CasesAuditLogColumns";
 
 function Cases() {
   const cases = useCaseStore((state) => state.cases);
@@ -33,6 +34,7 @@ function Cases() {
   const currentSelectedCase = useCaseStore(
     (state) => state.currentSelectedCase
   );
+  const caseAuditLogs = useCaseStore((state) => state.caseAuditLogs);
 
   const isSingleRowActionDialogOpen = useAlertDialogStore(
     (state) => state.isSingleRowActionDialogOpen
@@ -132,6 +134,9 @@ function Cases() {
           <TabsTrigger value="my cases" className="w-[200px]">
             My Cases
           </TabsTrigger>
+          <TabsTrigger value="audit logs" className="w-[200px]">
+            Audit Logs
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="all cases" className="mt-4">
@@ -149,6 +154,9 @@ function Cases() {
                 item.assigneeId === "77e748dc-1bb4-4a16-bc0f-b44ee5d441e3"
             )}
           />
+        </TabsContent>
+        <TabsContent value="audit logs">
+          <DataTable columns={caseAuditLogColumns} data={caseAuditLogs} />
         </TabsContent>
       </Tabs>
 

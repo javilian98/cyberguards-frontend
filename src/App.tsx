@@ -31,14 +31,7 @@ function App() {
               {/* <Route path="/threats" element={<Threats />} /> */}
               <Route path="threats">
                 <Route index element={<Threats />} />
-                <Route
-                  path="employee/:employeeid/:logtype"
-                  element={<ThreatDetail />}
-                />
-                <Route
-                  path="employee/:employeeid/:logtype/:logid"
-                  element={<ThreatDetail />}
-                />
+                <Route path="employee/:employeeid" element={<ThreatDetail />} />
               </Route>
               <Route path="users">
                 <Route index element={<Users />} />

@@ -37,7 +37,7 @@ function ActionsMenu({ row }: ActionsMenuProps) {
 
   const handleViewEmployee = () => {
     setCurrentSelectedEmployee(row.original);
-    navigate(`/threats/employee/${row.original.id}/buildingaccess`);
+    navigate(`/threats/employee/${row.original.id}`);
   };
 
   // const handleEditUser = () => {

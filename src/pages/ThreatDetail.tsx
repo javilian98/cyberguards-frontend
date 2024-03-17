@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import {
   Avatar,
   AvatarFallback,
   // AvatarImage
 } from "@/components/ui/avatar";
-import { formatDateTime, formatTime, renderNameInitials } from "@/utils/utils";
+import { renderNameInitials } from "@/utils/utils";
 import { buildingAccessColumns } from "@/components/DataTable/BuildingAccess/BuildingAccessColumns";
 import { DataTable } from "@/components/DataTable/DataTable";
 import { pcAccessColumns } from "@/components/DataTable/PCAccess/PCAccessColumns";
@@ -17,16 +17,19 @@ import {
   PCAccessLogs,
   ProxyLogs,
 } from "@/types/types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useThreatStore } from "@/stores/useThreatStore";
 import { Separator } from "@/components/ui/separator";
-import { LuClipboardX, LuExternalLink, LuPlus } from "react-icons/lu";
-import { getCaseListByLogIds } from "@/api/casesApi";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  LuExternalLink,
+  // LuPlus
+} from "react-icons/lu";
+import { getCaseByEmployeeId } from "@/api/casesApi";
+import { useQuery } from "@tanstack/react-query";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const ThreatDetail = () => {
-  const { pathname } = useLocation();
-  const { employeeid, logtype, logid } = useParams();
+  const { employeeid } = useParams();
 
   const employees = useThreatStore((state) => state.employees);
   const currentSelectedEmployee = useThreatStore(
@@ -36,54 +39,31 @@ const ThreatDetail = () => {
     (state) => state.setCurrentSelectedEmployee
   );
 
-  const setLogType = useThreatStore((state) => state.setLogType);
-
-  const currentSelectedLog = useThreatStore(
-    (state) => state.currentSelectedLog
-  );
-  const setCurrentSelectedLog = useThreatStore(
-    (state) => state.setCurrentSelectedLog
-  );
-
   const logs = useThreatStore((state) => state.logs);
 
-  const queryClient = useQueryClient();
+  const {
+    data: caseDetailData,
+    // error: caseDetailError,
+    // isLoading: isCaseDetailLoading,
+  } = useQuery({
+    queryKey: ["cases", employeeid],
+    queryFn: async () => {
+      const data = await getCaseByEmployeeId(employeeid as string);
+      return data;
+    },
+    enabled: !!employeeid, // query is only triggered if id is not undefined
+  });
 
+  // Cpde for getting employee details
   useEffect(() => {
     const foundEmployee = employees.find((item) => item.id === employeeid);
-    const foundLog = logs.find((item) => item.logId === logid);
 
     setCurrentSelectedEmployee(foundEmployee as EmployeeListItem);
-    setLogType(logtype as string);
-    setCurrentSelectedLog(foundLog);
-  }, [
-    employees,
-    employeeid,
-    logtype,
-    logid,
-    logs,
-    setCurrentSelectedEmployee,
-    setLogType,
-    setCurrentSelectedLog,
-  ]);
+  }, [employees, employeeid, setCurrentSelectedEmployee]);
 
   const countTotalOffences = logs.filter(
     (item) => item.employeeId === employeeid
   ).length;
-
-  // const getCardTitle = () => {
-  //   if (pathname.includes("/buildingaccess")) {
-  //     return "Building Access Details";
-  //   }
-
-  //   if (pathname.includes("/pcaccess")) {
-  //     return "PC Access Details";
-  //   }
-
-  //   if (pathname.includes("/proxy")) {
-  //     return "Proxy Log Details";
-  //   }
-  // };
 
   const isBuildingAccessLogs = (
     log: BuildingAccessLogs | PCAccessLogs | ProxyLogs
@@ -102,39 +82,6 @@ const ThreatDetail = () => {
   ): log is ProxyLogs => {
     return (log as ProxyLogs).bytesIn !== undefined;
   };
-
-  const {
-    data: caseDetailData,
-    error: caseDetailError,
-    isLoading: isCaseDetailLoading,
-  } = useQuery({
-    queryKey: ["cases_threatlogid", logid],
-    queryFn: async () => {
-      const cases = await getCaseListByLogIds(logs.map((item) => item.logId));
-
-      const foundCase = cases.find((item) => item.logId === logid);
-
-      console.log("cases ", cases);
-      console.log("foundCase ", foundCase);
-
-      return foundCase || null;
-    },
-    enabled: !!logid, // query is only triggered if id is not undefined
-  });
-
-  // Add a useEffect to invalidate the query when logid changes
-  useEffect(() => {
-    // Invalidate the query key when logid changes
-    queryClient.invalidateQueries({ queryKey: ["cases_threatlogid", logid] });
-  }, [logid, queryClient]);
-
-  if (isCaseDetailLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (caseDetailError) {
-    return <div>Threat Detail cannot be found.</div>;
-  }
 
   return (
     <div className="UserDetail">
@@ -169,80 +116,46 @@ const ThreatDetail = () => {
           <span className="text-sm">Total Offences</span>
         </div>
         <div className="flex items-center ml-2 gap-3">
-          <Separator orientation="vertical" className="mr-2" />
+          {caseDetailData?.assignee?.fullName && (
+            <>
+              <Separator orientation="vertical" className="mr-2" />
+              <div className="flex items-center gap-3">
+                <span className="text-sm">Analyst Reviewing: </span>
 
-          <div className="flex items-center gap-3">
-            <span className="text-sm">Analyst Reviewing: </span>
-            <Avatar>
-              <AvatarFallback className="bg-black text-white">
-                JD
-              </AvatarFallback>
-            </Avatar>
-            <span>John Doe</span>
-          </div>
-          <Separator orientation="vertical" className="ml-2 mr-2" />
-          <Button>
-            Go To Case <LuExternalLink className="h-4 w-4 ml-3" />
-          </Button>
+                <Avatar>
+                  <AvatarFallback className="bg-black text-white">
+                    {renderNameInitials(caseDetailData?.assignee?.fullName)}
+                  </AvatarFallback>
+                </Avatar>
+
+                <span>{caseDetailData?.assignee?.fullName}</span>
+              </div>
+              <Separator orientation="vertical" className="ml-2 mr-2" />
+
+              <Button asChild>
+                <Link to={`/cases/${caseDetailData?.id}`}>
+                  Go To Case <LuExternalLink className="h-4 w-4 ml-3" />
+                </Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
       <div className="">
-        <div>
-          <div className="w-full">
-            <div className="flex gap-1 bg-gray-100 p-2 rounded-md">
-              <Button
-                className={
-                  pathname.includes("/buildingaccess")
-                    ? "w-1/3 bg-slate-800 text-white hover:bg-slate-900 hover:text-white"
-                    : "w-1/3"
-                }
-                variant="ghost"
-                asChild
-              >
-                <Link
-                  to={`/threats/employee/${employeeid}/buildingaccess`}
-                  onClick={() => setCurrentSelectedLog(undefined)}
-                >
-                  Building Access
-                </Link>
-              </Button>
+        <Tabs defaultValue="building_access">
+          <TabsList>
+            <TabsTrigger value="building_access" className="w-[200px]">
+              Building Access
+            </TabsTrigger>
+            <TabsTrigger value="pc_access" className="w-[200px]">
+              PC Access
+            </TabsTrigger>
+            <TabsTrigger value="proxy" className="w-[200px]">
+              Proxy
+            </TabsTrigger>
+          </TabsList>
 
-              <Button
-                className={
-                  pathname.includes("/pcaccess")
-                    ? "w-1/3 bg-slate-800 text-white hover:bg-slate-900 hover:text-white"
-                    : "w-1/3"
-                }
-                variant="ghost"
-                asChild
-              >
-                <Link
-                  to={`/threats/employee/${employeeid}/pcaccess`}
-                  onClick={() => setCurrentSelectedLog(undefined)}
-                >
-                  PC Access
-                </Link>
-              </Button>
-              <Button
-                className={
-                  pathname.includes("/proxy")
-                    ? "w-1/3 bg-slate-800 text-white hover:bg-slate-900 hover:text-white"
-                    : "w-1/3"
-                }
-                variant="ghost"
-                asChild
-              >
-                <Link
-                  to={`/threats/employee/${employeeid}/proxy`}
-                  onClick={() => setCurrentSelectedLog(undefined)}
-                >
-                  Proxy Logs
-                </Link>
-              </Button>
-            </div>
-          </div>
-
-          {pathname.includes("/buildingaccess") && (
+          <TabsContent value="building_access" className="mt-4">
             <DataTable
               columns={buildingAccessColumns}
               data={(logs as BuildingAccessLogs[]).filter(
@@ -250,26 +163,26 @@ const ThreatDetail = () => {
                   item.employeeId === employeeid && isBuildingAccessLogs(item)
               )}
             />
-          )}
+          </TabsContent>
 
-          {pathname.includes("/pcaccess") && (
+          <TabsContent value="pc_access" className="mt-4">
             <DataTable
               columns={pcAccessColumns}
               data={(logs as PCAccessLogs[]).filter(
                 (item) => item.employeeId === employeeid && isPCAccessLogs(item)
               )}
             />
-          )}
+          </TabsContent>
 
-          {pathname.includes("/proxy") && (
+          <TabsContent value="proxy" className="mt-4">
             <DataTable
               columns={proxyLogColumns}
               data={(logs as ProxyLogs[]).filter(
                 (item) => item.employeeId === employeeid && isProxyLogs(item)
               )}
             />
-          )}
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

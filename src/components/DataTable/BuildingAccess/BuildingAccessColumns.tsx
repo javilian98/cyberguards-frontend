@@ -3,9 +3,6 @@ import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
 import { BuildingAccessLogs } from "@/types/types";
 
-import { Link } from "react-router-dom";
-import { useThreatStore } from "@/stores/useThreatStore";
-
 const renderSortButton = (
   column: Column<BuildingAccessLogs>,
   columnName: string

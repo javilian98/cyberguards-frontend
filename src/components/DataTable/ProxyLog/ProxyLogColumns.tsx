@@ -1,12 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-
-import { useCaseStore } from "@/stores/useCaseStore";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
 import { ProxyLogs } from "@/types/types";
-import { Link } from "react-router-dom";
-import { useThreatStore } from "@/stores/useThreatStore";
 
 const renderSortButton = (column: Column<ProxyLogs>, columnName: string) => {
   return (

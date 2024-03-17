@@ -4,12 +4,12 @@ export interface Case {
   riskScore: number;
   createdAt: string;
   assigneeId?: string;
-  logId?: string;
   assignee?: {
     fullName: string | null;
   };
   assignedDateTime?: string;
-  suspectedUser?: {
+  employeeId?: string;
+  employee?: {
     fullName: string | null;
   };
   caseStatus: number;
@@ -22,17 +22,14 @@ export interface CaseDetail {
   riskScore: number;
   createdAt?: string;
   assigneeId?: string;
-  logId?: string;
   assignedDateTime?: string;
-  threatPageUrl: string;
   assignee?: {
     fullName: string | null;
   };
-  suspectedUserId?: string;
-  suspectedUser?: {
+  employeeId?: string;
+  employee?: {
     fullName: string | null;
   };
-  suspectTypeId: number;
   caseStatus: number;
 }
 
@@ -94,7 +91,16 @@ export type ProxyLogs = {
   category: string;
   bytesIn: number;
   bytesOut: number;
-  suspectType: string;
+  suspectType: number;
+};
+
+export type CaseAuditLogs = {
+  id: string;
+  caseId: string;
+  caseAction: string;
+  employeeId: string;
+  assignee: string;
+  createdAt: string;
 };
 
 export enum CASE_STATUS {

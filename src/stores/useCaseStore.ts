@@ -1,4 +1,4 @@
-import { Case } from "@/types/types";
+import { Case, CaseAuditLogs } from "@/types/types";
 import { create } from "zustand";
 
 interface CaseStore {
@@ -9,6 +9,9 @@ interface CaseStore {
   currentSelectedCase: Case;
   setCurrentSelectedCase: (item: Case) => void;
   resetCurrentSelectedCase: () => void;
+
+  caseAuditLogs: CaseAuditLogs[];
+  setCaseAuditLogs: (items: CaseAuditLogs[]) => void;
 }
 
 const initCurrentSelectedCase: Case = {
@@ -35,4 +38,8 @@ export const useCaseStore = create<CaseStore>((set) => ({
     set(() => ({ currentSelectedCase: item })),
   resetCurrentSelectedCase: () =>
     set(() => ({ currentSelectedCase: initCurrentSelectedCase })),
+
+  caseAuditLogs: [],
+  setCaseAuditLogs: (items: CaseAuditLogs[]) =>
+    set(() => ({ caseAuditLogs: items })),
 }));

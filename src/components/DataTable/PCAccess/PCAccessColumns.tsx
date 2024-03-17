@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
 import { PCAccessLogs } from "@/types/types";
-import { useThreatStore } from "@/stores/useThreatStore";
-import { Link } from "react-router-dom";
 
 const renderSortButton = (column: Column<PCAccessLogs>, columnName: string) => {
   return (
