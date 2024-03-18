@@ -65,7 +65,12 @@ import {
 } from "@/components/ui/popover";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createCase, getCase, updateCase } from "@/api/casesApi";
+import {
+  createCase,
+  createCaseAuditLog,
+  getCase,
+  updateCase,
+} from "@/api/casesApi";
 import { getUserList } from "@/api/usersApi";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -76,11 +81,16 @@ import { toast } from "sonner";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { CASE_STATUS, EmployeeListItem, UserListItem } from "@/types/types";
+import {
+  CASE_STATUS,
+  CaseAuditLog,
+  EmployeeListItem,
+  UserListItem,
+} from "@/types/types";
 import { LucideNotebookPen } from "lucide-react";
-import { useThreatStore } from "@/stores/useThreatStore";
+// import { useThreatStore } from "@/stores/useThreatStore";
 import { useCaseStore } from "@/stores/useCaseStore";
-import { formatDateTime } from "@/utils/utils";
+import { getThreatList } from "@/api/threatsApi";
 
 const assigneeEmployeeSchema = z.object({
   id: z.string().nullable(),
@@ -127,19 +137,36 @@ function CreateEditCase() {
 
   const [isFormEdited, setFormEdited] = useState(false);
   const [employeeIdValue, setEmployeeIdValue] = useState("");
+  const [formInputsEdited, setFormInputsEdited] = useState({
+    title: false,
+    description: false,
+    riskScore: false,
+    assignee: false,
+    employee: false,
+    caseStatus: false,
+  });
 
-  function formatDate(dateNow: number) {
-    const d = new Date(dateNow);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
-    const seconds = String(d.getSeconds()).padStart(2, "0");
-    const milliseconds = String(d.getMilliseconds()).padStart(3, "0");
+  const renderCaseEditChangesText = () => {
+    const fields = [
+      { name: "title", text: "Title" },
+      { name: "description", text: "Case Note" },
+      { name: "riskScore", text: "Risk Score" },
+      { name: "assignee", text: "Assignee" },
+      { name: "employee", text: "Employee" },
+      { name: "caseStatus", text: "Case Status" },
+    ];
 
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
-  }
+    const textArr = fields.reduce((acc: string[], field) => {
+      if (formInputsEdited[field.name as keyof typeof formInputsEdited]) {
+        acc.push(field.text);
+      }
+      return acc;
+    }, []);
+
+    return textArr.join(", ");
+  };
+
+  console.log("renderCaseEditChangesText ", renderCaseEditChangesText());
 
   const {
     data: caseDetailData,
@@ -162,7 +189,7 @@ function CreateEditCase() {
       });
 
       // to be replaced with employee data fetched from bff cases api
-      const foundEmployee = employeesData.find(
+      const foundEmployee = employeesData?.find(
         (item) => item.id === data.employeeId
       );
       const foundEmployeeFullName = `${foundEmployee?.firstName} ${foundEmployee?.lastName}`;
@@ -217,21 +244,17 @@ function CreateEditCase() {
       const assigneeFound = assigneeListData?.find(
         (assignee) => assignee.id === data.assigneeId
       );
-      const employeeFound = employeesData?.find(
-        (employee) => employee.id === data.employeeId
-      );
 
-      console.log("assigneeListData ", assigneeFound);
-
-      const newCaseAuditLog = {
-        id: crypto.randomUUID(),
+      const newCaseAuditLog: CaseAuditLog = {
         caseId: data.id,
-        caseAction: "CREATE",
-        employeeId: employeeFound?.id as string,
+        action: "CREATE",
+        edits: null,
         assignee: assigneeFound?.firstName + " " + assigneeFound?.lastName,
-        createdAt: formatDateTime(formatDate(Date.now())),
+        assigneeId: assigneeFound?.id ?? undefined,
       };
       setCaseAuditLogs([...caseAuditLogs, newCaseAuditLog]);
+
+      createCaseAuditLogMutation.mutate(newCaseAuditLog);
 
       navigate("/cases");
       toast.success(`Case "${data.title}" has been created`);
@@ -277,20 +300,28 @@ function CreateEditCase() {
         (assignee) => assignee.id === data.assigneeId
       );
 
-      console.log("assigneeListData ", data);
-
       const newCaseAuditLog = {
-        id: crypto.randomUUID(),
         caseId: data.id,
-        caseAction: "UPDATE",
-        employeeId: "1",
+        action: "UPDATE",
+        edits: renderCaseEditChangesText(),
         assignee: assigneeFound?.firstName + " " + assigneeFound?.lastName,
-        createdAt: formatDateTime(formatDate(Date.now())),
+        assigneeId: assigneeFound?.id ?? undefined,
       };
       setCaseAuditLogs([...caseAuditLogs, newCaseAuditLog]);
 
+      createCaseAuditLogMutation.mutate(newCaseAuditLog);
+
       navigate("/cases");
       toast.success(`Case "${data.title}" has been updated`);
+    },
+  });
+
+  const createCaseAuditLogMutation = useMutation({
+    mutationKey: ["createCaseAuditLog"],
+    mutationFn: async (log: CaseAuditLog) => {
+      const newLog = await createCaseAuditLog(log);
+      console.log("NEW LOG ", newLog);
+      return newLog;
     },
   });
 
@@ -302,7 +333,19 @@ function CreateEditCase() {
       return data;
     },
   });
-  const employeesData = useThreatStore((state) => state.employees);
+
+  const { data: employeesData } = useQuery({
+    queryKey: ["threats"],
+    queryFn: async () => {
+      const data = await getThreatList();
+
+      // setEmployees(data as EmployeeListItem[]);
+      return data as EmployeeListItem[];
+    },
+  });
+
+  // const employeesData = useThreatStore((state) => state.employees);
+  // const setEmployees = useThreatStore((state) => state.setEmployees);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -458,10 +501,12 @@ function CreateEditCase() {
                                       fullName: computeFullName(employee),
                                     });
 
-                                    console.log("employee");
-
                                     setIsEmployeeChanged(true);
                                     setEmployeeIdValue(employee.id);
+                                    setFormInputsEdited((prevState) => ({
+                                      ...prevState,
+                                      employee: true,
+                                    }));
                                   }}
                                 >
                                   <LuCheck
@@ -530,7 +575,17 @@ function CreateEditCase() {
                     <FormItem>
                       <FormLabel>Title</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your Case Title" {...field} />
+                        <Input
+                          placeholder="Enter your Case Title"
+                          {...field}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            setFormInputsEdited((prevState) => ({
+                              ...prevState,
+                              title: true,
+                            }));
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -549,6 +604,13 @@ function CreateEditCase() {
                           placeholder="Type your message here."
                           rows={8}
                           {...field}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            setFormInputsEdited((prevState) => ({
+                              ...prevState,
+                              description: true,
+                            }));
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -561,10 +623,17 @@ function CreateEditCase() {
                 <FormField
                   control={form.control}
                   name="riskScore"
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field }) => (
                     <RiskScoreSlider
-                      defaultValue={value}
-                      handleValueChange={onChange}
+                      defaultValue={field.value}
+                      handleValueChange={(value) => {
+                        field.onChange(value);
+
+                        setFormInputsEdited((prevState) => ({
+                          ...prevState,
+                          riskScore: true,
+                        }));
+                      }}
                     />
                   )}
                 />
@@ -578,7 +647,14 @@ function CreateEditCase() {
                     <FormItem>
                       <FormLabel>Case Status</FormLabel>
                       <Select
-                        onValueChange={(value) => field.onChange(Number(value))}
+                        onValueChange={(value) => {
+                          field.onChange(Number(value));
+
+                          setFormInputsEdited((prevState) => ({
+                            ...prevState,
+                            caseStatus: true,
+                          }));
+                        }}
                         defaultValue={field.value?.toString()}
                         value={field.value?.toString()}
                       >
@@ -682,6 +758,10 @@ function CreateEditCase() {
                                     console.log("assigneeee");
 
                                     setIsAssigneeChanged(true);
+                                    setFormInputsEdited((prevState) => ({
+                                      ...prevState,
+                                      assignee: true,
+                                    }));
                                   }}
                                 >
                                   <LuCheck

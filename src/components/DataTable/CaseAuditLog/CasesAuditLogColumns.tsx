@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
-import { LuArrowUpDown } from "react-icons/lu";
-import { CaseAuditLogs } from "@/types/types";
+import { LuArrowUpDown, LuExternalLink } from "react-icons/lu";
+import { CaseAuditLog } from "@/types/types";
+import { Link } from "react-router-dom";
 
 const renderSortButton = (
-  column: Column<CaseAuditLogs>,
+  column: Column<CaseAuditLog>,
   columnName: string
 ) => {
   return (
@@ -18,7 +19,7 @@ const renderSortButton = (
   );
 };
 
-export const caseAuditLogColumns: ColumnDef<CaseAuditLogs>[] = [
+export const caseAuditLogColumns: ColumnDef<CaseAuditLog>[] = [
   // {
   //   id: "select",
   //   header: ({ table }) => {
@@ -69,8 +70,12 @@ export const caseAuditLogColumns: ColumnDef<CaseAuditLogs>[] = [
   //   enableHiding: false,
   // },
   {
-    accessorKey: "caseAction",
+    accessorKey: "action",
     header: ({ column }) => renderSortButton(column, "Case Action"),
+  },
+  {
+    accessorKey: "edits",
+    header: ({ column }) => renderSortButton(column, "Case Edits"),
   },
   {
     accessorKey: "assignee",
@@ -91,16 +96,21 @@ export const caseAuditLogColumns: ColumnDef<CaseAuditLogs>[] = [
   {
     accessorKey: "caseId",
     header: ({ column }) => renderSortButton(column, "Case ID"),
-    // cell: ({ row }) => {
-    //   const status = row.getValue("caseStatus") as CASE_STATUS;
-    //   return (
-    //     <span
-    //       className={`border rounded-sm py-1 px-2 ${renderStatusColor(status)}`}
-    //     >
-    //       {computeStatusString(status)}
-    //     </span>
-    //   );
-    // },
+    cell: ({ row }) => {
+      return (
+        // <span
+        //   className={`border rounded-sm py-1 px-2 ${renderStatusColor(status)}`}
+        // >
+        //   {computeStatusString(status)}
+        // </span>
+        <Button type="button" variant="link" asChild>
+          <Link to={`/cases/${row.getValue("caseId")}`}>
+            <LuExternalLink className="mr-2" />
+            {row.getValue("caseId")}
+          </Link>
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "createdAt",

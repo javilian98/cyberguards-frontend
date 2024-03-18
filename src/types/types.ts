@@ -180,13 +180,15 @@ export type ProxyLogs = {
   suspectType: number;
 };
 
-export type CaseAuditLogs = {
-  id: string;
+export type CaseAuditLog = {
+  id?: string;
   caseId: string;
-  caseAction: string;
-  employeeId: string;
+  action: string;
+  edits: string | null;
+  // employeeId: string;
   assignee: string;
-  createdAt: string;
+  assigneeId?: string;
+  createdAt?: string;
 };
 
 export enum CASE_STATUS {

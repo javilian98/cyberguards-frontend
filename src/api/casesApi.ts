@@ -1,4 +1,4 @@
-import { Case, CaseDetail } from "@/types/types";
+import { Case, CaseAuditLog, CaseDetail } from "@/types/types";
 import { formatDateTime } from "@/utils/utils";
 import axios from "axios";
 
@@ -110,5 +110,36 @@ export const deleteCase = async (id: string): Promise<void> => {
     return response.data;
   } catch (error) {
     throw new Error("Failed to create case: " + error);
+  }
+};
+
+export const getCaseAuditLogList = async (): Promise<CaseAuditLog[]> => {
+  try {
+    const response = await bffApi.get(`/api/cases/logs/case_audit_logs`);
+
+    const newResponseData = response.data.map((item: Case) => {
+      return {
+        ...item,
+        createdAt: formatDateTime(item.createdAt),
+        assigneeId: item.assigneeId,
+        assignee: item.assignee?.fullName ? item.assignee?.fullName : null,
+      };
+    });
+
+    return newResponseData;
+  } catch (error) {
+    throw new Error("Failed to fetch cases: " + error);
+  }
+};
+
+export const createCaseAuditLog = async (
+  log: Omit<CaseAuditLog, "id">
+): Promise<CaseAuditLog> => {
+  try {
+    const response = await bffApi.post(`/api/cases/case_audit_logs`, log);
+
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to create case audit log: " + error);
   }
 };

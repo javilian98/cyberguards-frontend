@@ -22,7 +22,7 @@ import FixedHeader from "@/components/Layouts/Header/FixedHeader";
 import { casesColumns } from "@/components/DataTable/Cases/CasesColumns";
 
 import { LuPlus } from "react-icons/lu";
-import { deleteCase, getCaseList } from "@/api/casesApi";
+import { deleteCase, getCaseAuditLogList, getCaseList } from "@/api/casesApi";
 import { toast } from "sonner";
 import { caseAuditLogColumns } from "@/components/DataTable/CaseAuditLog/CasesAuditLogColumns";
 
@@ -35,6 +35,7 @@ function Cases() {
     (state) => state.currentSelectedCase
   );
   const caseAuditLogs = useCaseStore((state) => state.caseAuditLogs);
+  const setCaseAuditLogs = useCaseStore((state) => state.setCaseAuditLogs);
 
   const isSingleRowActionDialogOpen = useAlertDialogStore(
     (state) => state.isSingleRowActionDialogOpen
@@ -53,6 +54,17 @@ function Cases() {
       console.log("data ", data);
 
       setCases(data);
+      return data;
+    },
+  });
+
+  const caseAuditLogsQuery = useQuery({
+    queryKey: ["caseAuditLogs"],
+    queryFn: async () => {
+      // roleId: 1 is analyst
+      const data = await getCaseAuditLogList();
+
+      setCaseAuditLogs(data);
       return data;
     },
   });
@@ -156,7 +168,10 @@ function Cases() {
           />
         </TabsContent>
         <TabsContent value="audit logs">
-          <DataTable columns={caseAuditLogColumns} data={caseAuditLogs} />
+          <DataTable
+            columns={caseAuditLogColumns}
+            data={caseAuditLogsQuery.isLoading ? [] : caseAuditLogs}
+          />
         </TabsContent>
       </Tabs>
 
