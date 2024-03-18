@@ -166,7 +166,7 @@ function CreateEditCase() {
     return textArr.join(", ");
   };
 
-  console.log("renderCaseEditChangesText ", renderCaseEditChangesText());
+  // console.log("renderCaseEditChangesText ", renderCaseEditChangesText());
 
   const {
     data: caseDetailData,
@@ -194,7 +194,7 @@ function CreateEditCase() {
       // );
       // const foundEmployeeFullName = `${foundEmployee?.firstName} ${foundEmployee?.lastName}`;
 
-      console.log("data.employee ", data);
+      // console.log("data.employee ", data);
 
       form.setValue("employee", {
         id: data.employeeId ?? null,
@@ -205,7 +205,8 @@ function CreateEditCase() {
       form.setValue("caseStatus", data.caseStatus);
 
       setEmployeeIdValue(data.employeeId ?? "");
-
+      setIsAssigneeChanged(false);
+      setIsEmployeeChanged(false);
       return data;
     },
     enabled: !!id, // query is only triggered if id is not undefined
