@@ -1,9 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
-import { ProxyLogs } from "@/types/types";
+import { ProxyLogAPIResponse, ProxyLogs } from "@/types/types";
 
-const renderSortButton = (column: Column<ProxyLogs>, columnName: string) => {
+// const renderSortButton = (column: Column<ProxyLogs>, columnName: string) => {
+const renderSortButton = (
+  column: Column<ProxyLogAPIResponse>,
+  columnName: string
+) => {
   return (
     <Button
       variant="ghost"
@@ -15,13 +19,14 @@ const renderSortButton = (column: Column<ProxyLogs>, columnName: string) => {
   );
 };
 
-export const proxyLogColumns: ColumnDef<ProxyLogs>[] = [
+// export const proxyLogColumns: ColumnDef<ProxyLogs>[] = [
+export const proxyLogColumns: ColumnDef<ProxyLogAPIResponse>[] = [
   {
-    accessorKey: "accessDateTime",
+    accessorKey: "access_date_time",
     header: ({ column }) => renderSortButton(column, "Access Date Time"),
   },
   {
-    accessorKey: "machineName",
+    accessorKey: "machine_name",
     header: ({ column }) => renderSortButton(column, "Machine Name"),
   },
   {
@@ -33,17 +38,17 @@ export const proxyLogColumns: ColumnDef<ProxyLogs>[] = [
     header: ({ column }) => renderSortButton(column, "Category"),
   },
   {
-    accessorKey: "bytesIn",
+    accessorKey: "bytes_in",
     header: ({ column }) => renderSortButton(column, "Bytes In"),
   },
   {
-    accessorKey: "bytesOut",
+    accessorKey: "bytes_out",
     header: ({ column }) => renderSortButton(column, "Bytes Out"),
   },
-  {
-    accessorKey: "suspectType",
-    header: ({ column }) => renderSortButton(column, "Suspect"),
-  },
+  // {
+  //   accessorKey: "suspect_type",
+  //   header: ({ column }) => renderSortButton(column, "Suspect"),
+  // },
   // {
   //   id: "actions",
   //   cell: ({ row }) => {

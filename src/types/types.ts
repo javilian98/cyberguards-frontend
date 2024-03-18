@@ -61,7 +61,93 @@ export interface EmployeeListItem {
   lastName: string;
   businessUnit: string;
   riskScore: number;
-  totalOffences: number;
+  offenceLogCount: number;
+}
+
+export interface ThreatListItem {
+  id: string;
+  firstName: string;
+  lastName: string;
+  businessUnit: string;
+  riskScore: number;
+}
+
+export interface ThreatDetail {
+  id: string;
+  employeeId: string;
+  riskScore: number;
+  offenceLogCount: number;
+  employeeInfo: {
+    businessUnit: string;
+    firstname: string;
+    lastname: string;
+  };
+  logs: {
+    buildingAccess: BuildingAccessLogAPIResponse[];
+    pcAccess: PCAccessLogAPIResponse[];
+    proxy: ProxyLogAPIResponse[];
+  };
+}
+
+export interface BuildingAccessLogAPIResponse {
+  id: number;
+  employeeid: number;
+  access_date_time: string;
+  direction: string;
+  status: string;
+  office_location: string;
+  suspect: number;
+}
+export type PCAccessLogAPIResponse = {
+  id: number;
+  employeeid: number;
+  access_date_time: string;
+  log_on_off: string;
+  machine_name: string;
+  machine_location: string;
+  suspect: number;
+};
+export type ProxyLogAPIResponse = {
+  id: number;
+  employeeid: number;
+  access_date_time: string;
+  machine_name: string;
+  url: string;
+  category: string;
+  bytes_in: number;
+  bytes_out: number;
+  suspect: number;
+};
+
+export interface ThreatAPIResponse {
+  id: number;
+  employeeId: number;
+  riskScore: number;
+}
+
+export interface ThreatDetailAPIResponse {
+  id: number;
+  employeeId: number;
+  riskScore: number;
+  offenceLogCount: number;
+  employeeInfo: {
+    business_unit: string;
+    email: string;
+    employeeid: number;
+    firstname: string;
+    lastname: string;
+    gender: string;
+    joined_date: string;
+    location: string;
+    profile: number;
+    suspect: boolean;
+    terminated_date: string | null;
+  };
+  logs: {
+    buildingAccess: BuildingAccessLogAPIResponse[];
+    pcAccess: PCAccessLogAPIResponse[];
+    proxy: ProxyLogAPIResponse[];
+  };
 }
 
 export interface BuildingAccessLogs {

@@ -6,102 +6,36 @@
 import Search from "@/components/Search/Search";
 // import { deleteUser, getUserList } from "@/api/usersApi";
 // import { useUserStore } from "@/stores/useUserStore";
-// import {
-//   useMutation,
-//   useQuery,
-//   useQueryClient,
-//   // useQueryClient
-// } from "@tanstack/react-query";
+import {
+  //   useMutation,
+  useQuery,
+  //   useQueryClient,
+  //   // useQueryClient
+} from "@tanstack/react-query";
 
 import { DataTable } from "@/components/DataTable/DataTable";
 import FixedHeader from "@/components/Layouts/Header/FixedHeader";
 import { threatsColumns } from "@/components/DataTable/Threats/ThreatsColumns";
 import { useThreatStore } from "@/stores/useThreatStore";
+import { getThreatList } from "@/api/threatsApi";
+import { EmployeeListItem } from "@/types/types";
 
 function Threats() {
   const employees = useThreatStore((state) => state.employees);
-  // const setEmployees = useThreatStore((state) => state.setEmployees);
+  const setEmployees = useThreatStore((state) => state.setEmployees);
 
-  // const currentSelectedEmployee = useThreatStore(
-  //   (state) => state.currentSelectedEmployee
-  // );
-  // const isSingleRowActionDialogOpen = useAlertDialogStore(
-  //   (state) => state.isSingleRowActionDialogOpen
-  // );
-  // const setSingleRowActionDialogOpen = useAlertDialogStore(
-  //   (state) => state.setSingleRowActionDialogOpen
-  // );
+  const threatQuery = useQuery({
+    queryKey: ["threats"],
+    queryFn: async () => {
+      const data = await getThreatList();
+      console.log("threats ", data);
 
-  // const queryClient = useQueryClient();
+      setEmployees(data as EmployeeListItem[]);
+      return data as EmployeeListItem[];
+    },
+  });
 
-  // const usersQuery = useQuery({
-  //   queryKey: ["users"],
-  //   queryFn: async () => {
-  //     const data = await getUserList();
-  //     console.log("users ", data);
-
-  //     setUsers(data);
-  //     return data;
-  //   },
-  // });
-
-  // const deleteUserMutation = useMutation({
-  //   mutationFn: async (id: string) => {
-  //     await deleteUser(id);
-  //   },
-  //   onSuccess: () => {
-  //     const newUsers = users.filter(
-  //       (item) => item.id !== currentSelectedUser.id
-  //     );
-  //     setUsers(newUsers);
-  //     toast.success("User deleted successfully");
-  //   },
-  //   onSettled: async (_, error) => {
-  //     if (error) {
-  //       console.log(error);
-  //     } else {
-  //       await queryClient.invalidateQueries({ queryKey: ["users"] });
-  //     }
-  //   },
-  // });
-
-  // const deleteMultipleUsersMutation = useMutation({
-  //   mutationFn: async (ids: string[]) => {
-  //     console.log("ids ", ids);
-
-  //     await Promise.all(ids.map((id) => deleteUser(id)));
-  //   },
-  //   onSuccess: () => {
-  //     const newUsers = users.filter(
-  //       (item) =>
-  //         !selectedUsers.some((selectedUser) => selectedUser.id === item.id)
-  //     );
-
-  //     console.log("newUsers ", newUsers);
-
-  //     setUsers(newUsers);
-  //     setSelectedUsers([]);
-  //     toast.success("Users deleted successfully");
-  //   },
-  //   onSettled: async (_, error) => {
-  //     if (error) {
-  //       console.log(error);
-  //     } else {
-  //       await queryClient.invalidateQueries({ queryKey: ["users"] });
-  //     }
-  //   },
-  // });
-
-  // const handleDelete = () => {
-  //   deleteUserMutation.mutate(currentSelectedUser.id);
-  // };
-
-  // const handleDeleteAllSelected = () => {
-  //   const selectedUserIds = selectedUsers.map((userItem) => userItem.id);
-  //   console.log("selectedUserIds ", selectedUserIds);
-
-  //   deleteMultipleUsersMutation.mutate(selectedUserIds);
-  // };
+  console.log("threatQuery employees", employees);
 
   return (
     <>
@@ -120,7 +54,7 @@ function Threats() {
       <div className="mt-16">
         <DataTable
           columns={threatsColumns}
-          data={employees}
+          data={threatQuery.isLoading ? [] : employees}
           // actionDelete={handleDeleteAllSelected}
         />
       </div>

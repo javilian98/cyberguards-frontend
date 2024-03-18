@@ -27,19 +27,20 @@ import {
 import { getCaseByEmployeeId } from "@/api/casesApi";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getThreatByEmployeeId } from "@/api/threatsApi";
 
 const ThreatDetail = () => {
   const { employeeid } = useParams();
 
-  const employees = useThreatStore((state) => state.employees);
-  const currentSelectedEmployee = useThreatStore(
-    (state) => state.currentSelectedEmployee
-  );
-  const setCurrentSelectedEmployee = useThreatStore(
-    (state) => state.setCurrentSelectedEmployee
-  );
+  const { data: threatDetailData } = useQuery({
+    queryKey: ["threat", employeeid],
+    queryFn: async () => {
+      const data = await getThreatByEmployeeId(employeeid as string);
+      console.log("threatDetailQuery ", data);
 
-  const logs = useThreatStore((state) => state.logs);
+      return data;
+    },
+  });
 
   const {
     data: caseDetailData,
@@ -54,34 +55,11 @@ const ThreatDetail = () => {
     enabled: !!employeeid, // query is only triggered if id is not undefined
   });
 
-  // Cpde for getting employee details
-  useEffect(() => {
-    const foundEmployee = employees.find((item) => item.id === employeeid);
-
-    setCurrentSelectedEmployee(foundEmployee as EmployeeListItem);
-  }, [employees, employeeid, setCurrentSelectedEmployee]);
-
-  const countTotalOffences = logs.filter(
-    (item) => item.employeeId === employeeid
-  ).length;
-
-  const isBuildingAccessLogs = (
-    log: BuildingAccessLogs | PCAccessLogs | ProxyLogs
-  ): log is BuildingAccessLogs => {
-    return (log as BuildingAccessLogs).officeLocation !== undefined;
-  };
-
-  const isPCAccessLogs = (
-    log: BuildingAccessLogs | PCAccessLogs | ProxyLogs
-  ): log is PCAccessLogs => {
-    return (log as PCAccessLogs).machineLocation !== undefined;
-  };
-
-  const isProxyLogs = (
-    log: BuildingAccessLogs | PCAccessLogs | ProxyLogs
-  ): log is ProxyLogs => {
-    return (log as ProxyLogs).bytesIn !== undefined;
-  };
+  // const countTotalOffences = threatDetailData
+  //   ? threatDetailData?.logs.buildingAccess.length +
+  //     threatDetailData?.logs.pcAccess.length +
+  //     threatDetailData?.logs.proxy.length
+  //   : 0;
 
   return (
     <div className="UserDetail">
@@ -91,42 +69,46 @@ const ThreatDetail = () => {
             {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
             <AvatarFallback className="text-xl font-bold">
               {renderNameInitials(
-                `${currentSelectedEmployee?.firstName} ${currentSelectedEmployee?.lastName}`
+                `${threatDetailData?.employeeInfo.firstname} ${threatDetailData?.employeeInfo.lastname}`
               )}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col ml-4">
             <h2 className="text-lg font-semibold tracking-tight">
-              {currentSelectedEmployee?.firstName}{" "}
-              {currentSelectedEmployee?.lastName}
+              {`${threatDetailData?.employeeInfo.firstname} ${threatDetailData?.employeeInfo.lastname}`}
             </h2>
             <span className="text-sm text-gray-600">
-              {currentSelectedEmployee?.businessUnit}
+              {threatDetailData?.employeeInfo.businessUnit}
             </span>
           </div>
         </div>
         <div className="flex flex-col justify-center ml-5">
           <span className="text-2xl font-bold">
-            {currentSelectedEmployee?.riskScore}%
+            {threatDetailData?.riskScore}%
           </span>
           <span className="text-sm">Overall Risk</span>
         </div>
         <div className="flex flex-col justify-center ml-5">
-          <span className="text-2xl font-bold">{countTotalOffences}</span>
+          <span className="text-2xl font-bold">
+            {threatDetailData?.offenceLogCount}
+          </span>
           <span className="text-sm">Total Offences</span>
         </div>
         <div className="flex items-center ml-2 gap-3">
-          {caseDetailData?.assignee?.fullName && (
+          {caseDetailData && (
             <>
               <Separator orientation="vertical" className="mr-2" />
               <div className="flex items-center gap-3">
                 <span className="text-sm">Analyst Reviewing: </span>
-
-                <Avatar>
-                  <AvatarFallback className="bg-black text-white">
-                    {renderNameInitials(caseDetailData?.assignee?.fullName)}
-                  </AvatarFallback>
-                </Avatar>
+                {caseDetailData?.assignee?.fullName ? (
+                  <Avatar>
+                    <AvatarFallback className="bg-black text-white">
+                      {renderNameInitials(caseDetailData?.assignee?.fullName)}
+                    </AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <span className="text-red-500">Unassigned</span>
+                )}
 
                 <span>{caseDetailData?.assignee?.fullName}</span>
               </div>
@@ -158,28 +140,31 @@ const ThreatDetail = () => {
           <TabsContent value="building_access" className="mt-4">
             <DataTable
               columns={buildingAccessColumns}
-              data={(logs as BuildingAccessLogs[]).filter(
-                (item) =>
-                  item.employeeId === employeeid && isBuildingAccessLogs(item)
-              )}
+              data={
+                threatDetailData?.logs.buildingAccess
+                  ? threatDetailData?.logs.buildingAccess
+                  : []
+              }
             />
           </TabsContent>
 
           <TabsContent value="pc_access" className="mt-4">
             <DataTable
               columns={pcAccessColumns}
-              data={(logs as PCAccessLogs[]).filter(
-                (item) => item.employeeId === employeeid && isPCAccessLogs(item)
-              )}
+              data={
+                threatDetailData?.logs.pcAccess
+                  ? threatDetailData?.logs.pcAccess
+                  : []
+              }
             />
           </TabsContent>
 
           <TabsContent value="proxy" className="mt-4">
             <DataTable
               columns={proxyLogColumns}
-              data={(logs as ProxyLogs[]).filter(
-                (item) => item.employeeId === employeeid && isProxyLogs(item)
-              )}
+              data={
+                threatDetailData?.logs.proxy ? threatDetailData?.logs.proxy : []
+              }
             />
           </TabsContent>
         </Tabs>

@@ -1,9 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
-import { PCAccessLogs } from "@/types/types";
+import { PCAccessLogAPIResponse, PCAccessLogs } from "@/types/types";
 
-const renderSortButton = (column: Column<PCAccessLogs>, columnName: string) => {
+// const renderSortButton = (column: Column<PCAccessLogs>, columnName: string) => {
+const renderSortButton = (
+  column: Column<PCAccessLogAPIResponse>,
+  columnName: string
+) => {
   return (
     <Button
       variant="ghost"
@@ -15,27 +19,28 @@ const renderSortButton = (column: Column<PCAccessLogs>, columnName: string) => {
   );
 };
 
-export const pcAccessColumns: ColumnDef<PCAccessLogs>[] = [
+// export const pcAccessColumns: ColumnDef<PCAccessLogs>[] = [
+export const pcAccessColumns: ColumnDef<PCAccessLogAPIResponse>[] = [
   {
-    accessorKey: "accessDateTime",
+    accessorKey: "access_date_time",
     header: ({ column }) => renderSortButton(column, "Access Date Time"),
   },
   {
-    accessorKey: "logOnOff",
+    accessorKey: "log_on_off",
     header: ({ column }) => renderSortButton(column, "Log On/Off"),
   },
   {
-    accessorKey: "machineName",
+    accessorKey: "machine_name",
     header: ({ column }) => renderSortButton(column, "Machine Name"),
   },
   {
-    accessorKey: "machineLocation",
+    accessorKey: "machine_location",
     header: ({ column }) => renderSortButton(column, "Machine Location"),
   },
-  {
-    accessorKey: "suspectType",
-    header: ({ column }) => renderSortButton(column, "Suspect"),
-  },
+  // {
+  //   accessorKey: "suspect_type",
+  //   header: ({ column }) => renderSortButton(column, "Suspect"),
+  // },
   // {
   //   id: "actions",
   //   cell: ({ row }) => {

@@ -110,10 +110,10 @@ export const threatsColumns: ColumnDef<EmployeeListItem>[] = [
     ),
   },
   {
-    accessorKey: "totalOffences",
+    accessorKey: "offenceLogCount",
     header: ({ column }) => renderSortButton(column, "No. of Offences"),
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("totalOffences")}</div>
+      <div className="text-center">{row.getValue("offenceLogCount")}</div>
     ),
   },
 
