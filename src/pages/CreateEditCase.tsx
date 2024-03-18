@@ -188,16 +188,18 @@ function CreateEditCase() {
         fullName: data.assignee?.fullName ?? null,
       });
 
-      // to be replaced with employee data fetched from bff cases api
-      const foundEmployee = employeesData?.find(
-        (item) => item.id === data.employeeId
-      );
-      const foundEmployeeFullName = `${foundEmployee?.firstName} ${foundEmployee?.lastName}`;
+      // // to be replaced with employee data fetched from bff cases api
+      // const foundEmployee = employeesData?.find(
+      //   (item) => item.id === data.employeeId
+      // );
+      // const foundEmployeeFullName = `${foundEmployee?.firstName} ${foundEmployee?.lastName}`;
+
+      console.log("data.employee ", data);
 
       form.setValue("employee", {
         id: data.employeeId ?? null,
         // fullName: data.employee?.fullName ?? null,
-        fullName: foundEmployeeFullName ?? null,
+        fullName: data.employee?.fullName ?? null,
       });
 
       form.setValue("caseStatus", data.caseStatus);
