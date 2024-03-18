@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Link, useParams } from "react-router-dom";
-import { useEffect } from "react";
 import {
   Avatar,
   AvatarFallback,
@@ -11,14 +10,14 @@ import { buildingAccessColumns } from "@/components/DataTable/BuildingAccess/Bui
 import { DataTable } from "@/components/DataTable/DataTable";
 import { pcAccessColumns } from "@/components/DataTable/PCAccess/PCAccessColumns";
 import { proxyLogColumns } from "@/components/DataTable/ProxyLog/ProxyLogColumns";
-import {
-  BuildingAccessLogs,
-  EmployeeListItem,
-  PCAccessLogs,
-  ProxyLogs,
-} from "@/types/types";
+// import {
+//   BuildingAccessLogs,
+//   EmployeeListItem,
+//   PCAccessLogs,
+//   ProxyLogs,
+// } from "@/types/types";
 // import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useThreatStore } from "@/stores/useThreatStore";
+// import { useThreatStore } from "@/stores/useThreatStore";
 import { Separator } from "@/components/ui/separator";
 import {
   LuExternalLink,

@@ -3,7 +3,7 @@ import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
 import {
   BuildingAccessLogAPIResponse,
-  BuildingAccessLogs,
+  // BuildingAccessLogs,
 } from "@/types/types";
 
 const renderSortButton = (

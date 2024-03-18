@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
-import { ProxyLogAPIResponse, ProxyLogs } from "@/types/types";
+import { ProxyLogAPIResponse, 
+  // ProxyLogs 
+} from "@/types/types";
 
 // const renderSortButton = (column: Column<ProxyLogs>, columnName: string) => {
 const renderSortButton = (

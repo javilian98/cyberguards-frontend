@@ -1,11 +1,11 @@
 import {
   BuildingAccessLogAPIResponse,
-  BuildingAccessLogs,
+  // BuildingAccessLogs,
   EmployeeListItem,
   PCAccessLogAPIResponse,
-  PCAccessLogs,
+  // PCAccessLogs,
   ProxyLogAPIResponse,
-  ProxyLogs,
+  // ProxyLogs,
 } from "@/types/types";
 import { create } from "zustand";
 
@@ -16,7 +16,7 @@ export const employeesData: EmployeeListItem[] = [
     lastName: "Meadows",
     businessUnit: "Wealth Management",
     riskScore: 80,
-    // totalOffences: 5,
+    offenceLogCount: 5,
   },
   {
     id: "2",
@@ -24,7 +24,7 @@ export const employeesData: EmployeeListItem[] = [
     lastName: "Munoz",
     businessUnit: "Technology & Ops",
     riskScore: 50,
-    // totalOffences: 1,
+    offenceLogCount: 1,
   },
   {
     id: "3",
@@ -32,7 +32,7 @@ export const employeesData: EmployeeListItem[] = [
     lastName: "Ezell",
     businessUnit: "Wealth Management",
     riskScore: 30,
-    // totalOffences: 2,
+    offenceLogCount: 2,
   },
 ];
 
@@ -167,9 +167,9 @@ export const employeesData: EmployeeListItem[] = [
 interface ThreatStore {
   employees: EmployeeListItem[];
   setEmployees: (items: EmployeeListItem[]) => void;
-  currentSelectedEmployee: EmployeeListItem | undefined;
-  setCurrentSelectedEmployee: (item: EmployeeListItem) => void;
-  resetCurrentSelectedEmployee: () => void;
+  // currentSelectedEmployee: EmployeeListItem | undefined;
+  // setCurrentSelectedEmployee: (item: EmployeeListItem) => void;
+  // resetCurrentSelectedEmployee: () => void;
 
   // logType: string;
   // setLogType: (value: string) => void;
@@ -197,24 +197,24 @@ interface ThreatStore {
   // resetCurrentSelectedLog: () => void;
 }
 
-const initCurrentSelectedEmployee: EmployeeListItem = {
-  id: "",
-  firstName: "",
-  lastName: "",
-  businessUnit: "",
-  riskScore: 0,
-  // totalOffences: 0,
-};
+// const initCurrentSelectedEmployee: EmployeeListItem = {
+//   id: "",
+//   firstName: "",
+//   lastName: "",
+//   businessUnit: "",
+//   riskScore: 0,
+//   // offenceLogCount: 0,
+// };
 
 export const useThreatStore = create<ThreatStore>((set) => ({
-  employees: employeesData,
+  employees: [],
   setEmployees: (items: EmployeeListItem[]) =>
     set(() => ({ employees: items })),
-  currentSelectedEmployee: initCurrentSelectedEmployee,
-  setCurrentSelectedEmployee: (item: EmployeeListItem) =>
-    set(() => ({ currentSelectedEmployee: item })),
-  resetCurrentSelectedEmployee: () =>
-    set(() => ({ currentSelectedEmployee: initCurrentSelectedEmployee })),
+  // currentSelectedEmployee: initCurrentSelectedEmployee,
+  // setCurrentSelectedEmployee: (item: EmployeeListItem) =>
+  //   set(() => ({ currentSelectedEmployee: item })),
+  // resetCurrentSelectedEmployee: () =>
+  //   set(() => ({ currentSelectedEmployee: initCurrentSelectedEmployee })),
 
   // logType: "",
   // setLogType: (value: string) => set(() => ({ logType: value })),
