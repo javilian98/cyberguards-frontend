@@ -337,9 +337,7 @@ function CreateEditCase() {
       // roleId: 1 is analyst
       const data = await getUserList();
 
-      const filteredData = data.filter((item) => item.id !== userAuth.id);
-
-      return filteredData;
+      return data;
     },
   });
 
