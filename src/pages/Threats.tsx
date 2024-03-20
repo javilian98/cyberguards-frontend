@@ -20,7 +20,8 @@ import { useThreatStore } from "@/stores/useThreatStore";
 import { getNewThreat, getThreatList } from "@/api/threatsApi";
 import { EmployeeListItem } from "@/types/types";
 import { Button } from "@/components/ui/button";
-import { LuVenetianMask } from "react-icons/lu";
+import { LuLoader2, LuVenetianMask } from "react-icons/lu";
+import { toast } from "sonner";
 
 function Threats() {
   const employees = useThreatStore((state) => state.employees);
@@ -37,17 +38,23 @@ function Threats() {
     },
   });
 
-  const { refetch: fetchThreatGeneratedData } = useQuery({
-    queryKey: ["generate_threat"],
-    queryFn: async () => {
-      const data = await getNewThreat();
-      console.log("new threat ", data);
+  const { isFetching: isFetchingNewThreat, refetch: fetchThreatGeneratedData } =
+    useQuery({
+      queryKey: ["generate_threat"],
+      queryFn: async () => {
+        const data = await getNewThreat();
+        console.log("new threat ", data);
 
-      return data;
-    },
-    refetchOnWindowFocus: false,
-    enabled: false,
-  });
+        const newEmployees = [...employees, data];
+
+        setEmployees(newEmployees as EmployeeListItem[]);
+        toast.success("New threat has been generated");
+
+        return data;
+      },
+      refetchOnWindowFocus: false,
+      enabled: false,
+    });
 
   const handleGenerateThreat = () => {
     fetchThreatGeneratedData();
@@ -69,15 +76,26 @@ function Threats() {
         </Link> */}
       </FixedHeader>
 
-      <div className="mt-16">
-        <Button
-          variant="destructive"
-          className="mt-2"
-          onClick={handleGenerateThreat}
-        >
-          <LuVenetianMask className="h-6 w-6 mr-3" />
-          Generate Threat
-        </Button>
+      <div className="mt-20">
+        <div className="flex items-center gap-3">
+          <Button
+            disabled={isFetchingNewThreat}
+            variant="destructive"
+            onClick={handleGenerateThreat}
+          >
+            {isFetchingNewThreat ? (
+              <LuLoader2 className="h-6 w-6 mr-3 animate-spin" />
+            ) : (
+              <LuVenetianMask className="h-6 w-6 mr-3" />
+            )}
+            Generate Threat
+          </Button>
+          {isFetchingNewThreat && (
+            <span className="text-sm text-muted-foreground">
+              This process may take a while
+            </span>
+          )}
+        </div>
         <DataTable
           columns={threatsColumns}
           data={threatListQuery.isLoading ? [] : employees}

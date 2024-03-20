@@ -60,22 +60,22 @@ export const getThreatByEmployeeId = async (
   }
 };
 
-export const getNewThreat = async (): Promise<ThreatListItem[]> => {
-    try {
-      const response = await bffApi.get("/api/threats/generate");
-  
-      const responseData = response.data;
-      // const newResponseData = response.data.map((item: ThreatListItem) => {
-      //   return {
-      //     ...item,
-      //     createdAt: formatDateTime(item.createdAt),
-      //     assigneeId: item.assigneeId,
-      //     assignee: item.assignee?.fullName ? item.assignee?.fullName : null,
-      //   };
-      // });
-  
-      return responseData;
-    } catch (error) {
-      throw new Error("Failed to fetch cases: " + error);
-    }
-  };
+export const getNewThreat = async (): Promise<ThreatListItem> => {
+  try {
+    const response = await bffApi.get("/api/threats/generate");
+
+    const responseData = response.data;
+    // const newResponseData = response.data.map((item: ThreatListItem) => {
+    //   return {
+    //     ...item,
+    //     createdAt: formatDateTime(item.createdAt),
+    //     assigneeId: item.assigneeId,
+    //     assignee: item.assignee?.fullName ? item.assignee?.fullName : null,
+    //   };
+    // });
+
+    return responseData;
+  } catch (error) {
+    throw new Error("Failed to fetch cases: " + error);
+  }
+};
