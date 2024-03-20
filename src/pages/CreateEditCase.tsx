@@ -90,7 +90,8 @@ import {
 import { LucideNotebookPen } from "lucide-react";
 // import { useThreatStore } from "@/stores/useThreatStore";
 import { useCaseStore } from "@/stores/useCaseStore";
-import { getThreatList } from "@/api/threatsApi";
+import { getThreatByEmployeeId, getThreatList } from "@/api/threatsApi";
+import { useUserAuthStore } from "@/stores/useUserAuthStore";
 
 const assigneeEmployeeSchema = z.object({
   id: z.string().nullable(),
@@ -134,6 +135,8 @@ function CreateEditCase() {
 
   const caseAuditLogs = useCaseStore((state) => state.caseAuditLogs);
   const setCaseAuditLogs = useCaseStore((state) => state.setCaseAuditLogs);
+
+  const userAuth = useUserAuthStore((state) => state.userAuth);
 
   const [isFormEdited, setFormEdited] = useState(false);
   const [employeeIdValue, setEmployeeIdValue] = useState("");
@@ -251,7 +254,7 @@ function CreateEditCase() {
       const newCaseAuditLog: CaseAuditLog = {
         caseId: data.id,
         action: "CREATE",
-        edits: null,
+        edits: "-",
         assignee: assigneeFound?.firstName + " " + assigneeFound?.lastName,
         assigneeId: assigneeFound?.id ?? undefined,
       };
@@ -333,7 +336,10 @@ function CreateEditCase() {
     queryFn: async () => {
       // roleId: 1 is analyst
       const data = await getUserList();
-      return data;
+
+      const filteredData = data.filter((item) => item.id !== userAuth.id);
+
+      return filteredData;
     },
   });
 
@@ -345,6 +351,17 @@ function CreateEditCase() {
       // setEmployees(data as EmployeeListItem[]);
       return data as EmployeeListItem[];
     },
+  });
+
+  const { refetch: fetchEmployeeDetail } = useQuery({
+    queryKey: ["threats", employeeIdValue],
+    queryFn: async () => {
+      const data = await getThreatByEmployeeId(employeeIdValue);
+
+      form.setValue("riskScore", [data.riskScore]);
+      return data;
+    },
+    refetchOnWindowFocus: false,
   });
 
   // const employeesData = useThreatStore((state) => state.employees);
@@ -503,6 +520,8 @@ function CreateEditCase() {
                                       id: employee.id,
                                       fullName: computeFullName(employee),
                                     });
+
+                                    fetchEmployeeDetail();
 
                                     setIsEmployeeChanged(true);
                                     setEmployeeIdValue(employee.id);
