@@ -6,9 +6,13 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import { FiUser, FiLogOut } from "react-icons/fi";
+import { useQueryClient } from "@tanstack/react-query";
+import { useUserAuthStore } from "@/stores/useUserAuthStore";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface AvatarMenuProps {
   name: string;
@@ -16,9 +20,25 @@ interface AvatarMenuProps {
 }
 
 function AvatarMenu({ name, imgSrc }: AvatarMenuProps) {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const userAuth = useUserAuthStore((state) => state.userAuth);
+  const resetUserAuth = useUserAuthStore((state) => state.resetUserAuth);
+
   const renderNameInitials = (name: string) => {
     const [firstName, lastName] = name.split(" ");
     return `${firstName[0]}${lastName[0]}`;
+  };
+
+  const handleLogout = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["users", userAuth.email],
+    });
+
+    toast.success("Logged out successfully");
+
+    resetUserAuth();
+    navigate("/login");
   };
 
   return (
@@ -26,7 +46,7 @@ function AvatarMenu({ name, imgSrc }: AvatarMenuProps) {
       <PopoverTrigger className="w-full">
         <Button variant="ghost" className="w-full justify-start">
           <Avatar className="w-10 h-10 bg-gray-600 mr-3 rounded-full">
-            <img src={imgSrc} alt={name}/>
+            <img src={imgSrc} alt={name} />
             <AvatarFallback className="bg-blue-600 text-white">
               {renderNameInitials(name)}
             </AvatarFallback>
@@ -40,7 +60,11 @@ function AvatarMenu({ name, imgSrc }: AvatarMenuProps) {
           My Profile
         </Button>
         <Separator className="my-4" />
-        <Button variant="ghost" className="w-full justify-start text-red-600">
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-red-600"
+          onClick={handleLogout}
+        >
           <FiLogOut className="h-5 w-5 mr-3" />
           Logout
         </Button>

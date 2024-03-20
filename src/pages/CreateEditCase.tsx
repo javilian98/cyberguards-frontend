@@ -91,7 +91,6 @@ import { LucideNotebookPen } from "lucide-react";
 // import { useThreatStore } from "@/stores/useThreatStore";
 import { useCaseStore } from "@/stores/useCaseStore";
 import { getThreatByEmployeeId, getThreatList } from "@/api/threatsApi";
-import { useUserAuthStore } from "@/stores/useUserAuthStore";
 
 const assigneeEmployeeSchema = z.object({
   id: z.string().nullable(),
@@ -135,8 +134,6 @@ function CreateEditCase() {
 
   const caseAuditLogs = useCaseStore((state) => state.caseAuditLogs);
   const setCaseAuditLogs = useCaseStore((state) => state.setCaseAuditLogs);
-
-  const userAuth = useUserAuthStore((state) => state.userAuth);
 
   const [isFormEdited, setFormEdited] = useState(false);
   const [employeeIdValue, setEmployeeIdValue] = useState("");

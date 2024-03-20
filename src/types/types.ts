@@ -47,12 +47,21 @@ export interface UserDetail {
   id: string;
   firstName: string;
   lastName: string;
+  email: string;
   profession: string;
   roleId: number;
   riskStatus: string;
   riskScore: number;
   suspectCaseId: number;
   lastAccessAt: string;
+}
+
+export interface UserAuth {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: number;
 }
 
 export interface EmployeeListItem {

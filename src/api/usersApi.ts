@@ -55,6 +55,23 @@ export const getUser = async (id: string): Promise<UserDetail> => {
   }
 };
 
+export const getUserByEmail = async (email: string): Promise<UserDetail> => {
+  try {
+    const response = await bffApi.get(`/api/users/email/${email}`);
+
+    const newResponseData: UserDetail = response.data;
+
+    const userDetailData = {
+      ...newResponseData,
+      lastAccessAt: formatDateTime(newResponseData.lastAccessAt),
+    };
+
+    return userDetailData;
+  } catch (error) {
+    throw new Error("Failed to fetch case detail: " + error);
+  }
+};
+
 export const createUser = async (
   userItem: Omit<
     UserDetail,

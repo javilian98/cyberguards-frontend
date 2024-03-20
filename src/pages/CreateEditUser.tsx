@@ -59,6 +59,9 @@ const formSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name cannot be empty.",
   }),
+  email: z.string().min(1, { message: "Email is required" }).email({
+    message: "Must be a valid email",
+  }),
   // profession: z.string().min(1, {
   //   message: "Profession cannot be empty.",
   // }),
@@ -105,6 +108,7 @@ function CreateEditUser() {
 
       form.setValue("firstName", data.firstName);
       form.setValue("lastName", data.lastName);
+      form.setValue("email", data.email);
       // form.setValue("profession", data.profession);
       // form.setValue("roleId", data.roleId as unknown as ROLE_ID);
 
@@ -288,6 +292,38 @@ function CreateEditUser() {
                   )}
                 />
               </div>
+
+              <div className="grid w-full items-center gap-2 mt-6">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="hello@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* <div className="grid w-full items-center gap-2 mt-6">
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Last Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div> */}
 
               {/* <div className="grid w-full max-w-sm items-center gap-2 mt-6">
                 <FormField

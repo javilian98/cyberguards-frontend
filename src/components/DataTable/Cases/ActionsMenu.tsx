@@ -1,13 +1,9 @@
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useCaseStore } from "@/stores/useCaseStore";
 
-import {
-  LuMoreHorizontal,
-  LuPencilLine,
-  LuTrash2,
-} from "react-icons/lu";
+import { LuMoreHorizontal, LuPencilLine, LuTrash2 } from "react-icons/lu";
 
-import { Case } from "@/types/types";
+import { Case, ROLE_ID } from "@/types/types";
 import { Row } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useUserAuthStore } from "@/stores/useUserAuthStore";
 
 interface ActionsMenuProps {
   row: Row<Case>;
@@ -31,6 +28,8 @@ function ActionsMenu({ row }: ActionsMenuProps) {
   const setSingleRowActionDialogOpen = useAlertDialogStore(
     (state) => state.setSingleRowActionDialogOpen
   );
+  const userAuth = useUserAuthStore((state) => state.userAuth);
+
   const navigate = useNavigate();
 
   const handleEditCase = () => {
@@ -61,14 +60,18 @@ function ActionsMenu({ row }: ActionsMenuProps) {
           <LuPencilLine className="w-4 h-4 mr-2" />
           Edit Case
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="text-red-600"
-          onClick={handleDeleteDialogVisibility}
-        >
-          <LuTrash2 className="w-4 h-4 mr-2" />
-          Delete Case
-        </DropdownMenuItem>
+        {userAuth.role === ROLE_ID.admin && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-red-600"
+              onClick={handleDeleteDialogVisibility}
+            >
+              <LuTrash2 className="w-4 h-4 mr-2" />
+              Delete Case
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
