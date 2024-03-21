@@ -27,6 +27,8 @@ import {
 import FixedHeader from "@/components/Layouts/Header/FixedHeader";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { useUserAuthStore } from "@/stores/useUserAuthStore";
+import { ROLE_ID } from "@/types/types";
 
 function Users() {
   const users = useUserStore((state) => state.users);
@@ -42,6 +44,8 @@ function Users() {
   const setSingleRowActionDialogOpen = useAlertDialogStore(
     (state) => state.setSingleRowActionDialogOpen
   );
+
+  const userAuth = useUserAuthStore((state) => state.userAuth);
 
   const queryClient = useQueryClient();
 
@@ -120,12 +124,14 @@ function Users() {
         <Search placeholderText="Search analyst" drawerTitle="Filter Analysts">
           asd
         </Search>
-        <Link to="/users/create">
-          <Button>
-            <LuPlus className="w-5 h-5 mr-2 text-white" />
-            Create Analyst
-          </Button>
-        </Link>
+        {userAuth.role === ROLE_ID.admin && (
+          <Link to="/users/create">
+            <Button>
+              <LuPlus className="w-5 h-5 mr-2 text-white" />
+              Create Analyst
+            </Button>
+          </Link>
+        )}
       </FixedHeader>
 
       <div className="mt-16">

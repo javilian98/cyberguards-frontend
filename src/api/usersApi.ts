@@ -82,6 +82,7 @@ export const createUser = async (
     const userItemFormatted = {
       firstName: userItem.firstName,
       lastName: userItem.lastName,
+      email: userItem.email,
       profession: userItem.profession,
       roleId: userItem.roleId,
       riskStatus: "low",
@@ -107,6 +108,7 @@ export const updateUser = async (
     const userItemFormatted = {
       firstName: userItem.firstName,
       lastName: userItem.lastName,
+      email: userItem.email,
       profession: userItem.profession,
       roleId: userItem.roleId,
       riskStatus: "low",

@@ -169,6 +169,7 @@ function CreateEditUser() {
     defaultValues: {
       firstName: "",
       lastName: "",
+      email: "",
       // profession: "",
       // roleId: userDetailData
       //   ? (userDetailData.roleId as unknown as ROLE_ID)
