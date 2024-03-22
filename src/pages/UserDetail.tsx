@@ -152,7 +152,7 @@ const UserDetail = () => {
               {userDetailData?.firstName} {userDetailData?.lastName}
             </h2>
             <span className="text-sm text-gray-600">
-              {userDetailData?.profession}
+              {/* {userDetailData?.profession} */}
             </span>
           </div>
         </div>

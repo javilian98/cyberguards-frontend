@@ -38,22 +38,13 @@ export interface UserListItem {
   roleId: number;
   firstName: string;
   lastName: string;
-  profession: string;
-  riskScore: number;
-  suspectCaseId: number;
-  lastAccessAt: string;
 }
 export interface UserDetail {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
-  profession: string;
   roleId: number;
-  riskStatus: string;
-  riskScore: number;
-  suspectCaseId: number;
-  lastAccessAt: string;
 }
 
 export interface UserAuth {

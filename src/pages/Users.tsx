@@ -53,7 +53,6 @@ function Users() {
     queryKey: ["users"],
     queryFn: async () => {
       const data = await getUserList();
-      console.log("users ", data);
 
       setUsers(data);
       return data;
@@ -82,8 +81,6 @@ function Users() {
 
   const deleteMultipleUsersMutation = useMutation({
     mutationFn: async (ids: string[]) => {
-      console.log("ids ", ids);
-
       await Promise.all(ids.map((id) => deleteUser(id)));
     },
     onSuccess: () => {
@@ -91,8 +88,6 @@ function Users() {
         (item) =>
           !selectedUsers.some((selectedUser) => selectedUser.id === item.id)
       );
-
-      console.log("newUsers ", newUsers);
 
       setUsers(newUsers);
       setSelectedUsers([]);
@@ -113,8 +108,6 @@ function Users() {
 
   const handleDeleteAllSelected = () => {
     const selectedUserIds = selectedUsers.map((userItem) => userItem.id);
-    console.log("selectedUserIds ", selectedUserIds);
-
     deleteMultipleUsersMutation.mutate(selectedUserIds);
   };
 
