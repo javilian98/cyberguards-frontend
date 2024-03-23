@@ -3,15 +3,11 @@ import {
   ThreatDetailAPIResponse,
   ThreatListItem,
 } from "@/types/types";
-import axios from "axios";
-
-export const bffApi = axios.create({
-  baseURL: "http://localhost:9999",
-});
+import { axiosBFFService } from "@/utils/baseApi";
 
 export const getThreatList = async (): Promise<ThreatListItem[]> => {
   try {
-    const response = await bffApi.get("/api/threats");
+    const response = await axiosBFFService.get("/api/threats");
 
     const responseData = response.data;
     // const newResponseData = response.data.map((item: ThreatListItem) => {
@@ -33,7 +29,7 @@ export const getThreatByEmployeeId = async (
   employeeId: string
 ): Promise<ThreatDetail> => {
   try {
-    const response = await bffApi.get(`/api/threats/employee/${employeeId}`);
+    const response = await axiosBFFService.get(`/api/threats/employee/${employeeId}`);
 
     const responseData: ThreatDetailAPIResponse = response.data;
 
@@ -62,7 +58,7 @@ export const getThreatByEmployeeId = async (
 
 export const getNewThreat = async (): Promise<ThreatListItem> => {
   try {
-    const response = await bffApi.get("/api/threats/generate");
+    const response = await axiosBFFService.get("/api/threats/generate");
 
     const responseData = response.data;
     // const newResponseData = response.data.map((item: ThreatListItem) => {

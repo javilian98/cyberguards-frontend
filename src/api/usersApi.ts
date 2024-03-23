@@ -1,10 +1,7 @@
 import { UserListItem, UserDetail } from "@/types/types";
+import { axiosBFFService } from "@/utils/baseApi";
 import { formatDateTime } from "@/utils/utils";
-import axios from "axios";
 
-const bffApi = axios.create({
-  baseURL: "http://localhost:9999",
-});
 
 type GetUserListArgs = {
   roleId?: number;
@@ -17,7 +14,7 @@ export const getUserList = async ({
   take = 10,
 }: GetUserListArgs = {}): Promise<UserListItem[]> => {
   try {
-    const response = await bffApi.get("/api/users", {
+    const response = await axiosBFFService.get("/api/users", {
       params: {
         roleId,
         skip,
@@ -40,7 +37,7 @@ export const getUserList = async ({
 
 export const getUser = async (id: string): Promise<UserDetail> => {
   try {
-    const response = await bffApi.get(`/api/users/${id}`);
+    const response = await axiosBFFService.get(`/api/users/${id}`);
 
     const newResponseData: UserDetail = response.data;
 
@@ -57,7 +54,7 @@ export const getUser = async (id: string): Promise<UserDetail> => {
 
 export const getUserByEmail = async (email: string): Promise<UserDetail> => {
   try {
-    const response = await bffApi.get(`/api/users/email/${email}`);
+    const response = await axiosBFFService.get(`/api/users/email/${email}`);
 
     const newResponseData: UserDetail = response.data;
 
@@ -89,7 +86,7 @@ export const createUser = async (
       riskScore: 0,
       suspectCaseId: 0,
     };
-    const response = await bffApi.post("/api/users", userItemFormatted);
+    const response = await axiosBFFService.post("/api/users", userItemFormatted);
 
     return response.data;
   } catch (error) {
@@ -115,7 +112,7 @@ export const updateUser = async (
       riskScore: 0,
       suspectCaseId: 0,
     };
-    const response = await bffApi.put(`/api/users/${id}`, userItemFormatted);
+    const response = await axiosBFFService.put(`/api/users/${id}`, userItemFormatted);
 
     return response.data;
   } catch (error) {
@@ -125,7 +122,7 @@ export const updateUser = async (
 
 export const deleteUser = async (id: string): Promise<void> => {
   try {
-    const response = await bffApi.delete(`/api/users/${id}`);
+    const response = await axiosBFFService.delete(`/api/users/${id}`);
     return response.data;
   } catch (error) {
     throw new Error("Failed to create case: " + error);
