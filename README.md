@@ -6,16 +6,16 @@
 
 ## Running in Docker Compose:
 
-1. Uncomment the first BFF_SERVICE_URL variable if you are running your BFF (Orchestrator) service using Docker Compose:
+1. Uncomment the first VITE_BFF_SERVICE_URL variable if you are running your BFF (Orchestrator) service using Docker Compose:
 
 ```
-# BFF_SERVICE_URL=http://bff-service:9999
+# VITE_BFF_SERVICE_URL=http://bff-service:9999
 ```
 
-2. Comment the second BFF_SERVICE_URL variable
+2. Comment the second VITE_BFF_SERVICE_URL variable
 
 ```
-# BFF_SERVICE_URL=http://localhost:9999
+# VITE_BFF_SERVICE_URL=http://localhost:9999
 ```
 
 3. Make sure your compose.yaml file is within the same directory level as this project and other services folder e.g.:
@@ -36,16 +36,16 @@ docker compose up -d --build
 
 ## Running in non-Docker Compose environment:
 
-1. Uncomment the second BFF_SERVICE_URL variable if you are running your BFF (Orchestrator) service going to use 'npm run dev' command:
+1. Uncomment the second VITE_BFF_SERVICE_URL variable if you are running your BFF (Orchestrator) service going to use 'npm run dev' command:
 
 ```
-# BFF_SERVICE_URL=http://localhost:9999
+# VITE_BFF_SERVICE_URL=http://localhost:9999
 ```
 
-2. Comment the second BFF_SERVICE_URL variable
+2. Comment the second VITE_BFF_SERVICE_URL variable
 
 ```
-# BFF_SERVICE_URL=http://bff-service:9999
+# VITE_BFF_SERVICE_URL=http://bff-service:9999
 ```
 3. Make sure you are in the cyberguards-frontend directory
 4. Install node_module dependencies by running the command:
