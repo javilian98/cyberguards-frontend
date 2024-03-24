@@ -1,12 +1,23 @@
 import AvatarMenu from "@/components/AvatarMenu/AvatarMenu";
 import { render, screen } from "@/utils/test-utils";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter } from "react-router-dom";
 
 describe("Unit Testing on AvatarMenu.tsx", () => {
   it("should display correct display picture when URL is provided", () => {
+    // Create a new QueryClient instance
+    const queryClient = new QueryClient();
+
     // ARRANGE
     const name = "John Doe";
     const imgSrc = "https://github.com/shadcn.png";
-    render(<AvatarMenu name={name} imgSrc={imgSrc} />);
+    render(
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <AvatarMenu name={name} imgSrc={imgSrc} />
+        </QueryClientProvider>
+      </BrowserRouter>
+    );
 
     // ACT
     const avatarImage = screen.getByRole("img", {
@@ -19,10 +30,19 @@ describe("Unit Testing on AvatarMenu.tsx", () => {
   });
 
   it("should display correct initials when no display picture URL is provided", () => {
+    // Create a new QueryClient instance
+    const queryClient = new QueryClient();
+
     // ARRANGE
     const name = "John Doe";
 
-    render(<AvatarMenu name={name} imgSrc="" />);
+    render(
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <AvatarMenu name={name} imgSrc="" />
+        </QueryClientProvider>
+      </BrowserRouter>
+    );
 
     // ASSERT
     const avatarInitials = screen.getByText(name);
