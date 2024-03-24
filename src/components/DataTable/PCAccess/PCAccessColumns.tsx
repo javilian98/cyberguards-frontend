@@ -1,11 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
-import { PCAccessLogs } from "@/types/types";
-import { useThreatStore } from "@/stores/useThreatStore";
-import { Link } from "react-router-dom";
+import {
+  PCAccessLogAPIResponse,
+  // PCAccessLogs
+} from "@/types/types";
 
-const renderSortButton = (column: Column<PCAccessLogs>, columnName: string) => {
+// const renderSortButton = (column: Column<PCAccessLogs>, columnName: string) => {
+const renderSortButton = (
+  column: Column<PCAccessLogAPIResponse>,
+  columnName: string
+) => {
   return (
     <Button
       variant="ghost"
@@ -17,37 +22,46 @@ const renderSortButton = (column: Column<PCAccessLogs>, columnName: string) => {
   );
 };
 
-export const pcAccessColumns: ColumnDef<PCAccessLogs>[] = [
+// export const pcAccessColumns: ColumnDef<PCAccessLogs>[] = [
+export const pcAccessColumns: ColumnDef<PCAccessLogAPIResponse>[] = [
   {
-    accessorKey: "accessDateTime",
+    accessorKey: "access_date_time",
     header: ({ column }) => renderSortButton(column, "Access Date Time"),
   },
   {
-    accessorKey: "machineName",
+    accessorKey: "log_on_off",
+    header: ({ column }) => renderSortButton(column, "Log On/Off"),
+  },
+  {
+    accessorKey: "machine_name",
     header: ({ column }) => renderSortButton(column, "Machine Name"),
   },
   {
-    accessorKey: "machineLocation",
+    accessorKey: "machine_location",
     header: ({ column }) => renderSortButton(column, "Machine Location"),
   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const { setCurrentSelectedLog, currentSelectedEmployee } =
-        useThreatStore.getState();
+  // {
+  //   accessorKey: "suspect_type",
+  //   header: ({ column }) => renderSortButton(column, "Suspect"),
+  // },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const { setCurrentSelectedLog, currentSelectedEmployee } =
+  //       useThreatStore.getState();
 
-      return (
-        <div>
-          <Button asChild variant="outline">
-            <Link
-              to={`/threats/employee/${currentSelectedEmployee?.id}/pcaccess/${row.original.logId}`}
-              onClick={() => setCurrentSelectedLog(row.original)}
-            >
-              View
-            </Link>
-          </Button>
-        </div>
-      );
-    },
-  },
+  //     return (
+  //       <div>
+  //         <Button asChild variant="outline">
+  //           <Link
+  //             to={`/threats/employee/${currentSelectedEmployee?.id}/pcaccess/${row.original.logId}`}
+  //             onClick={() => setCurrentSelectedLog(row.original)}
+  //           >
+  //             View
+  //           </Link>
+  //         </Button>
+  //       </div>
+  //     );
+  //   },
+  // },
 ];

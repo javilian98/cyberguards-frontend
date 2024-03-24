@@ -48,6 +48,7 @@ import { toast } from "sonner";
 import { useAlertDialogStore } from "@/stores/useAlertDialogStore";
 import { useEffect, useState } from "react";
 import {
+  UserDetail,
   // ROLE_ID,
   UserListItem,
 } from "@/types/types";
@@ -59,18 +60,9 @@ const formSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name cannot be empty.",
   }),
-  // profession: z.string().min(1, {
-  //   message: "Profession cannot be empty.",
-  // }),
-  // roleId: z.number().refine(
-  //   (value) => {
-  //     // Custom validation logic for suspectTypeId
-  //     return Object.values(ROLE_ID).includes(value as ROLE_ID);
-  //   },
-  //   {
-  //     message: "Invalid user role type.",
-  //   }
-  // ),
+  email: z.string().min(1, { message: "Email is required" }).email({
+    message: "Must be a valid email",
+  }),
 });
 
 function CreateEditUser() {
@@ -97,15 +89,9 @@ function CreateEditUser() {
     queryFn: async () => {
       const data = await getUser(id as string);
 
-      console.log("data ", data);
-
-      // Object.keys(data).forEach((key) => {
-      //   console.log("key", key);
-      // });
-
       form.setValue("firstName", data.firstName);
       form.setValue("lastName", data.lastName);
-      // form.setValue("profession", data.profession);
+      form.setValue("email", data.email);
       // form.setValue("roleId", data.roleId as unknown as ROLE_ID);
 
       return data;
@@ -120,7 +106,6 @@ function CreateEditUser() {
         ...userItem,
         // roleId: Number(userItem.roleId),
         roleId: 1,
-        profession: "",
       });
     },
     onError: () => {},
@@ -142,7 +127,6 @@ function CreateEditUser() {
         {
           ...userItem,
           roleId: 1,
-          profession: "",
         },
         id as string
       );
@@ -150,7 +134,6 @@ function CreateEditUser() {
     onError: () => {},
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
-      console.log(`User "${data.firstName} ${data.lastName}" has been updated`);
 
       navigate("/users");
       toast.success(
@@ -165,7 +148,7 @@ function CreateEditUser() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      // profession: "",
+      email: "",
       // roleId: userDetailData
       //   ? (userDetailData.roleId as unknown as ROLE_ID)
       //   : (0 as unknown as ROLE_ID),
@@ -204,8 +187,6 @@ function CreateEditUser() {
   };
 
   const renderSubmitButton = () => {
-    // console.log("caseDetailData ", caseDetailData);
-
     if (userDetailData) {
       return (
         <Button className="w-[150px]" type="submit" disabled={!isFormEdited}>
@@ -229,6 +210,12 @@ function CreateEditUser() {
     return `${user.firstName} ${user.lastName}`;
   };
 
+  const renderPageTitle = (userDetailData: UserDetail | undefined) => {
+    if (userDetailData == undefined) return "Analyst's Profile";
+
+    return `${computeFullName(userDetailData)}'s Profile`;
+  };
+
   if (isUserDetailLoading) {
     return <div>Loading...</div>;
   }
@@ -247,14 +234,8 @@ function CreateEditUser() {
           <Card className="max-w-[700px] mb-14">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                {userDetailData != undefined
-                  ? `${computeFullName(userDetailData)}'s Profile`
-                  : "Analyst's Profile"}
+                {renderPageTitle(userDetailData)}
               </CardTitle>
-              {/* <CardDescription>
-                You can populate a case by clicking on the import case button or
-                input the case details manually.
-              </CardDescription> */}
             </CardHeader>
             <CardContent>
               <div className="grid w-full items-center gap-2">
@@ -289,21 +270,21 @@ function CreateEditUser() {
                 />
               </div>
 
-              {/* <div className="grid w-full max-w-sm items-center gap-2 mt-6">
+              <div className="grid w-full items-center gap-2 mt-6">
                 <FormField
                   control={form.control}
-                  name="profession"
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Profession</FormLabel>
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="Profession" {...field} />
+                        <Input placeholder="hello@example.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              </div> */}
+              </div>
 
               {/* <div className="grid w-full max-w-sm items-center gap-2 mt-6">
                 <FormField

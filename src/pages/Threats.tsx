@@ -6,102 +6,61 @@
 import Search from "@/components/Search/Search";
 // import { deleteUser, getUserList } from "@/api/usersApi";
 // import { useUserStore } from "@/stores/useUserStore";
-// import {
-//   useMutation,
-//   useQuery,
-//   useQueryClient,
-//   // useQueryClient
-// } from "@tanstack/react-query";
+import {
+  //   useMutation,
+  useQuery,
+  //   useQueryClient,
+  //   // useQueryClient
+} from "@tanstack/react-query";
 
 import { DataTable } from "@/components/DataTable/DataTable";
 import FixedHeader from "@/components/Layouts/Header/FixedHeader";
 import { threatsColumns } from "@/components/DataTable/Threats/ThreatsColumns";
 import { useThreatStore } from "@/stores/useThreatStore";
+import { getNewThreat, getThreatList } from "@/api/threatsApi";
+import { EmployeeListItem } from "@/types/types";
+import { Button } from "@/components/ui/button";
+import { LuLoader2, LuVenetianMask } from "react-icons/lu";
+import { toast } from "sonner";
 
 function Threats() {
   const employees = useThreatStore((state) => state.employees);
-  // const setEmployees = useThreatStore((state) => state.setEmployees);
+  const setEmployees = useThreatStore((state) => state.setEmployees);
 
-  // const currentSelectedEmployee = useThreatStore(
-  //   (state) => state.currentSelectedEmployee
-  // );
-  // const isSingleRowActionDialogOpen = useAlertDialogStore(
-  //   (state) => state.isSingleRowActionDialogOpen
-  // );
-  // const setSingleRowActionDialogOpen = useAlertDialogStore(
-  //   (state) => state.setSingleRowActionDialogOpen
-  // );
+  const threatListQuery = useQuery({
+    queryKey: ["threats"],
+    queryFn: async () => {
+      const data = await getThreatList();
+      console.log("threats ", data);
 
-  // const queryClient = useQueryClient();
+      setEmployees(data as EmployeeListItem[]);
+      return data as EmployeeListItem[];
+    },
+  });
 
-  // const usersQuery = useQuery({
-  //   queryKey: ["users"],
-  //   queryFn: async () => {
-  //     const data = await getUserList();
-  //     console.log("users ", data);
+  const { isFetching: isFetchingNewThreat, refetch: fetchThreatGeneratedData } =
+    useQuery({
+      queryKey: ["generate_threat"],
+      queryFn: async () => {
+        const data = await getNewThreat();
+        console.log("new threat ", data);
 
-  //     setUsers(data);
-  //     return data;
-  //   },
-  // });
+        const newEmployees = [...employees, data];
 
-  // const deleteUserMutation = useMutation({
-  //   mutationFn: async (id: string) => {
-  //     await deleteUser(id);
-  //   },
-  //   onSuccess: () => {
-  //     const newUsers = users.filter(
-  //       (item) => item.id !== currentSelectedUser.id
-  //     );
-  //     setUsers(newUsers);
-  //     toast.success("User deleted successfully");
-  //   },
-  //   onSettled: async (_, error) => {
-  //     if (error) {
-  //       console.log(error);
-  //     } else {
-  //       await queryClient.invalidateQueries({ queryKey: ["users"] });
-  //     }
-  //   },
-  // });
+        setEmployees(newEmployees as EmployeeListItem[]);
+        toast.success("New threat has been generated");
 
-  // const deleteMultipleUsersMutation = useMutation({
-  //   mutationFn: async (ids: string[]) => {
-  //     console.log("ids ", ids);
+        return data;
+      },
+      refetchOnWindowFocus: false,
+      enabled: false,
+    });
 
-  //     await Promise.all(ids.map((id) => deleteUser(id)));
-  //   },
-  //   onSuccess: () => {
-  //     const newUsers = users.filter(
-  //       (item) =>
-  //         !selectedUsers.some((selectedUser) => selectedUser.id === item.id)
-  //     );
+  const handleGenerateThreat = () => {
+    fetchThreatGeneratedData();
+  };
 
-  //     console.log("newUsers ", newUsers);
-
-  //     setUsers(newUsers);
-  //     setSelectedUsers([]);
-  //     toast.success("Users deleted successfully");
-  //   },
-  //   onSettled: async (_, error) => {
-  //     if (error) {
-  //       console.log(error);
-  //     } else {
-  //       await queryClient.invalidateQueries({ queryKey: ["users"] });
-  //     }
-  //   },
-  // });
-
-  // const handleDelete = () => {
-  //   deleteUserMutation.mutate(currentSelectedUser.id);
-  // };
-
-  // const handleDeleteAllSelected = () => {
-  //   const selectedUserIds = selectedUsers.map((userItem) => userItem.id);
-  //   console.log("selectedUserIds ", selectedUserIds);
-
-  //   deleteMultipleUsersMutation.mutate(selectedUserIds);
-  // };
+  console.log("threatQuery employees", employees);
 
   return (
     <>
@@ -117,10 +76,29 @@ function Threats() {
         </Link> */}
       </FixedHeader>
 
-      <div className="mt-16">
+      <div className="mt-20">
+        <div className="flex items-center gap-3">
+          <Button
+            disabled={isFetchingNewThreat}
+            variant="destructive"
+            onClick={handleGenerateThreat}
+          >
+            {isFetchingNewThreat ? (
+              <LuLoader2 className="h-6 w-6 mr-3 animate-spin" />
+            ) : (
+              <LuVenetianMask className="h-6 w-6 mr-3" />
+            )}
+            Generate Threat
+          </Button>
+          {isFetchingNewThreat && (
+            <span className="text-sm text-muted-foreground">
+              This process may take a while
+            </span>
+          )}
+        </div>
         <DataTable
           columns={threatsColumns}
-          data={employees}
+          data={threatListQuery.isLoading ? [] : employees}
           // actionDelete={handleDeleteAllSelected}
         />
       </div>

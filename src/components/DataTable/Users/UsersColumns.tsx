@@ -6,6 +6,7 @@ import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
 import { ROLE_ID, UserListItem } from "@/types/types";
 import ActionsMenu from "@/components/DataTable/Users/ActionsMenu";
+import { useUserAuthStore } from "@/stores/useUserAuthStore";
 
 const renderSortButton = (column: Column<UserListItem>, columnName: string) => {
   return (
@@ -115,13 +116,13 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
   //     <div className="text-left">{row.getValue("riskScore")}</div>
   //   ),
   // },
-  // {
-  //   accessorKey: "roleId",
-  //   header: ({ column }) => renderSortButton(column, "Role"),
-  //   cell: ({ row }) => (
-  //     <div className="text-left">{renderRoleTag(row.getValue("roleId"))}</div>
-  //   ),
-  // },
+  {
+    accessorKey: "roleId",
+    header: ({ column }) => renderSortButton(column, "Role"),
+    cell: ({ row }) => (
+      <div className="text-left">{renderRoleTag(row.getValue("roleId"))}</div>
+    ),
+  },
   // {
   //   accessorKey: "suspectCaseId",
   //   header: ({ column }) => renderSortButton(column, "Total Cases Handed"),
@@ -132,6 +133,10 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) => <ActionsMenu row={row} />,
+    cell: ({ row }) => {
+      const { userAuth } = useUserAuthStore.getState();
+
+      return userAuth.role === ROLE_ID.admin && <ActionsMenu row={row} />;
+    },
   },
 ];

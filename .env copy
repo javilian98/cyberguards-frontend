@@ -1,0 +1,10 @@
+
+#
+# Use this URL if you are using docker-compose
+#
+# BFF_SERVICE_URL=http://bff-service:9999
+
+#
+# Use this URL if you are running locally or individual docker container
+#
+BFF_SERVICE_URL=http://localhost:9999

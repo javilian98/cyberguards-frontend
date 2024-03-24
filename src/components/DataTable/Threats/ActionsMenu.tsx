@@ -21,23 +21,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useThreatStore } from "@/stores/useThreatStore";
+// import { useThreatStore } from "@/stores/useThreatStore";
 
 interface ActionsMenuProps {
   row: Row<EmployeeListItem>;
 }
 function ActionsMenu({ row }: ActionsMenuProps) {
-  const setCurrentSelectedEmployee = useThreatStore(
-    (state) => state.setCurrentSelectedEmployee
-  );
+  // const setCurrentSelectedEmployee = useThreatStore(
+  //   (state) => state.setCurrentSelectedEmployee
+  // );
   // const setSingleRowActionDialogOpen = useAlertDialogStore(
   //   (state) => state.setSingleRowActionDialogOpen
   // );
   const navigate = useNavigate();
 
   const handleViewEmployee = () => {
-    setCurrentSelectedEmployee(row.original);
-    navigate(`/threats/employee/${row.original.id}/buildingaccess`);
+    // setCurrentSelectedEmployee(row.original);
+    navigate(`/threats/employee/${row.original.id}`);
   };
 
   // const handleEditUser = () => {

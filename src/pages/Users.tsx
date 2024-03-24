@@ -27,6 +27,8 @@ import {
 import FixedHeader from "@/components/Layouts/Header/FixedHeader";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { useUserAuthStore } from "@/stores/useUserAuthStore";
+import { ROLE_ID } from "@/types/types";
 
 function Users() {
   const users = useUserStore((state) => state.users);
@@ -43,13 +45,14 @@ function Users() {
     (state) => state.setSingleRowActionDialogOpen
   );
 
+  const userAuth = useUserAuthStore((state) => state.userAuth);
+
   const queryClient = useQueryClient();
 
   const usersQuery = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
       const data = await getUserList();
-      console.log("users ", data);
 
       setUsers(data);
       return data;
@@ -78,8 +81,6 @@ function Users() {
 
   const deleteMultipleUsersMutation = useMutation({
     mutationFn: async (ids: string[]) => {
-      console.log("ids ", ids);
-
       await Promise.all(ids.map((id) => deleteUser(id)));
     },
     onSuccess: () => {
@@ -87,8 +88,6 @@ function Users() {
         (item) =>
           !selectedUsers.some((selectedUser) => selectedUser.id === item.id)
       );
-
-      console.log("newUsers ", newUsers);
 
       setUsers(newUsers);
       setSelectedUsers([]);
@@ -109,8 +108,6 @@ function Users() {
 
   const handleDeleteAllSelected = () => {
     const selectedUserIds = selectedUsers.map((userItem) => userItem.id);
-    console.log("selectedUserIds ", selectedUserIds);
-
     deleteMultipleUsersMutation.mutate(selectedUserIds);
   };
 
@@ -120,12 +117,14 @@ function Users() {
         <Search placeholderText="Search analyst" drawerTitle="Filter Analysts">
           asd
         </Search>
-        <Link to="/users/create">
-          <Button>
-            <LuPlus className="w-5 h-5 mr-2 text-white" />
-            Create Analyst
-          </Button>
-        </Link>
+        {userAuth.role === ROLE_ID.admin && (
+          <Link to="/users/create">
+            <Button>
+              <LuPlus className="w-5 h-5 mr-2 text-white" />
+              Create Analyst
+            </Button>
+          </Link>
+        )}
       </FixedHeader>
 
       <div className="mt-16">

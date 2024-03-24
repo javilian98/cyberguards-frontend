@@ -1,30 +1,75 @@
-# React + TypeScript + Vite
+# Cyberguards Frontend App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Environment variable configurations
 
-Currently, two official plugins are available:
+1. rename your .env copy file to .env
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Running in Docker Compose:
 
-## Expanding the ESLint configuration
+1. Uncomment the first BFF_SERVICE_URL variable if you are running your BFF (Orchestrator) service using Docker Compose:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```
+# BFF_SERVICE_URL=http://bff-service:9999
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Comment the second BFF_SERVICE_URL variable
+
+```
+# BFF_SERVICE_URL=http://localhost:9999
+```
+
+3. Make sure your compose.yaml file is within the same directory level as this project and other services folder e.g.:
+
+```
+root project folder
+  - /cyberguards-frontend
+  - /cyberguards-be-cases
+  - ...
+  - compose.yaml
+```
+
+4. Make sure before running the command below, you are in the same directory level as compose.yaml shown above
+
+```
+docker compose up -d --build
+```
+
+## Running in non-Docker Compose environment:
+
+1. Uncomment the second BFF_SERVICE_URL variable if you are running your BFF (Orchestrator) service going to use 'npm run dev' command:
+
+```
+# BFF_SERVICE_URL=http://localhost:9999
+```
+
+2. Comment the second BFF_SERVICE_URL variable
+
+```
+# BFF_SERVICE_URL=http://bff-service:9999
+```
+
+3. Install node_module dependencies by running the command:
+
+```
+npm install
+```
+
+4. Run the application
+
+```
+npm run dev
+```
+
+## Running Unit Tests:
+
+1. Install node_module dependencies by running the command if you haven't:
+
+```
+npm install
+```
+
+2. To run the tests, run the following command:
+
+```
+npm run test
+```

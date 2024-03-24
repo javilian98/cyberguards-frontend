@@ -22,8 +22,16 @@ import FixedHeader from "@/components/Layouts/Header/FixedHeader";
 import { casesColumns } from "@/components/DataTable/Cases/CasesColumns";
 
 import { LuPlus } from "react-icons/lu";
-import { deleteCase, getCaseList } from "@/api/casesApi";
+import {
+  createCaseAuditLog,
+  deleteCase,
+  getCaseAuditLogList,
+  getCaseList,
+} from "@/api/casesApi";
 import { toast } from "sonner";
+import { caseAuditLogColumns } from "@/components/DataTable/CaseAuditLog/CasesAuditLogColumns";
+import { CaseAuditLog } from "@/types/types";
+import { useUserAuthStore } from "@/stores/useUserAuthStore";
 
 function Cases() {
   const cases = useCaseStore((state) => state.cases);
@@ -33,6 +41,8 @@ function Cases() {
   const currentSelectedCase = useCaseStore(
     (state) => state.currentSelectedCase
   );
+  const caseAuditLogs = useCaseStore((state) => state.caseAuditLogs);
+  const setCaseAuditLogs = useCaseStore((state) => state.setCaseAuditLogs);
 
   const isSingleRowActionDialogOpen = useAlertDialogStore(
     (state) => state.isSingleRowActionDialogOpen
@@ -40,6 +50,8 @@ function Cases() {
   const setSingleRowActionDialogOpen = useAlertDialogStore(
     (state) => state.setSingleRowActionDialogOpen
   );
+
+  const userAuth = useUserAuthStore((state) => state.userAuth);
 
   const queryClient = useQueryClient();
 
@@ -55,6 +67,17 @@ function Cases() {
     },
   });
 
+  const caseAuditLogsQuery = useQuery({
+    queryKey: ["caseAuditLogs"],
+    queryFn: async () => {
+      // roleId: 1 is analyst
+      const data = await getCaseAuditLogList();
+
+      setCaseAuditLogs(data);
+      return data;
+    },
+  });
+
   const deleteCaseMutation = useMutation({
     mutationFn: async (id: string) => {
       await deleteCase(id);
@@ -65,6 +88,17 @@ function Cases() {
       );
       setCases(newCases);
       toast.success("Case deleted successfully");
+
+      const newCaseAuditLog: CaseAuditLog = {
+        caseId: currentSelectedCase.id,
+        action: "DELETE",
+        edits: "-",
+        assignee: currentSelectedCase?.assignee?.fullName as string,
+        assigneeId: currentSelectedCase.assigneeId ?? undefined,
+      };
+      setCaseAuditLogs([...caseAuditLogs, newCaseAuditLog]);
+
+      createCaseAuditLogMutation.mutate(newCaseAuditLog);
 
       await queryClient.invalidateQueries({ queryKey: ["cases_threatlogid"] });
     },
@@ -96,6 +130,15 @@ function Cases() {
       } else {
         await queryClient.invalidateQueries({ queryKey: ["cases"] });
       }
+    },
+  });
+
+  const createCaseAuditLogMutation = useMutation({
+    mutationKey: ["createCaseAuditLog"],
+    mutationFn: async (log: CaseAuditLog) => {
+      const newLog = await createCaseAuditLog(log);
+      console.log("NEW LOG ", newLog);
+      return newLog;
     },
   });
 
@@ -132,6 +175,9 @@ function Cases() {
           <TabsTrigger value="my cases" className="w-[200px]">
             My Cases
           </TabsTrigger>
+          <TabsTrigger value="audit logs" className="w-[200px]">
+            Audit Logs
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="all cases" className="mt-4">
@@ -144,10 +190,13 @@ function Cases() {
         <TabsContent value="my cases">
           <DataTable
             columns={casesColumns}
-            data={cases.filter(
-              (item) =>
-                item.assigneeId === "77e748dc-1bb4-4a16-bc0f-b44ee5d441e3"
-            )}
+            data={cases.filter((item) => item.assigneeId === userAuth.id)}
+          />
+        </TabsContent>
+        <TabsContent value="audit logs">
+          <DataTable
+            columns={caseAuditLogColumns}
+            data={caseAuditLogsQuery.isLoading ? [] : caseAuditLogs}
           />
         </TabsContent>
       </Tabs>

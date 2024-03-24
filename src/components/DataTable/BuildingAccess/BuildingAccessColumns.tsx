@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
-import { BuildingAccessLogs } from "@/types/types";
-
-import { Link } from "react-router-dom";
-import { useThreatStore } from "@/stores/useThreatStore";
+import {
+  BuildingAccessLogAPIResponse,
+  // BuildingAccessLogs,
+} from "@/types/types";
 
 const renderSortButton = (
-  column: Column<BuildingAccessLogs>,
+  // column: Column<BuildingAccessLogs>,
+  column: Column<BuildingAccessLogAPIResponse>,
   columnName: string
 ) => {
   return (
@@ -21,35 +22,50 @@ const renderSortButton = (
   );
 };
 
-export const buildingAccessColumns: ColumnDef<BuildingAccessLogs>[] = [
-  {
-    accessorKey: "accessDateTime",
-    header: ({ column }) => renderSortButton(column, "Access Date Time"),
-  },
-  {
-    accessorKey: "officeLocation",
-    header: ({ column }) => renderSortButton(column, "Office Location"),
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const { setCurrentSelectedLog, currentSelectedEmployee } =
-        useThreatStore.getState();
-
-      return (
-        <div>
-          <Button asChild variant="outline">
-            <Link
-              to={`/threats/employee/${currentSelectedEmployee?.id}/buildingaccess/${row.original.logId}`}
-              onClick={() => {
-                setCurrentSelectedLog(row.original);
-              }}
-            >
-              View
-            </Link>
-          </Button>
-        </div>
-      );
+// export const buildingAccessColumns: ColumnDef<BuildingAccessLogs>[] = [
+export const buildingAccessColumns: ColumnDef<BuildingAccessLogAPIResponse>[] =
+  [
+    {
+      accessorKey: "access_date_time",
+      header: ({ column }) => renderSortButton(column, "Access Date Time"),
     },
-  },
-];
+    {
+      accessorKey: "direction",
+      header: ({ column }) => renderSortButton(column, "Direction"),
+    },
+    {
+      accessorKey: "status",
+      header: ({ column }) => renderSortButton(column, "Status"),
+    },
+    {
+      accessorKey: "office_location",
+      header: ({ column }) => renderSortButton(column, "Office Location"),
+    },
+
+    // {
+    //   accessorKey: "suspectType",
+    //   header: ({ column }) => renderSortButton(column, "Suspect"),
+    // },
+    // {
+    //   id: "actions",
+    //   cell: ({ row }) => {
+    //     const { setCurrentSelectedLog, currentSelectedEmployee } =
+    //       useThreatStore.getState();
+
+    //     return (
+    //       <div>
+    //         <Button asChild variant="outline">
+    //           <Link
+    //             to={`/threats/employee/${currentSelectedEmployee?.id}/buildingaccess/${row.original.logId}`}
+    //             onClick={() => {
+    //               setCurrentSelectedLog(row.original);
+    //             }}
+    //           >
+    //             View
+    //           </Link>
+    //         </Button>
+    //       </div>
+    //     );
+    //   },
+    // },
+  ];

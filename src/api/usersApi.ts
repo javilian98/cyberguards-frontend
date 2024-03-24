@@ -1,10 +1,6 @@
 import { UserListItem, UserDetail } from "@/types/types";
-import { formatDateTime } from "@/utils/utils";
-import axios from "axios";
-
-const bffApi = axios.create({
-  baseURL: "http://localhost:9999",
-});
+import { axiosBFFService } from "@/utils/baseApi";
+// import { formatDateTime } from "@/utils/utils";
 
 type GetUserListArgs = {
   roleId?: number;
@@ -17,22 +13,23 @@ export const getUserList = async ({
   take = 10,
 }: GetUserListArgs = {}): Promise<UserListItem[]> => {
   try {
-    const response = await bffApi.get("/api/users", {
+    const response = await axiosBFFService.get("/api/users", {
       params: {
         roleId,
         skip,
         take,
       },
     });
+    const responseData = response.data;
 
-    const newResponseData = response.data.map((item: UserListItem) => {
-      return {
-        ...item,
-        lastAccessAt: formatDateTime(item.lastAccessAt),
-      };
-    });
+    // const newResponseData = response.data.map((item: UserListItem) => {
+    //   return {
+    //     ...item,
+    //     lastAccessAt: formatDateTime(item.lastAccessAt),
+    //   };
+    // });
 
-    return newResponseData;
+    return responseData;
   } catch (error) {
     throw new Error("Failed to fetch cases: " + error);
   }
@@ -40,38 +37,52 @@ export const getUserList = async ({
 
 export const getUser = async (id: string): Promise<UserDetail> => {
   try {
-    const response = await bffApi.get(`/api/users/${id}`);
+    const response = await axiosBFFService.get(`/api/users/${id}`);
 
-    const newResponseData: UserDetail = response.data;
+    const responseData: UserDetail = response.data;
 
-    const userDetailData = {
-      ...newResponseData,
-      lastAccessAt: formatDateTime(newResponseData.lastAccessAt),
-    };
+    // const userDetailData = {
+    //   ...responseData,
+    //   lastAccessAt: formatDateTime(responseData.lastAccessAt),
+    // };
 
-    return userDetailData;
+    return responseData;
+  } catch (error) {
+    throw new Error("Failed to fetch case detail: " + error);
+  }
+};
+
+export const getUserByEmail = async (email: string): Promise<UserDetail> => {
+  try {
+    const response = await axiosBFFService.get(`/api/users/email/${email}`);
+
+    const responseData: UserDetail = response.data;
+
+    // const userDetailData = {
+    //   ...responseData,
+    //   lastAccessAt: formatDateTime(responseData.lastAccessAt),
+    // };
+
+    return responseData;
   } catch (error) {
     throw new Error("Failed to fetch case detail: " + error);
   }
 };
 
 export const createUser = async (
-  userItem: Omit<
-    UserDetail,
-    "id" | "lastAccessAt" | "riskStatus" | "riskScore" | "suspectCaseId"
-  >
+  userItem: Omit<UserDetail, "id">
 ): Promise<UserDetail> => {
   try {
     const userItemFormatted = {
       firstName: userItem.firstName,
       lastName: userItem.lastName,
-      profession: userItem.profession,
+      email: userItem.email,
       roleId: userItem.roleId,
-      riskStatus: "low",
-      riskScore: 0,
-      suspectCaseId: 0,
     };
-    const response = await bffApi.post("/api/users", userItemFormatted);
+    const response = await axiosBFFService.post(
+      "/api/users",
+      userItemFormatted
+    );
 
     return response.data;
   } catch (error) {
@@ -80,23 +91,20 @@ export const createUser = async (
 };
 
 export const updateUser = async (
-  userItem: Omit<
-    UserDetail,
-    "id" | "lastAccessAt" | "riskStatus" | "riskScore" | "suspectCaseId"
-  >,
+  userItem: Omit<UserDetail, "id">,
   id: string
 ): Promise<UserDetail> => {
   try {
     const userItemFormatted = {
       firstName: userItem.firstName,
       lastName: userItem.lastName,
-      profession: userItem.profession,
+      email: userItem.email,
       roleId: userItem.roleId,
-      riskStatus: "low",
-      riskScore: 0,
-      suspectCaseId: 0,
     };
-    const response = await bffApi.put(`/api/users/${id}`, userItemFormatted);
+    const response = await axiosBFFService.put(
+      `/api/users/${id}`,
+      userItemFormatted
+    );
 
     return response.data;
   } catch (error) {
@@ -106,7 +114,7 @@ export const updateUser = async (
 
 export const deleteUser = async (id: string): Promise<void> => {
   try {
-    const response = await bffApi.delete(`/api/users/${id}`);
+    const response = await axiosBFFService.delete(`/api/users/${id}`);
     return response.data;
   } catch (error) {
     throw new Error("Failed to create case: " + error);

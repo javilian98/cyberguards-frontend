@@ -13,9 +13,12 @@ import {
 import AvatarMenu from "@/components/AvatarMenu/AvatarMenu";
 
 import Logo from "@/assets/logo.jpg";
+import { useUserAuthStore } from "@/stores/useUserAuthStore";
+import { useEffect } from "react";
 
 export default function Sidebar() {
   const { pathname } = useLocation();
+  const userAuth = useUserAuthStore((state) => state.userAuth);
 
   const renderActiveLinkStyle = (pathname: string, selectedPath: string) => {
     if (
@@ -27,6 +30,10 @@ export default function Sidebar() {
 
     return "ghost";
   };
+
+  useEffect(() => {
+    console.log("user auth changed ", userAuth);
+  }, [userAuth]);
 
   const links = [
     // {
@@ -93,7 +100,10 @@ export default function Sidebar() {
 
         <div className="px-4">
           <Separator className="mb-4" />
-          <AvatarMenu name="John Doe" imgSrc="https://github.com/shadcn.png" />
+          <AvatarMenu
+            name={`${userAuth.firstName} ${userAuth.lastName}`}
+            imgSrc="https://github.com/shadcn.png"
+          />
         </div>
       </div>
     </>

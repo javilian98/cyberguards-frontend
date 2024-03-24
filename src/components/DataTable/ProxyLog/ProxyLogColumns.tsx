@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-
-import { useCaseStore } from "@/stores/useCaseStore";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import { LuArrowUpDown } from "react-icons/lu";
-import { ProxyLogs } from "@/types/types";
-import { Link } from "react-router-dom";
-import { useThreatStore } from "@/stores/useThreatStore";
+import { ProxyLogAPIResponse, 
+  // ProxyLogs 
+} from "@/types/types";
 
-const renderSortButton = (column: Column<ProxyLogs>, columnName: string) => {
+// const renderSortButton = (column: Column<ProxyLogs>, columnName: string) => {
+const renderSortButton = (
+  column: Column<ProxyLogAPIResponse>,
+  columnName: string
+) => {
   return (
     <Button
       variant="ghost"
@@ -20,74 +21,53 @@ const renderSortButton = (column: Column<ProxyLogs>, columnName: string) => {
   );
 };
 
-export const proxyLogColumns: ColumnDef<ProxyLogs>[] = [
+// export const proxyLogColumns: ColumnDef<ProxyLogs>[] = [
+export const proxyLogColumns: ColumnDef<ProxyLogAPIResponse>[] = [
   {
-    id: "select",
-    header: ({ table }) => {
-      const { cases, setSelectedCases } = useCaseStore.getState();
-
-      return (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => {
-            table.toggleAllPageRowsSelected(!!value);
-
-            if (table.getIsAllPageRowsSelected()) {
-              setSelectedCases([]);
-            } else {
-              setSelectedCases(cases);
-            }
-          }}
-          aria-label="Select all"
-        />
-      );
-    },
-    cell: ({ row }) => {
-      return (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => {
-            row.toggleSelected(!!value);
-          }}
-          aria-label="Select row"
-        />
-      );
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "accessDateTime",
+    accessorKey: "access_date_time",
     header: ({ column }) => renderSortButton(column, "Access Date Time"),
   },
   {
-    accessorKey: "bytesIn",
+    accessorKey: "machine_name",
+    header: ({ column }) => renderSortButton(column, "Machine Name"),
+  },
+  {
+    accessorKey: "url",
+    header: ({ column }) => renderSortButton(column, "URL"),
+  },
+  {
+    accessorKey: "category",
+    header: ({ column }) => renderSortButton(column, "Category"),
+  },
+  {
+    accessorKey: "bytes_in",
     header: ({ column }) => renderSortButton(column, "Bytes In"),
   },
   {
-    accessorKey: "bytesOut",
+    accessorKey: "bytes_out",
     header: ({ column }) => renderSortButton(column, "Bytes Out"),
   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const { setCurrentSelectedLog, currentSelectedEmployee } = useThreatStore.getState();
+  // {
+  //   accessorKey: "suspect_type",
+  //   header: ({ column }) => renderSortButton(column, "Suspect"),
+  // },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const { setCurrentSelectedLog, currentSelectedEmployee } = useThreatStore.getState();
 
-      return (
-        <div>
-          <Button asChild variant="outline">
-            <Link
-              to={`/threats/employee/${currentSelectedEmployee?.id}/proxy/${row.original.logId}`}
-              onClick={() => setCurrentSelectedLog(row.original)}
-            >
-              View
-            </Link>
-          </Button>
-        </div>
-      );
-    },
-  },
+  //     return (
+  //       <div>
+  //         <Button asChild variant="outline">
+  //           <Link
+  //             to={`/threats/employee/${currentSelectedEmployee?.id}/proxy/${row.original.logId}`}
+  //             onClick={() => setCurrentSelectedLog(row.original)}
+  //           >
+  //             View
+  //           </Link>
+  //         </Button>
+  //       </div>
+  //     );
+  //   },
+  // },
 ];
