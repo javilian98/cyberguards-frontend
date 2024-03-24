@@ -1,7 +1,6 @@
 import { UserListItem, UserDetail } from "@/types/types";
 import { axiosBFFService } from "@/utils/baseApi";
-import { formatDateTime } from "@/utils/utils";
-
+// import { formatDateTime } from "@/utils/utils";
 
 type GetUserListArgs = {
   roleId?: number;
@@ -21,15 +20,16 @@ export const getUserList = async ({
         take,
       },
     });
+    const responseData = response.data;
 
-    const newResponseData = response.data.map((item: UserListItem) => {
-      return {
-        ...item,
-        lastAccessAt: formatDateTime(item.lastAccessAt),
-      };
-    });
+    // const newResponseData = response.data.map((item: UserListItem) => {
+    //   return {
+    //     ...item,
+    //     lastAccessAt: formatDateTime(item.lastAccessAt),
+    //   };
+    // });
 
-    return newResponseData;
+    return responseData;
   } catch (error) {
     throw new Error("Failed to fetch cases: " + error);
   }
@@ -39,14 +39,14 @@ export const getUser = async (id: string): Promise<UserDetail> => {
   try {
     const response = await axiosBFFService.get(`/api/users/${id}`);
 
-    const newResponseData: UserDetail = response.data;
+    const responseData: UserDetail = response.data;
 
-    const userDetailData = {
-      ...newResponseData,
-      lastAccessAt: formatDateTime(newResponseData.lastAccessAt),
-    };
+    // const userDetailData = {
+    //   ...responseData,
+    //   lastAccessAt: formatDateTime(responseData.lastAccessAt),
+    // };
 
-    return userDetailData;
+    return responseData;
   } catch (error) {
     throw new Error("Failed to fetch case detail: " + error);
   }
@@ -56,37 +56,33 @@ export const getUserByEmail = async (email: string): Promise<UserDetail> => {
   try {
     const response = await axiosBFFService.get(`/api/users/email/${email}`);
 
-    const newResponseData: UserDetail = response.data;
+    const responseData: UserDetail = response.data;
 
-    const userDetailData = {
-      ...newResponseData,
-      lastAccessAt: formatDateTime(newResponseData.lastAccessAt),
-    };
+    // const userDetailData = {
+    //   ...responseData,
+    //   lastAccessAt: formatDateTime(responseData.lastAccessAt),
+    // };
 
-    return userDetailData;
+    return responseData;
   } catch (error) {
     throw new Error("Failed to fetch case detail: " + error);
   }
 };
 
 export const createUser = async (
-  userItem: Omit<
-    UserDetail,
-    "id" | "lastAccessAt" | "riskStatus" | "riskScore" | "suspectCaseId"
-  >
+  userItem: Omit<UserDetail, "id">
 ): Promise<UserDetail> => {
   try {
     const userItemFormatted = {
       firstName: userItem.firstName,
       lastName: userItem.lastName,
       email: userItem.email,
-      profession: userItem.profession,
       roleId: userItem.roleId,
-      riskStatus: "low",
-      riskScore: 0,
-      suspectCaseId: 0,
     };
-    const response = await axiosBFFService.post("/api/users", userItemFormatted);
+    const response = await axiosBFFService.post(
+      "/api/users",
+      userItemFormatted
+    );
 
     return response.data;
   } catch (error) {
@@ -95,10 +91,7 @@ export const createUser = async (
 };
 
 export const updateUser = async (
-  userItem: Omit<
-    UserDetail,
-    "id" | "lastAccessAt" | "riskStatus" | "riskScore" | "suspectCaseId"
-  >,
+  userItem: Omit<UserDetail, "id">,
   id: string
 ): Promise<UserDetail> => {
   try {
@@ -106,13 +99,12 @@ export const updateUser = async (
       firstName: userItem.firstName,
       lastName: userItem.lastName,
       email: userItem.email,
-      profession: userItem.profession,
       roleId: userItem.roleId,
-      riskStatus: "low",
-      riskScore: 0,
-      suspectCaseId: 0,
     };
-    const response = await axiosBFFService.put(`/api/users/${id}`, userItemFormatted);
+    const response = await axiosBFFService.put(
+      `/api/users/${id}`,
+      userItemFormatted
+    );
 
     return response.data;
   } catch (error) {
