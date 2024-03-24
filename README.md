@@ -47,14 +47,14 @@ docker compose up -d --build
 ```
 # BFF_SERVICE_URL=http://bff-service:9999
 ```
-
-3. Install node_module dependencies by running the command:
+3. Make sure you are in the cyberguards-frontend directory
+4. Install node_module dependencies by running the command:
 
 ```
 npm install
 ```
-
-4. Run the application
+5. Make sure you are in the cyberguards-frontend directory
+6. Run the application
 
 ```
 npm run dev
